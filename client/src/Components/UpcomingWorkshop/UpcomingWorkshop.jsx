@@ -3,8 +3,10 @@ import { useStyles } from './UpcomingWorkshop.styles';
 import classNames from 'classnames';
 import CalendarTodayOutlinedIcon from '@mui/icons-material/CalendarTodayOutlined';
 import FmdGoodOutlinedIcon from '@mui/icons-material/FmdGoodOutlined';
+import { useNavigate } from 'react-router-dom';
 
-const UpcomingWorkshop = ({ title, startDate, endDate, location }) => {
+const UpcomingWorkshop = ({ id, title, startDate, endDate, location }) => {
+  const nav = useNavigate();
   var months = [
     'Jan',
     'Feb',
@@ -26,7 +28,18 @@ const UpcomingWorkshop = ({ title, startDate, endDate, location }) => {
   const endingMonth = new Date(endDate).getMonth();
 
   return (
-    <Box className={classes.workshop}>
+    <Box
+      className={classes.workshop}
+      role="button"
+      tabIndex={0}
+      onClick={() => id && nav(`/workshops/detail/${id}/view`)}
+      onKeyDown={(e) => {
+        if (id && (e.key === 'Enter' || e.key === ' ')) {
+          e.preventDefault();
+          nav(`/workshops/detail/${id}/view`);
+        }
+      }}
+    >
       <Box className={classNames(classes.card)}>
         <Typography>{startingDate}</Typography>
         <Typography>{months[startingMonth]}</Typography>

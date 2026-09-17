@@ -44,7 +44,6 @@ const Sidebar = ({ open, handleSidebarOpen }) => {
       {sideBarRoute.map((links) => (
         <ListItem key={links.id} className={classes.sideBarLinks}>
           <ListItemButton
-            disableRipple
             LinkComponent={NavLink}
             to={links.path}
             className={classes.navlink}

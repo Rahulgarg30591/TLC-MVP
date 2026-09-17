@@ -64,6 +64,11 @@ export const useStyles = makeStyles((theme) => ({
     },
     '& .ag-row': {
       borderColor: '#C6C6C6',
+      transition: 'background-color 120ms ease',
+    },
+    '& .ag-row-hover': {
+      backgroundColor: 'rgba(37, 147, 17, 0.07) !important',
+      cursor: 'pointer',
     },
 
     '& .ag-cell': {
@@ -101,6 +106,12 @@ export const useStyles = makeStyles((theme) => ({
   count: {
     color: '#4e73be',
     cursor: 'pointer',
+    fontWeight: '600',
+    transition: 'color 160ms ease, text-decoration-color 160ms ease',
+    '&:hover': {
+      color: '#005C8E',
+      textDecoration: 'underline',
+    },
   },
 
   errorMessage: {

@@ -36,6 +36,13 @@ export const useStyles = makeStyles((theme) => ({
     display: 'flex',
     gap: '5px',
     alignItems: 'center',
+    cursor: 'pointer',
+    borderRadius: '8px',
+    padding: '4px 6px',
+    transition: 'background-color 160ms ease',
+    '&:hover': {
+      backgroundColor: 'rgba(37, 147, 17, 0.08)',
+    },
     '& .MuiAvatar-circular': {
       height: '30px',
       width: '30px',
@@ -88,6 +95,10 @@ export const useStyles = makeStyles((theme) => ({
         '& a': {
           gap: '8px',
           padding: '4px 10px',
+          transition: 'background-color 160ms ease',
+          '&:hover': {
+            backgroundColor: 'rgba(37, 147, 17, 0.08)',
+          },
           '& .MuiListItemIcon-root': {
             minWidth: 'max-content',
           },

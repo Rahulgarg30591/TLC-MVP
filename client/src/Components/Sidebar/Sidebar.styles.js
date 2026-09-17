@@ -25,8 +25,11 @@ export const useStyles = makeStyles((theme) => ({
       gap: '15px',
       height: '35px',
       borderRadius: '5px',
+      borderLeft: '3px solid transparent',
+      transition:
+        'background-color 160ms ease, border-color 160ms ease, padding 160ms ease',
       '&:hover': {
-        backgroundColor: 'rgba(37,147,17,10%)',
+        backgroundColor: 'rgba(37,147,17,0.10)',
       },
     },
     '& .sidebarIcon': {
@@ -41,7 +44,12 @@ export const useStyles = makeStyles((theme) => ({
   },
   navlink: {
     '&.active': {
-      backgroundColor: 'rgba(37,147,17,10%)',
+      backgroundColor: 'rgba(37,147,17,0.14)',
+      borderLeft: '3px solid #259311',
+      '& .sidebarText span': {
+        color: '#259311',
+        fontWeight: '600',
+      },
     },
   },
 }));

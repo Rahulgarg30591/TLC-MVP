@@ -78,7 +78,10 @@ const Navbar = ({ handleSidebarOpen, isSidebarOpen }) => {
             }}
           />
         </Box>
-        <Box className={classes.profile}>
+        <Box
+          className={classes.profile}
+          onClick={(e) => setProfileAnchorEl(e.currentTarget)}
+        >
           <Avatar>{userName}</Avatar>
           <Box className={classes.userNameAndUserRole}>
             <Typography className="userName" sx={{ color: 'black' }}>

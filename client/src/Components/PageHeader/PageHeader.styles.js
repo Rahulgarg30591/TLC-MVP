@@ -20,6 +20,11 @@ export const useStyles = makeStyles((theme) => ({
       cursor: 'pointer',
       fontSize: '12px',
       fontWeight: '500',
+      transition: 'color 160ms ease',
+      '&:hover': {
+        textDecoration: 'underline',
+        color: '#259311',
+      },
     },
     '& svg': { fontSize: '20px', color: '#005C8E' },
     '& .currentPage': {

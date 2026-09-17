@@ -7,6 +7,7 @@ export const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
     gap: '20px',
     background: '#F2F3F4',
+    animation: 'tlcFadeIn 280ms ease',
     [theme.breakpoints.down('sm')]: {
       padding: '20px 8px 13px 8px',
     },
@@ -33,6 +34,27 @@ export const useStyles = makeStyles((theme) => ({
     gap: '20px',
     boxShadow: 'rgba(109, 109, 109, 0.25) 0px 4px 10px',
     textTransform: 'capitalize',
+    cursor: 'pointer',
+    overflow: 'hidden',
+    position: 'relative',
+    transition: 'transform 180ms ease, box-shadow 180ms ease',
+    '&::before': {
+      content: '""',
+      position: 'absolute',
+      left: 0,
+      top: 0,
+      bottom: 0,
+      width: '4px',
+      background: 'currentColor',
+      opacity: 0.85,
+    },
+    '&:hover': {
+      transform: 'translateY(-4px)',
+      boxShadow: '0 10px 22px rgba(109, 109, 109, 0.28)',
+    },
+    '&:active': {
+      transform: 'translateY(-1px)',
+    },
 
     '&.volunteer': {
       color: '#7EAA55',

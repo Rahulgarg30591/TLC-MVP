@@ -5,6 +5,21 @@ export const useStyles = makeStyles((theme) => ({
     display: 'flex',
     alignItems: 'center',
     gap: '20px',
+    cursor: 'pointer',
+    borderRadius: '8px',
+    padding: '8px 10px',
+    margin: '0 -10px',
+    outline: 'none',
+    transition: 'background-color 160ms ease, transform 160ms ease',
+    '&:hover': {
+      backgroundColor: 'rgba(37, 147, 17, 0.08)',
+    },
+    '&:active': {
+      transform: 'scale(0.995)',
+    },
+    '&:hover $card': {
+      transform: 'scale(1.06)',
+    },
     [theme.breakpoints.down("sm")]:{
      gap:"15px",
     },
@@ -20,6 +35,7 @@ export const useStyles = makeStyles((theme) => ({
     justifyContent: 'center',
     color: 'white',
     borderRadius: '5px',
+    transition: 'transform 160ms ease',
     '& p': {
       fontWeight: '500',
       lineHeight: 'normal',

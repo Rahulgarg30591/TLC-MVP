@@ -1,4 +1,4 @@
-import { Box, Divider, Stack, Typography } from '@mui/material';
+import { Box, ButtonBase, Divider, Stack, Typography } from '@mui/material';
 import React from 'react';
 import { useStyles } from './Dashboard.styles';
 import { useNavigate } from 'react-router-dom'
@@ -71,12 +71,10 @@ const Dashboard = () => {
         {smallCardData.map((item) => (
           <Stack
             key={item.id}
+            component={ButtonBase}
             className={`${classes.smallCard} ${item.class}`}
             divider={<Divider orientation="vertical" flexItem />}
             direction={'row'}
-            sx={{
-              cursor: 'pointer'
-            }}
             onClick={item?.click}
           >
             {item.icon}
@@ -107,6 +105,7 @@ const Dashboard = () => {
               wkshps?.data?.workshops?.map((workshop) => (
                 <UpcomingWorkshop
                   key={workshop?.id}
+                  id={workshop?.id}
                   title={workshop?.types}
                   startDate={workshop?.start_date}
                   endDate={workshop?.end_date}

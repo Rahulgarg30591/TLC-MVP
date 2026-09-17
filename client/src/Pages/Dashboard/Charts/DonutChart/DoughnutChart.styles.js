@@ -17,6 +17,14 @@ export const useStyles = makeStyles((theme) => ({
       fontSize: '12px',
       color: 'grey',
       gap: '5px',
+      padding: '2px 6px',
+      borderRadius: '4px',
+      cursor: 'default',
+      transition: 'background-color 160ms ease, color 160ms ease',
+      '&:hover': {
+        backgroundColor: 'rgba(37, 147, 17, 0.08)',
+        color: '#2F2F2F',
+      },
     },
   },
   root: {

@@ -41,6 +41,7 @@ export const useStyles = makeStyles((theme) => ({
       textTransform: 'capitalize',
       fontSize: '12px',
       color: '#FFFFFF',
+      boxShadow: '0 1px 3px rgba(0,0,0,0.16)',
       [theme.breakpoints.down('sm')]: {
         minWidth: '70px',
       },

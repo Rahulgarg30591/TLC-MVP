@@ -70,6 +70,7 @@ export const useStyles = makeStyles((theme) => ({
       height: '40px',
       paddingRight: '10px',
       backgroundColor: '#ffffff',
+      transition: 'border-color 160ms ease, box-shadow 160ms ease',
       '& input': {
         fontSize: '14px',
         padding: ' 6px 10px',
@@ -105,6 +106,9 @@ export const useStyles = makeStyles((theme) => ({
       textDecoration: 'none',
     },
     '& p': { color: '#2F2F2F' },
+    '& .forgotPassword:hover, & .signup:hover': {
+      textDecoration: 'underline',
+    },
     '& .signup': {
       textDecoration: 'none',
       color: '#4E73BE',
