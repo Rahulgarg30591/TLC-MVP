@@ -18,7 +18,7 @@ const mutations_1 = require("../../gql/user/mutations");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const bcrypt_1 = require("bcrypt");
 const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a, _b;
+    var _a, _b, _c, _d, _e;
     const { email, password } = req.body;
     // 1) Check if email and password exist
     if (!email || !password) {
@@ -31,12 +31,18 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         email,
     };
     const data = yield (0, getData_1.default)(query, variables);
-    if (!(data === null || data === void 0 ? void 0 : data.data.users.length)) {
+    if ((_a = data === null || data === void 0 ? void 0 : data.errors) === null || _a === void 0 ? void 0 : _a.length) {
+        return res.status(500).json({
+            status: 'error',
+            message: 'Database is unavailable. Please try again later.',
+        });
+    }
+    if (!((_c = (_b = data === null || data === void 0 ? void 0 : data.data) === null || _b === void 0 ? void 0 : _b.users) === null || _c === void 0 ? void 0 : _c.length)) {
         return res
             .status(400)
             .json({ status: 'error', message: 'User does not exists!' });
     }
-    const user = data === null || data === void 0 ? void 0 : data.data.users[0];
+    const user = data.data.users[0];
     const decryptedPass = yield (0, bcrypt_1.compare)(password, user === null || user === void 0 ? void 0 : user.password);
     if (!decryptedPass) {
         return res.status(401).json({
@@ -69,7 +75,7 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         email, isLoggedIn: token
     });
     userToSend = Object.assign(Object.assign({}, userToSend), { key: token });
-    if ((_b = (_a = updateUserStatus === null || updateUserStatus === void 0 ? void 0 : updateUserStatus.data) === null || _a === void 0 ? void 0 : _a.update_users) === null || _b === void 0 ? void 0 : _b.affected_rows) {
+    if ((_e = (_d = updateUserStatus === null || updateUserStatus === void 0 ? void 0 : updateUserStatus.data) === null || _d === void 0 ? void 0 : _d.update_users) === null || _e === void 0 ? void 0 : _e.affected_rows) {
         return res.status(200).json({ status: 'success', user: userToSend });
     }
     return res.status(400).json({ status: 'error', message: 'Something went wrong. Please try again later!' });

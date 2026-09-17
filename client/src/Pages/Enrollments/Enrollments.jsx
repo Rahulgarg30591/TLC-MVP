@@ -238,7 +238,7 @@ const Enrollments = () => {
       <Box className={classes.headerTablePagination}>
         <Box className={classes.tableHeader}>
           <TextField
-            placeholder="Search"
+            placeholder="Search name or phone"
             className={classes.searchbar}
             autoComplete="off"
             value={searchValue}

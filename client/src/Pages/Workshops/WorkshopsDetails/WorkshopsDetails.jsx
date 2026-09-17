@@ -183,7 +183,7 @@ function WorkshopsDetails() {
     }
 
     if (mode === 'Participants' && data) {
-      const isEvery = compareTwoArrays(participantsRowData, data, 'email');
+      const isEvery = compareTwoArrays(participantsRowData, data, 'id');
 
       if (!isEvery) {
         setAlertType({
@@ -266,7 +266,7 @@ function WorkshopsDetails() {
       setLeadVolunteersRowData(updatedRow);
     }
     if (row === 'Participants') {
-      const updatedRow = participantsRowData.filter((p) => p.email !== email);
+      const updatedRow = participantsRowData.filter((p) => p.id !== id);
       setParticipantsRowData(updatedRow);
     }
     if (row === 'Meetings') {

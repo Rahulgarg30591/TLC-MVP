@@ -67,8 +67,21 @@ export const fetchRowDataEnrollment = function (enrollment) {
   const fetchWorkshops = enrollment?.workshop_participants?.map(
     (w) => w.workshop
   );
+  const fetchMeetings = enrollment?.meetings_enrollments?.map(
+    (m) => m.meeting
+  );
 
-  return { fetchWorkshops };
+  return { fetchWorkshops, fetchMeetings };
+};
+
+export const normalizeMobile = function (value) {
+  if (!value) return null;
+  let digits = String(value).replace(/\D/g, '');
+  if (digits.startsWith('91') && digits.length === 12) {
+    digits = digits.slice(2);
+  }
+  if (/^[6-9]\d{9}$/.test(digits)) return digits;
+  return null;
 };
 
 export const validateEnrollment = function (body) {
@@ -117,18 +130,24 @@ export const validateEnrollment = function (body) {
       message: 'Date of birth must be in past',
     };
 
-  if (!validator.isMobilePhone(body.mobile_number)) {
+  const mobile = normalizeMobile(body.mobile_number);
+  if (!mobile) {
     return {
       type: 'error',
-      message: 'Please provide a valid mobile number',
+      message: 'Please provide a valid 10-digit mobile number',
     };
   }
+  body.mobile_number = mobile;
 
-  if (!validator.isEmail(body.email)) {
-    return {
-      type: 'error',
-      message: 'Please provide a valid email',
-    };
+  if (body.email && body.email.trim()) {
+    if (!validator.isEmail(body.email.trim())) {
+      return {
+        type: 'error',
+        message: 'Please provide a valid email',
+      };
+    }
+  } else {
+    body.email = '';
   }
 
   if (!body.address.length) {

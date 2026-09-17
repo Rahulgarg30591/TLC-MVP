@@ -88,7 +88,12 @@ export const MeetingPageEnrollmentsColDef = [
   { field: 'gender', headerName: 'Gender', minWidth: 100 },
   { field: 'children', headerName: 'Children', minWidth: 100 },
   { field: 'mobile_number', headerName: 'Phone Number', minWidth: 150 },
-  { field: 'email', headerName: 'Email ID', minWidth: 250 },
+  {
+    field: 'email',
+    headerName: 'Email ID',
+    minWidth: 250,
+    valueGetter: (params) => params.data.email || '-',
+  },
   { field: 'city', headerName: 'City', minWidth: 150 },
 ];
 

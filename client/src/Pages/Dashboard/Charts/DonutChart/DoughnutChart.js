@@ -23,25 +23,25 @@ const DoughnutChart = ({ data }) => {
   const chartRef = useRef(null);
   const [dataObj, setDataObj] = useState({});
   const [chartInstance, setChartInstance] = useState(null);
-  const date = new Date(new Date().setMonth(new Date().getMonth() - 5));
 
   useEffect(() => {
     if (data) {
       const obj = {};
-      for (let i = date.getMonth(); i < date.getMonth() + 6; i++) {
-        let comp;
-        if (i > 12) {
-          comp = i - 12;
-        } else {
-          comp = i;
-        }
+      const now = new Date();
+      for (let i = 5; i >= 0; i--) {
+        const monthDate = new Date(now.getFullYear(), now.getMonth() - i, 1);
+        const monthIndex = monthDate.getMonth();
+        const year = monthDate.getFullYear();
         const count = data?.data?.past_six_months_enrollments?.filter(
           (enrollment) => {
-            const date = new Date(enrollment?.created_at);
-            return date.getMonth() + 1 === comp;
+            const created = new Date(enrollment?.created_at);
+            return (
+              created.getMonth() === monthIndex &&
+              created.getFullYear() === year
+            );
           }
         );
-        obj[`${MONTHS[comp - 1]}`] = count?.length;
+        obj[MONTHS[monthIndex]] = count?.length || 0;
       }
       setDataObj(() => obj);
     }

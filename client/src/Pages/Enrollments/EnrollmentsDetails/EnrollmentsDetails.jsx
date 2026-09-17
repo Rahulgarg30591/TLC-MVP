@@ -21,7 +21,10 @@ import AddChildPopup from '../AddChildPopup/AddChildPopup';
 import AccordionTable from '../../../Components/AccordionTable/AccordionTable';
 import { useParams, useNavigate } from 'react-router-dom';
 import moment from 'moment';
-import { enrollPageWorkshopColDEf } from '../coldefs/coldefs';
+import {
+  enrollPageWorkshopColDEf,
+  enrollPageMeetingColDef,
+} from '../coldefs/coldefs';
 import { getLocationData } from '../../../apis/global';
 import { useReactQuery } from '../../../hooks/useReactQuery';
 import { getEnrollment } from '../../../apis/enrollments';
@@ -55,6 +58,7 @@ function EnrollmentsDetails() {
 
   const [childrenRowData, setChildrenRowData] = useState([]);
   const [workshopsRowData, setWorkshopRowData] = useState([]);
+  const [meetingsRowData, setMeetingsRowData] = useState([]);
 
   const [isView, setIsView] = useState(type === 'view' ? true : false);
   const [viewType, setViewType] = useState(type);
@@ -108,8 +112,10 @@ function EnrollmentsDetails() {
     setState(enrollment?.state || '');
 
     if (viewType !== 'create') {
-      const { fetchWorkshops } = fetchRowDataEnrollment(enrollment);
+      const { fetchWorkshops, fetchMeetings } =
+        fetchRowDataEnrollment(enrollment);
       setWorkshopRowData(fetchWorkshops || []);
+      setMeetingsRowData(fetchMeetings || []);
       setChildrenRowData(enrollment?.children || []);
     }
   }, [enrollment, viewType, isView]);
@@ -134,7 +140,11 @@ function EnrollmentsDetails() {
     },
     onError: (error) => {
       let msg;
-      if (error?.info?.message.includes('Uniqueness violation')) {
+      if (error?.info?.message?.includes('phone number already exists')) {
+        msg = error.info.message;
+      } else if (error?.info?.message?.includes('email already exists')) {
+        msg = error.info.message;
+      } else if (error?.info?.message?.includes('Uniqueness violation')) {
         msg = 'Enrollment already exists';
       }
       setAlertType({
@@ -367,12 +377,12 @@ function EnrollmentsDetails() {
                       onChange={(e) => setPhone(e.target.value)}
                     />
                   </FormControl>
-                  <FormControl className={classes.formControl} required>
+                  <FormControl className={classes.formControl}>
                     <FormLabel htmlFor="emailField">Email Address</FormLabel>
                     <TextField
                       type="email"
                       id="emailField"
-                      placeholder="Enter Your Email Address"
+                      placeholder="Optional"
                       name="email"
                       disabled={isView}
                       value={email}
@@ -505,6 +515,16 @@ function EnrollmentsDetails() {
                 columnDefs={enrollPageWorkshopColDEf}
                 rowData={workshopsRowData}
                 headingName={'workshops'}
+              />
+            </Box>
+            <Box className={classes.workshopHistory}>
+              <Typography className="historyHeading">
+                Meeting History
+              </Typography>
+              <AccordionTable
+                columnDefs={enrollPageMeetingColDef}
+                rowData={meetingsRowData}
+                headingName={'meetings'}
               />
             </Box>
           </Box>
