@@ -3,7 +3,7 @@ import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-quartz.css';
 import { useStyles } from './Table.styles';
 import { Box, Button, CircularProgress, Typography } from '@mui/material';
-import { useContext, useMemo } from 'react';
+import { memo, useCallback, useContext, useMemo, useRef } from 'react';
 import UserContext from '../../store/userContext';
 
 const Table = ({
@@ -21,24 +21,32 @@ const Table = ({
   const classes = useStyles();
   const { user } = useContext(UserContext);
 
-  const onSelectionChanged = () => {
-    const selectedNodes = gridApi.getSelectedNodes();
+  const gridApi = useRef(null);
+
+  const onSelectionChanged = useCallback(() => {
+    const selectedNodes = gridApi.current?.getSelectedNodes?.() || [];
     const selectedData = selectedNodes.map((node) => node.data);
     updateSelectedRows(selectedData);
-  };
+  }, [updateSelectedRows]);
 
-  const gridOptions = {
-    rowSelection: 'multiple',
-    onSelectionChanged: onSelectionChanged,
-    rowHeight: 30,
-    headerHeight: 30,
-    overlayNoRowsTemplate: 'No Records Found',
-  };
-  const defaultColDef = {
-    flex: 1,
-  };
-
-  let gridApi;
+  const gridOptions = useMemo(
+    () => ({
+      rowSelection: 'multiple',
+      onSelectionChanged,
+      rowHeight: 30,
+      headerHeight: 30,
+      overlayNoRowsTemplate: 'No Records Found',
+      animateRows: false,
+      suppressCellFocus: true,
+    }),
+    [onSelectionChanged]
+  );
+  const defaultColDef = useMemo(
+    () => ({
+      flex: 1,
+    }),
+    []
+  );
 
   const handleClickInColumn = function (params) {
     showVerifyStatus(params.data.email);
@@ -80,23 +88,25 @@ const Table = ({
     );
   };
 
-  const modifiedColumnDefs = colDefs.map((colDef) => {
-    if (colDef.field === 'isAdminVerified') {
-      colDef.cellRenderer = IsAdminVerifiedComp;
-    }
-    if (colDef.field === 'lead_volunteers_count')
-      colDef.cellRenderer = InfoTable;
-
-    if (colDef.field === 'volunteers_count') colDef.cellRenderer = InfoTable;
-    if (colDef.field === 'participants_count') colDef.cellRenderer = InfoTable;
-
-    if (colDef.field === 'volunteers') colDef.cellRenderer = InfoTable;
-    if (colDef.field === 'enrollments') colDef.cellRenderer = InfoTable;
-
-    if (colDef.field === 'children') colDef.cellRenderer = InfoTable;
-
-    return colDef;
-  });
+  const modifiedColumnDefs = useMemo(() => {
+    return colDefs.map((colDef) => {
+      const next = { ...colDef };
+      if (next.field === 'isAdminVerified') {
+        next.cellRenderer = IsAdminVerifiedComp;
+      }
+      if (
+        next.field === 'lead_volunteers_count' ||
+        next.field === 'volunteers_count' ||
+        next.field === 'participants_count' ||
+        next.field === 'volunteers' ||
+        next.field === 'enrollments' ||
+        next.field === 'children'
+      ) {
+        next.cellRenderer = InfoTable;
+      }
+      return next;
+    });
+  }, [colDefs, user]);
 
   const isRowSelectable = useMemo(() => {
     return (params) => {
@@ -132,7 +142,7 @@ const Table = ({
           defaultColDef={defaultColDef}
           columnDefs={modifiedColumnDefs}
           gridOptions={gridOptions}
-          onGridReady={(params) => (gridApi = params.api)}
+          onGridReady={(params) => (gridApi.current = params.api)}
           isRowSelectable={isRowSelectable}
           getRowStyle={getRowStyle}
         ></AgGridReact>
@@ -141,4 +151,4 @@ const Table = ({
   );
 };
 
-export default Table;
+export default memo(Table);

@@ -25,8 +25,8 @@ export const meetings = async function ({ signal, queryKey, user }) {
       headers: {
         Authorization: `Bearer ${user.key}`,
       },
-    },
-    signal
+      signal,
+    }
   );
 
   if (!res.ok) {
@@ -43,16 +43,13 @@ export const meetings = async function ({ signal, queryKey, user }) {
 export const getMeeting = async function ({ signal, queryKey, user }) {
   const [id] = queryKey;
 
-  const res = await fetch(
-    `${BASE_URL}/${id}/details`,
-    {
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${user.key}`,
-      },
+  const res = await fetch(`${BASE_URL}/${id}/details`, {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${user.key}`,
     },
-    signal
-  );
+    signal,
+  });
 
   if (!res.ok) {
     const error = new Error('An error occured while fetching the data');

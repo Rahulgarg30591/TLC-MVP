@@ -83,14 +83,12 @@ function AutocompletePopup({
           ? selectedVolunteers
           : selectedParticipants;
 
+      const selectedKeys = new Set(
+        (selected || []).map((row) => row.id ?? row.email)
+      );
       const filtered = dataType?.filter((participant) => {
-        const vols = selected?.filter(
-          (vol) => JSON.stringify(vol) === JSON.stringify(participant)
-        );
-        if (vols.length) {
-          return false;
-        }
-        return true;
+        const key = participant.id ?? participant.email;
+        return !selectedKeys.has(key);
       });
 
       if (mode === 'Meetings') {

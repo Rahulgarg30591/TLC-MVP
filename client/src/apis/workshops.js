@@ -1,17 +1,13 @@
 import moment from 'moment';
 
 import { API_BASE } from './config';
+import { omitEmptyFilters } from './http';
 
 const BASEURL = `${API_BASE}/workshops`;
 
 export const workshops = async function ({ signal, queryKey, user }) {
-  const [page, noOfRecords, filters] = queryKey;
-
-  for (const key in filters) {
-    if (filters[key] === 'all' || filters[key] === '') {
-      delete filters[key];
-    }
-  }
+  const [page, noOfRecords, rawFilters] = queryKey;
+  const filters = omitEmptyFilters(rawFilters);
 
   let pageParam = page ? `?page=${page}` : `?page=${1}`;
   let noOfRecordsParam = noOfRecords ? `&no_of_records=${noOfRecords}` : '';
@@ -38,8 +34,8 @@ export const workshops = async function ({ signal, queryKey, user }) {
       headers: {
         Authorization: `Bearer ${user.key}`,
       },
-    },
-    signal
+      signal,
+    }
   );
 
   if (!res.ok) {
@@ -55,16 +51,13 @@ export const workshops = async function ({ signal, queryKey, user }) {
 
 export const getWorkshop = async function ({ signal, queryKey, user }) {
   const [id] = queryKey;
-  const res = await fetch(
-    `${BASEURL}/${id}/details`,
-    {
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${user.key}`,
-      },
+  const res = await fetch(`${BASEURL}/${id}/details`, {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${user.key}`,
     },
-    signal
-  );
+    signal,
+  });
 
   if (!res.ok) {
     const error = new Error('An error occured while fetching the data');
