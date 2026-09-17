@@ -21,12 +21,8 @@ export const useStyles = makeStyles((theme) => ({
   notUser: {
     minHeight: '100vh',
     background: '#F2F3F4',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
     [theme.breakpoints.down('sm')]: {
       minHeight: 'auto',
-      display: 'block',
     },
   },
 }));

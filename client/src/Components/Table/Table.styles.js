@@ -1,6 +1,11 @@
 import { makeStyles } from '@mui/styles';
 
 export const useStyles = makeStyles((theme) => ({
+  gridContainer: {
+    height: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+  },
   row: {
     fontSize: '14px !important',
   },
@@ -38,6 +43,8 @@ export const useStyles = makeStyles((theme) => ({
     },
   },
   AgGridMain: {
+    flex: 1,
+    minHeight: 0,
     '& .ag-root-wrapper': {
       borderRadius: '0px',
     },
@@ -67,7 +74,7 @@ export const useStyles = makeStyles((theme) => ({
       transition: 'background-color 120ms ease',
     },
     '& .ag-row-hover': {
-      backgroundColor: 'rgba(37, 147, 17, 0.07) !important',
+      backgroundColor: 'rgba(37, 147, 17, 0.14) !important',
       cursor: 'pointer',
     },
 
@@ -118,6 +125,27 @@ export const useStyles = makeStyles((theme) => ({
     color: '#6C6C6C',
     fontSize: '12px',
     fontWeight: '500',
+  },
+
+  nameLink: {
+    color: '#005C8E',
+    fontWeight: '600',
+    cursor: 'pointer',
+    textDecoration: 'underline',
+    textUnderlineOffset: '2px',
+    '&:hover': {
+      color: '#259311',
+    },
+  },
+
+  tableHint: {
+    display: 'block',
+    padding: '6px 12px',
+    fontSize: '11px !important',
+    fontWeight: '500 !important',
+    color: '#6C6C6C',
+    background: '#F7FBF5',
+    borderBottom: '1px solid #DCEBD4',
   },
 
   // customHeaderText: {

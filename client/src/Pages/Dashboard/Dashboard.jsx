@@ -1,7 +1,8 @@
 import { Box, ButtonBase, Divider, Stack, Typography } from '@mui/material';
-import React from 'react';
+import React, { useContext } from 'react';
 import { useStyles } from './Dashboard.styles';
 import { useNavigate } from 'react-router-dom'
+import UserContext from '../../store/userContext';
 import { ReactComponent as EnrollmentColorIcon } from '../.././assets/Icons/enrollmentsColorIcon.svg';
 import { ReactComponent as VolunteerColorIcon } from '../.././assets/Icons/volunteerColorIcon.svg';
 import { ReactComponent as MeetingsColorIcon } from '../.././assets/Icons/meetingsColorIcon.svg';
@@ -14,6 +15,7 @@ import Loader from '../../Components/Loader/Loader';
 
 const Dashboard = () => {
   const nav = useNavigate()
+  const { user } = useContext(UserContext);
   const { data, isPending } = useReactQuery(
     ['dashboard'],
     dashboardDetails
@@ -67,6 +69,16 @@ const Dashboard = () => {
 
   return (
     <Box className={classes.root}>
+      <Box className={classes.welcome}>
+        <Box>
+          <Typography className="welcomeTitle">
+            Welcome back, {user?.name || 'there'}
+          </Typography>
+          <Typography className="welcomeSub">
+            Click a card below, or open an upcoming workshop from the list.
+          </Typography>
+        </Box>
+      </Box>
       <Box className={classes.smallCardContainer}>
         {smallCardData.map((item) => (
           <Stack
@@ -83,6 +95,7 @@ const Dashboard = () => {
                 {item.value.toLocaleString()}
               </Typography>
               <Typography className="cardTitle">{item.title}</Typography>
+              <Typography className="cardCta">Open →</Typography>
             </Box>
           </Stack>
         ))}
@@ -97,9 +110,17 @@ const Dashboard = () => {
           </Box>
         </Box>
         <Box className={classes.bigCard}>
-          <Typography className="bigCardHeading">
-            Upcoming Workshops
-          </Typography>
+          <Box className={classes.bigCardHeadingRow}>
+            <Typography className="bigCardHeading">
+              Upcoming Workshops
+            </Typography>
+            <Typography
+              className="seeAll"
+              onClick={() => nav('/workshops')}
+            >
+              See all
+            </Typography>
+          </Box>
           <Box className={classes.upcominWorkshops}>
             {wkshps?.data?.workshops?.length > 0 ? (
               wkshps?.data?.workshops?.map((workshop) => (

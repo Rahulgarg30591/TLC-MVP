@@ -12,6 +12,24 @@ export const useStyles = makeStyles((theme) => ({
       padding: '20px 8px 13px 8px',
     },
   },
+  welcome: {
+    background: 'linear-gradient(90deg, #1F7A12 0%, #259311 55%, #4E73BE 100%)',
+    borderRadius: '10px',
+    padding: '18px 22px',
+    color: '#FFFFFF',
+    boxShadow: '0 8px 18px rgba(37, 147, 17, 0.28)',
+    '& .welcomeTitle': {
+      fontSize: '20px',
+      fontWeight: '700',
+      lineHeight: 1.3,
+    },
+    '& .welcomeSub': {
+      fontSize: '13px',
+      fontWeight: '500',
+      opacity: 0.92,
+      marginTop: '4px',
+    },
+  },
   smallCardContainer: {
     display: 'flex',
     gap: '20px',
@@ -29,8 +47,8 @@ export const useStyles = makeStyles((theme) => ({
     justifyContent: 'center',
     background: '#FFFFFF',
     width: 'calc(100% / 4)',
-    height: '100px',
-    borderRadius: '5px',
+    height: '118px',
+    borderRadius: '10px',
     gap: '20px',
     boxShadow: 'rgba(109, 109, 109, 0.25) 0px 4px 10px',
     textTransform: 'capitalize',
@@ -58,15 +76,19 @@ export const useStyles = makeStyles((theme) => ({
 
     '&.volunteer': {
       color: '#7EAA55',
+      background: 'linear-gradient(180deg, #FFFFFF 50%, #F1F7EC 100%)',
     },
     '&.enrollment': {
       color: '#DF8244',
+      background: 'linear-gradient(180deg, #FFFFFF 50%, #FBF3EC 100%)',
     },
     '&.meeting': {
       color: '#9580C5',
+      background: 'linear-gradient(180deg, #FFFFFF 50%, #F4F1F9 100%)',
     },
     '&.workshop': {
       color: '#4E73BE',
+      background: 'linear-gradient(180deg, #FFFFFF 50%, #EEF3FA 100%)',
     },
     '& hr': {
       alignSelf: 'center',
@@ -103,13 +125,19 @@ export const useStyles = makeStyles((theme) => ({
       lineHeight: 'normal',
       textAlign: 'center',
     },
+    '& .cardCta': {
+      fontSize: '11px',
+      fontWeight: '700',
+      color: 'currentColor',
+      marginTop: '2px',
+    },
   },
   // big cards
   bigCardContainer: {
     display: 'flex',
     gap: '20px',
     [theme.breakpoints.up('md')]: {
-      height: 'calc(100vh - 224px)',
+      height: 'calc(100vh - 300px)',
     },
     [theme.breakpoints.down('md')]: {
       flexDirection: 'column',
@@ -129,6 +157,21 @@ export const useStyles = makeStyles((theme) => ({
     '& p.bigCardHeading': {
       fontWeight: '600',
       height: '30px',
+    },
+  },
+  bigCardHeadingRow: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    height: '30px',
+    '& .seeAll': {
+      fontSize: '12px',
+      fontWeight: '700',
+      color: '#259311',
+      cursor: 'pointer',
+      '&:hover': {
+        textDecoration: 'underline',
+      },
     },
   },
 

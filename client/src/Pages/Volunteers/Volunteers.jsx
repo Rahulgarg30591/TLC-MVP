@@ -332,6 +332,9 @@ const Volunteers = () => {
             isPending={isPending}
             isError={isError}
             showVerifyStatus={showVerifyStatus}
+            onRowOpen={(row) =>
+              navigate(`/volunteers/detail/${row.email}/view`)
+            }
           />
         </Box>
         <PaginationComp

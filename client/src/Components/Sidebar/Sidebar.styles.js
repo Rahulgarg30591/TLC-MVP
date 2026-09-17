@@ -21,15 +21,14 @@ export const useStyles = makeStyles((theme) => ({
     alignItems: 'flex-start !important',
 
     '& a': {
-      padding: '10px',
+      padding: '10px 12px',
       gap: '15px',
-      height: '35px',
-      borderRadius: '5px',
-      borderLeft: '3px solid transparent',
+      height: '42px',
+      borderRadius: '8px',
       transition:
-        'background-color 160ms ease, border-color 160ms ease, padding 160ms ease',
+        'background-color 160ms ease, color 160ms ease, box-shadow 160ms ease',
       '&:hover': {
-        backgroundColor: 'rgba(37,147,17,0.10)',
+        backgroundColor: 'rgba(37,147,17,0.12)',
       },
     },
     '& .sidebarIcon': {
@@ -44,11 +43,14 @@ export const useStyles = makeStyles((theme) => ({
   },
   navlink: {
     '&.active': {
-      backgroundColor: 'rgba(37,147,17,0.14)',
-      borderLeft: '3px solid #259311',
+      backgroundColor: '#259311',
+      boxShadow: '0 4px 10px rgba(37, 147, 17, 0.28)',
       '& .sidebarText span': {
-        color: '#259311',
-        fontWeight: '600',
+        color: '#FFFFFF',
+        fontWeight: '700',
+      },
+      '& svg': {
+        filter: 'brightness(0) invert(1)',
       },
     },
   },

@@ -78,6 +78,14 @@ function Login() {
           message={alertType.message}
         />
       )}
+      <Box className={classes.brandPanel}>
+        <img className={classes.brandLogo} src={logo} alt="" />
+        <Typography className={classes.brandTitle}>The Last Centre</Typography>
+        <Typography className={classes.brandCopy}>
+          Manage workshops, meetings, volunteers and enrollments in one place.
+        </Typography>
+      </Box>
+      <Box className={classes.formColumn}>
       <Box className={classes.mainWrapper}>
         <img className={classes.logo} src={logo} alt="The Last Center Logo" />
         <Typography className={classes.header}>
@@ -153,6 +161,7 @@ function Login() {
             Continue with Google
           </Button> */}
         </Box>
+      </Box>
       </Box>
     </Box>
   );

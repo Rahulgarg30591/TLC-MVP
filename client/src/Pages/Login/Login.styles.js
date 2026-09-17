@@ -1,11 +1,47 @@
 import { makeStyles } from '@mui/styles';
 export const useStyles = makeStyles((theme) => ({
   root: {
-    height: '100%',
+    minHeight: '100vh',
+    display: 'flex',
+    width: '100%',
+    background: '#F2F3F4',
+  },
+  brandPanel: {
+    display: 'none',
+    [theme.breakpoints.up('md')]: {
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+      width: '42%',
+      padding: '48px',
+      background: 'linear-gradient(165deg, #14570C 0%, #259311 58%, #4E73BE 140%)',
+      color: '#FFFFFF',
+      gap: '16px',
+    },
+  },
+  brandLogo: {
+    width: '140px',
+    background: 'rgba(255,255,255,0.95)',
+    borderRadius: '12px',
+    padding: '8px',
+  },
+  brandTitle: {
+    fontSize: '32px !important',
+    fontWeight: '700 !important',
+    lineHeight: '1.2 !important',
+  },
+  brandCopy: {
+    fontSize: '16px !important',
+    fontWeight: '500 !important',
+    maxWidth: '360px',
+    opacity: 0.92,
+  },
+  formColumn: {
+    flex: 1,
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    width:"100%"
+    padding: '24px',
   },
   mainWrapper: {
     display: 'flex',

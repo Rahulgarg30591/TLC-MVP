@@ -323,6 +323,7 @@ const Workshops = () => {
             showVerifyStatus={showVerifyStatus}
             showDetails={showDetails}
             isError={isError}
+            onRowOpen={(row) => navigate(`/workshops/detail/${row.id}/view`)}
           />
         </Box>
         <PaginationComp

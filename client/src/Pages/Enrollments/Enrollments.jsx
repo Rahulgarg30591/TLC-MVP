@@ -329,6 +329,9 @@ const Enrollments = () => {
             showVerifyStatus={showVerifyStatus}
             showDetails={showDetails}
             isError={isError}
+            onRowOpen={(row) =>
+              navigate(`/enrollments/details/${row.id}/view`)
+            }
           />
         </Box>
         <PaginationComp

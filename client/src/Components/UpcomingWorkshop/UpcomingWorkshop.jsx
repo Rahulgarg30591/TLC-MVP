@@ -3,6 +3,7 @@ import { useStyles } from './UpcomingWorkshop.styles';
 import classNames from 'classnames';
 import CalendarTodayOutlinedIcon from '@mui/icons-material/CalendarTodayOutlined';
 import FmdGoodOutlinedIcon from '@mui/icons-material/FmdGoodOutlined';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { useNavigate } from 'react-router-dom';
 
 const UpcomingWorkshop = ({ id, title, startDate, endDate, location }) => {
@@ -60,6 +61,7 @@ const UpcomingWorkshop = ({ id, title, startDate, endDate, location }) => {
           </Box>
         </Box>
       </Box>
+      <ChevronRightIcon className={classes.chevron} />
     </Box>
   );
 };

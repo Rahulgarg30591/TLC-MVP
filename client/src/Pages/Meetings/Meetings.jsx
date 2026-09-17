@@ -316,6 +316,7 @@ const Meetings = () => {
             showVerifyStatus={showVerifyStatus}
             showDetails={showDetails}
             isError={isError}
+            onRowOpen={(row) => navigate(`/meetings/details/${row.id}/view`)}
           />
         </Box>
         <PaginationComp

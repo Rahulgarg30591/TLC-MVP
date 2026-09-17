@@ -6,13 +6,16 @@ export const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
     gap: '20px',
     cursor: 'pointer',
-    borderRadius: '8px',
-    padding: '8px 10px',
-    margin: '0 -10px',
+    borderRadius: '10px',
+    padding: '10px 12px',
     outline: 'none',
-    transition: 'background-color 160ms ease, transform 160ms ease',
+    background: '#F7FBF5',
+    border: '1px solid #DCEBD4',
+    transition: 'background-color 160ms ease, border-color 160ms ease, box-shadow 160ms ease',
     '&:hover': {
-      backgroundColor: 'rgba(37, 147, 17, 0.08)',
+      backgroundColor: '#EAF6E6',
+      borderColor: '#259311',
+      boxShadow: '0 4px 12px rgba(37, 147, 17, 0.16)',
     },
     '&:active': {
       transform: 'scale(0.995)',
@@ -42,6 +45,8 @@ export const useStyles = makeStyles((theme) => ({
     },
   },
   titleAndInfo: {
+    flex: 1,
+    minWidth: 0,
     [theme.breakpoints.down("sm")]:{
       width:"100%",
     },
@@ -76,5 +81,10 @@ export const useStyles = makeStyles((theme) => ({
       fontSize: '12px',
       fontWeight: '500',
     },
+  },
+  chevron: {
+    marginLeft: 'auto',
+    color: '#259311',
+    fontSize: '22px !important',
   },
 }));

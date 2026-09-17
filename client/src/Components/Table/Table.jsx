@@ -14,6 +14,7 @@ const Table = ({
   colDefs,
   showDetails,
   isError,
+  onRowOpen,
 }) => {
   let rowData;
   if (data) rowData = data;
@@ -38,6 +39,7 @@ const Table = ({
       overlayNoRowsTemplate: 'No Records Found',
       animateRows: false,
       suppressCellFocus: true,
+      rowHeight: 40,
     }),
     [onSelectionChanged]
   );
@@ -88,9 +90,29 @@ const Table = ({
     );
   };
 
+  const NameLink = (params) => (
+    <span
+      className={classes.nameLink}
+      onClick={(e) => {
+        e.stopPropagation();
+        onRowOpen?.(params.data);
+      }}
+    >
+      {params.value}
+    </span>
+  );
+
   const modifiedColumnDefs = useMemo(() => {
     return colDefs.map((colDef) => {
       const next = { ...colDef };
+      if (
+        onRowOpen &&
+        (next.field === 'name' ||
+          next.field === 'types' ||
+          next.field === 'type')
+      ) {
+        next.cellRenderer = NameLink;
+      }
       if (next.field === 'isAdminVerified') {
         next.cellRenderer = IsAdminVerifiedComp;
       }
@@ -106,7 +128,7 @@ const Table = ({
       }
       return next;
     });
-  }, [colDefs, user]);
+  }, [colDefs, user, onRowOpen]);
 
   const isRowSelectable = useMemo(() => {
     return (params) => {
@@ -136,16 +158,30 @@ const Table = ({
         </Box>
       )}
       {data && (
-        <AgGridReact
-          className={classes.AgGridMain}
-          rowData={rowData}
-          defaultColDef={defaultColDef}
-          columnDefs={modifiedColumnDefs}
-          gridOptions={gridOptions}
-          onGridReady={(params) => (gridApi.current = params.api)}
-          isRowSelectable={isRowSelectable}
-          getRowStyle={getRowStyle}
-        ></AgGridReact>
+        <>
+          {onRowOpen && (
+            <Typography className={classes.tableHint}>
+              Click a name or double-click a row to open it
+            </Typography>
+          )}
+          <AgGridReact
+            className={classes.AgGridMain}
+            rowData={rowData}
+            defaultColDef={defaultColDef}
+            columnDefs={modifiedColumnDefs}
+            gridOptions={gridOptions}
+            onGridReady={(params) => (gridApi.current = params.api)}
+            isRowSelectable={isRowSelectable}
+            getRowStyle={getRowStyle}
+            onRowDoubleClicked={(e) => {
+              const target = e.event?.target;
+              if (target?.closest?.('.ag-checkbox, .ag-selection-checkbox')) {
+                return;
+              }
+              onRowOpen?.(e.data);
+            }}
+          ></AgGridReact>
+        </>
       )}
     </Box>
   );
