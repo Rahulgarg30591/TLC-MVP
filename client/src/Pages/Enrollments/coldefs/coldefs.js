@@ -39,19 +39,20 @@ const colDefs = [
     headerName: 'Children',
   },
   {
+    field: 'mobile_number',
+    filter: false,
+    editable: false,
+    minWidth: 150,
+    headerName: 'Phone Number',
+  },
+  {
     field: 'email',
     filter: false,
     editable: false,
     minWidth: 250,
     headerName: 'Email ID',
     cellStyle: { textTransform: 'lowercase' },
-  },
-  {
-    field: 'mobile_number',
-    filter: false,
-    editable: false,
-    minWidth: 150,
-    headerName: 'Phone Number',
+    valueGetter: (params) => params.data.email || '-',
   },
   {
     field: 'state',
@@ -102,6 +103,18 @@ export const enrollPageWorkshopColDEf = [
   {
     field: 'end_date',
     headerName: 'End Date',
+    minWidth: 120,
+    cellRenderer: dateFormatter,
+  },
+];
+
+export const enrollPageMeetingColDef = [
+  { field: 'type', headerName: 'Meeting Type', minWidth: 180 },
+  { field: 'venue', headerName: 'Venue', minWidth: 250 },
+  { field: 'venue_city', headerName: 'City', minWidth: 150 },
+  {
+    field: 'date',
+    headerName: 'Date',
     minWidth: 120,
     cellRenderer: dateFormatter,
   },

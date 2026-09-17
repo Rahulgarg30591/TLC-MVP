@@ -1,4 +1,6 @@
-const BASE_URL = 'https://tlc-mvp-server.vercel.app/user';
+import { API_BASE } from './config';
+
+const BASE_URL = `${API_BASE}/user`;
 
 export const signup = async ({ body }) => {
   const url = `${BASE_URL}/signup`;
@@ -13,7 +15,7 @@ export const signup = async ({ body }) => {
 };
 
 export const signupInvite = async (body) => {
-  const url = `https://tlc-mvp-server.vercel.app/volunteers/inviteSignup`;
+  const url = `${API_BASE}/volunteers/inviteSignup`;
   const response = await fetch(url, {
     method: 'POST',
     headers: {

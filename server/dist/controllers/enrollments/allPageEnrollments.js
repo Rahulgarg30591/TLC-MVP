@@ -72,10 +72,11 @@ const allPageEnrollments = (req, res) => __awaiter(void 0, void 0, void 0, funct
         let phone = value;
         const email = phone.toLowerCase();
         const name = (0, global_1.capitaliseStr)(phone);
+        const digits = String(phone).replace(/\D/g, '');
         filters = Object.assign(Object.assign({}, filters), { _or: [
                 {
-                    email: {
-                        _like: `${email}%`
+                    mobile_number: {
+                        _like: `%${digits || phone}%`
                     }
                 },
                 {
@@ -84,8 +85,8 @@ const allPageEnrollments = (req, res) => __awaiter(void 0, void 0, void 0, funct
                     }
                 },
                 {
-                    mobile_number: {
-                        _like: `${phone}%`
+                    email: {
+                        _like: `${email}%`
                     }
                 },
                 {

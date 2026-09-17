@@ -22,14 +22,21 @@ const login = async (req: Request, res: Response) => {
   };
 
   const data = await getData(query, variables);
-  
-  if (!data?.data.users.length) {
-    return res
-    .status(400)
-    .json({ status: 'error', message: 'User does not exists!' });
+
+  if (data?.errors?.length) {
+    return res.status(500).json({
+      status: 'error',
+      message: 'Database is unavailable. Please try again later.',
+    });
   }
-  
-  const user = data?.data.users[0];
+
+  if (!data?.data?.users?.length) {
+    return res
+      .status(400)
+      .json({ status: 'error', message: 'User does not exists!' });
+  }
+
+  const user = data.data.users[0];
   const decryptedPass = await compare(password, user?.password)
   if (!decryptedPass){  
     return res.status(401).json({

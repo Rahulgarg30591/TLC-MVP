@@ -1,7 +1,9 @@
+import { API_BASE } from './config';
+
 export const dashboardDetails = async ({ user }) => {
   try {
     const response = await fetch(
-      'https://tlc-mvp-server.vercel.app/dashboard',
+      `${API_BASE}/dashboard`,
       {
         method: 'GET',
         headers: {
@@ -21,7 +23,7 @@ export const dashboardDetails = async ({ user }) => {
 export const dashboardWorkshops = async ({ user }) => {
   try {
     const response = await fetch(
-      'https://tlc-mvp-server.vercel.app/workshops?pastOrUpcoming=upcoming&sort_by=start_date',
+      `${API_BASE}/workshops?pastOrUpcoming=upcoming&sort_by=start_date`,
       {
         method: 'GET',
         headers: {

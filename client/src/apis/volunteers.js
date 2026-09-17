@@ -1,4 +1,6 @@
-const BASEURL = 'https://tlc-mvp-server.vercel.app/volunteers';
+import { API_BASE } from './config';
+
+const BASEURL = `${API_BASE}/volunteers`;
 
 export const volunteers = async function ({ signal, queryKey, user }) {
   let [page, noOfRecords, filters] = queryKey;

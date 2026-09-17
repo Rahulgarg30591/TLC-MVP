@@ -1,4 +1,6 @@
-const BASE_URL = 'https://tlc-mvp-server.vercel.app/enrollments';
+import { API_BASE } from './config';
+
+const BASE_URL = `${API_BASE}/enrollments`;
 
 export const enrollments = async function ({ signal, queryKey, user }) {
   const [page, noOfRecords, filters] = queryKey;

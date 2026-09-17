@@ -80,29 +80,30 @@ const allPageEnrollments = async (req: Request, res: Response) => {
     let phone: any = value;
     const email = phone.toLowerCase();
     const name = capitaliseStr(phone);
+    const digits = String(phone).replace(/\D/g, '');
     filters = {
       ...filters,
       _or: [
         {
-          email: {
-            _like: `${email}%`
+          mobile_number: {
+            _like: `%${digits || phone}%`
           }
-        }, 
+        },
         {
           name: {
             _like: `${name}%`
           }
-        }, 
+        },
         {
-          mobile_number: {
-            _like: `${phone}%`
+          email: {
+            _like: `${email}%`
           }
         },
         {
           state: {
             _like: `${name}%`
           }
-        }, 
+        },
         {
           enrolled_by: {
             _like: `${email}%`

@@ -252,7 +252,7 @@ function MeetingsDetails() {
     }
 
     if (row === 'Enrollments') {
-      const updatedRow = enrollmentsRowData.filter((e) => e.email !== email);
+      const updatedRow = enrollmentsRowData.filter((e) => e.id !== id);
       setEnrollmentsRowData(updatedRow);
     }
   };

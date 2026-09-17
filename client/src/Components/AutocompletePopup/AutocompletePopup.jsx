@@ -142,7 +142,7 @@ function AutocompletePopup({
                 ? `${option.type} (${option.venue})`
                 : mode === 'Volunteers'
                 ? `${option.name} (${option.email})`
-                : `${option.name} (${option.email})`
+                : `${option.name} (${option.mobile_number})`
             }
             onChange={(event, selectedElements) => {
               if (mode === 'Meetings')

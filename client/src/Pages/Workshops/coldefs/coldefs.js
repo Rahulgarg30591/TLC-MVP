@@ -106,7 +106,12 @@ export const ParticipantColDef = [
   { field: 'gender', headerName: 'Gender', minWidth: 100 },
   { field: 'children', headerName: 'Children', minWidth: 100 },
   { field: 'mobile_number', headerName: 'Phone Number', minWidth: 150 },
-  { field: 'email', headerName: 'Email ID', minWidth: 250 },
+  {
+    field: 'email',
+    headerName: 'Email ID',
+    minWidth: 250,
+    valueGetter: (params) => params.data.email || '-',
+  },
   { field: 'city', headerName: 'City', minWidth: 150 },
 ];
 
@@ -133,8 +138,8 @@ export const LeadVolunteersPopupColDef = [
 export const ParticipantsPopupColDef = [
   { field: 'name', headerName: 'Name' },
   { field: 'gender', headerName: 'Gender' },
-  { field: 'email', headerName: 'Email ID' },
   { field: 'mobile_number', headerName: 'Phone Number' },
+  { field: 'email', headerName: 'Email ID' },
   { field: 'city', headerName: 'City' },
 ];
 
