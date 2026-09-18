@@ -98,7 +98,6 @@ function Main() {
               minHeight: 0,
               display: 'flex',
               flexDirection: 'column',
-              overflow: 'hidden',
             }}
           >
           <Routes>

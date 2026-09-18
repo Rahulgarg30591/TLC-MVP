@@ -2,18 +2,18 @@ export const formPageShared = (theme) => ({
   root: {
     height: '100%',
     minHeight: 0,
-    overflow: 'hidden',
     position: 'relative',
     background: '#F3F6F1',
     display: 'flex',
     flexDirection: 'column',
     [theme.breakpoints.down('sm')]: {
-      overflow: 'auto',
+      height: 'auto',
     },
   },
   HeaderMainContent: {
     padding: '16px 24px 16px',
-    flex: 1,
+    /* remaining height after the 56px action bar */
+    height: 'calc(100% - 56px)',
     minHeight: 0,
     overflowX: 'hidden',
     overflowY: 'auto',

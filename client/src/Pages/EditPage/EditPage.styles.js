@@ -4,7 +4,6 @@ export const useStyles = makeStyles((theme) => ({
   root: {
     height: '100%',
     minHeight: 0,
-    overflow: 'hidden',
     position: 'relative',
     background: '#F2F3F4',
     display: 'flex',
@@ -13,7 +12,7 @@ export const useStyles = makeStyles((theme) => ({
 
   HeaderMainContent: {
     padding: '16px 20px',
-    flex: 1,
+    height: 'calc(100% - 56px)',
     minHeight: 0,
     overflowX: 'hidden',
     overflowY: 'auto',

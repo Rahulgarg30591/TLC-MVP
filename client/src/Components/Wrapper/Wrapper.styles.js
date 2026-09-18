@@ -2,19 +2,17 @@ import { makeStyles } from '@mui/styles';
 
 export const useStyles = makeStyles((theme) => ({
   root: {
-    height: '100%',
-    overflow: 'hidden',
+    minHeight: '100%',
   },
   main: {
     width: 'calc(100% - 16%)',
+    /* AppBar is 64px and position:fixed, so remaining viewport is 100vh - 64 */
     height: 'calc(100vh - 64px)',
-    height: 'calc(100dvh - 64px)',
     marginLeft: 'auto',
     marginTop: '64px',
-    overflow: 'hidden',
-    minHeight: 0,
     display: 'flex',
     flexDirection: 'column',
+    minHeight: 0,
     '& > *': {
       flex: 1,
       minHeight: 0,
@@ -24,12 +22,12 @@ export const useStyles = makeStyles((theme) => ({
       width: '100%',
     },
     [theme.breakpoints.down('sm')]: {
-      overflow: 'auto',
+      height: 'auto',
+      minHeight: 'calc(100vh - 64px)',
     },
   },
   notUser: {
-    height: '100%',
-    overflow: 'hidden',
+    minHeight: '100%',
     background: '#F3F6F1',
   },
 }));

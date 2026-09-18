@@ -8,12 +8,11 @@ export const useStyles = makeStyles((theme) => ({
     gap: '16px',
     height: '100%',
     minHeight: 0,
-    overflow: 'hidden',
     background: '#F2F3F4',
     animation: 'tlcFadeIn 280ms ease',
     [theme.breakpoints.down('sm')]: {
       padding: '20px 8px 13px 8px',
-      overflow: 'auto',
+      height: 'auto',
     },
   },
   welcome: {
