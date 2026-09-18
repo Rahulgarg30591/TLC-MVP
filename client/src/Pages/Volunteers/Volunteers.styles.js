@@ -1,6 +1,8 @@
 import { makeStyles } from '@mui/styles';
+import { actionButtons } from '../../styles/buttonShared';
 
 export const useStyles = makeStyles((theme) => ({
+  ...actionButtons(theme),
   root: {
     padding: '20px',
     display: 'flex',
@@ -27,39 +29,7 @@ export const useStyles = makeStyles((theme) => ({
       letterSpacing: '-0.02em',
     },
   },
-  ActionBtn: {
-    display: 'flex',
-    gap: '15px',
-    [theme.breakpoints.down('sm')]: {
-      justifyContent: 'flex-end',
-      gap: '6px',
-    },
-    '& button': {
-      height: '30px',
-      minWidth: '75px',
-      padding: '0 10px',
-      borderRadius: '5px',
-      textTransform: 'capitalize',
-      fontSize: '12px',
-      color: '#FFFFFF',
-      boxShadow: '0 1px 3px rgba(0,0,0,0.16)',
-      [theme.breakpoints.down('sm')]: {
-        minWidth: '70px',
-      },
-    },
-    '& button.viewBtn': {
-      background: `${theme.palette.primaryOrange}`,
-    },
-    '& button.deleteBtn': {
-      background: `${theme.palette.primaryRed}`,
-    },
-    '& button.editBtn': {
-      background: `${theme.palette.primaryBlue}`,
-    },
-    '& button.inviteBtn': {
-      background: `${theme.palette.primaryGreen}`,
-    },
-  },
+
   headerTablePagination: {
     boxShadow: '0 10px 28px rgba(31, 61, 20, 0.08)',
     borderRadius: '12px',
@@ -183,15 +153,7 @@ export const useStyles = makeStyles((theme) => ({
       },
     },
   },
-  resetFilterBtn: {
-    '&.MuiButton-root': {
-      textTransform: 'capitalize',
-      fontSize: '12px',
-      height: '30px',
-      background: `${theme.palette.primaryBlue} !important`,
-      color: '#FFFFFF',
-    },
-  },
+
   filterIcon: {
     '&.MuiIconButton-root': {
       borderRadius: '18px',

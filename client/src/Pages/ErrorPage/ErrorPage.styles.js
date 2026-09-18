@@ -31,12 +31,14 @@ export const useStyles = makeStyles((theme) => ({
   },
   errorBtn: {
     '&.MuiButton-root': {
-      height: '30px',
-      fontSize: '12px',
-      textTransform: 'capitalize',
+      height: '40px',
+      fontSize: '13px',
+      textTransform: 'none',
       background: '#259311 !important',
       color: '#FFFFFF',
-      fontWeight: '400',
+      fontWeight: '700',
+      borderRadius: '10px',
+      padding: '0 18px',
     },
   },
 }));

@@ -113,7 +113,8 @@ export const useStyles = makeStyles((theme) => ({
   },
   childActionBtn: {
     '&.MuiIconButton-root': {
-      padding: '0px',
+      padding: '6px',
+      borderRadius: '8px',
     },
     '& svg': {
       fontSize: '20px',

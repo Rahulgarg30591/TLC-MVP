@@ -33,15 +33,32 @@ export const Theme = createTheme({
       },
     },
     MuiButton: {
+      defaultProps: {
+        disableElevation: true,
+      },
       styleOverrides: {
         root: {
+          textTransform: 'none',
+          fontWeight: 700,
+          fontSize: '13px',
+          letterSpacing: '-0.01em',
+          borderRadius: '10px',
+          minHeight: '38px',
+          padding: '8px 16px',
+          boxShadow: 'none',
           transition:
-            'filter 160ms ease, box-shadow 160ms ease, transform 120ms ease, opacity 160ms ease',
+            'box-shadow 160ms ease, transform 120ms ease, opacity 160ms ease, background-color 160ms ease',
           '&:not(:disabled):hover': {
-            filter: 'brightness(0.92)',
+            filter: 'none',
+            boxShadow: '0 8px 18px rgba(31, 61, 20, 0.16)',
+            transform: 'translateY(-1px)',
           },
           '&:not(:disabled):active': {
-            transform: 'translateY(1px)',
+            transform: 'translateY(0)',
+            boxShadow: 'none',
+          },
+          '&.Mui-disabled': {
+            opacity: 0.45,
           },
         },
       },
