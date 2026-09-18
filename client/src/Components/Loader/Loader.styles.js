@@ -30,9 +30,10 @@ export const useStyles = makeStyles((theme) => ({
     },
   },
   logo: {
-    width: '96px',
+    width: '110px',
     height: 'auto',
     objectFit: 'contain',
+    imageRendering: '-webkit-optimize-contrast',
     zIndex: 1,
   },
   label: {
