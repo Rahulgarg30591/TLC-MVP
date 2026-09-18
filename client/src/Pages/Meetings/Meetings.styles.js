@@ -7,11 +7,14 @@ export const useStyles = makeStyles((theme) => ({
     padding: '20px',
     display: 'flex',
     flexDirection: 'column',
-    gap: '20px',
+    gap: '16px',
     height: '100%',
+    minHeight: 0,
+    overflow: 'hidden',
     backgroundColor: '#F2F3F4',
     [theme.breakpoints.down('sm')]: {
       padding: '13px 8px',
+      overflow: 'auto',
     },
     '& .ag-theme-quartz': {
       '--ag-active-color': theme.palette.primaryGreen,
@@ -22,6 +25,7 @@ export const useStyles = makeStyles((theme) => ({
   HeadingAndActionBtn: {
     display: 'flex',
     justifyContent: 'space-between',
+    flexShrink: 0,
     '& h1': {
       fontSize: '22px',
       fontWeight: '700',
@@ -33,17 +37,18 @@ export const useStyles = makeStyles((theme) => ({
   headerTablePagination: {
     boxShadow: '0 10px 28px rgba(31, 61, 20, 0.08)',
     borderRadius: '12px',
-    overflowX: 'hidden',
-    height: '100%',
+    overflow: 'hidden',
+    flex: 1,
+    minHeight: 0,
+    display: 'flex',
+    flexDirection: 'column',
     border: '1px solid #D5E6CE',
     background: '#FFFFFF',
-    [theme.breakpoints.down('sm')]: {
-      height: 'calc(100vh - 94px)',
-    },
   },
   tableContainer: {
-    height: 'calc(100% - 108px)',
-    overflow: 'auto',
+    flex: 1,
+    minHeight: 0,
+    overflow: 'hidden',
     background: '#FFFFFF',
     '&::-webkit-scrollbar': {
       display: 'none',
@@ -54,6 +59,7 @@ export const useStyles = makeStyles((theme) => ({
     background: '#F7FBF5',
     padding: '10px 16px',
     height: '56px',
+    flexShrink: 0,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'flex-start',

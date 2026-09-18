@@ -4,6 +4,7 @@ import Login from '../../Pages/Login/Login';
 import ForgetPassword from '../../Pages/ForgetPassword/ForgetPassword';
 import ResetPassword from '../../Pages/ResetPassword/ResetPassword';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { Box } from '@mui/material';
 import Wrapper from '../Wrapper/Wrapper';
 import UserContext from '../../store/userContext';
 import { logStatus } from '../../apis/user';
@@ -91,6 +92,15 @@ function Main() {
       <BrowserRouter>
         <Wrapper>
           <Suspense fallback={<Loader />}>
+          <Box
+            sx={{
+              height: '100%',
+              minHeight: 0,
+              display: 'flex',
+              flexDirection: 'column',
+              overflow: 'hidden',
+            }}
+          >
           <Routes>
             {!user && !loader && <Route exact path="/" element={<Login />} />}
             {!user && !loader && (
@@ -210,6 +220,7 @@ function Main() {
               <Route exact path="*" element={<ErrorPage />} />
             )}
           </Routes>
+          </Box>
           </Suspense>
         </Wrapper>
       </BrowserRouter>

@@ -7,6 +7,7 @@ export const useStyles = makeStyles((theme) => ({
     gap: '4px',
     justifyContent: 'flex-end',
     height: '52px',
+    flexShrink: 0,
     background: '#F7FBF5',
     padding: '0 16px',
     borderTop: '1px solid #D5E6CE',

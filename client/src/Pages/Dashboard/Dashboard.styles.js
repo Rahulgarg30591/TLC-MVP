@@ -5,14 +5,19 @@ export const useStyles = makeStyles((theme) => ({
     padding: '20px',
     display: 'flex',
     flexDirection: 'column',
-    gap: '20px',
+    gap: '16px',
+    height: '100%',
+    minHeight: 0,
+    overflow: 'hidden',
     background: '#F2F3F4',
     animation: 'tlcFadeIn 280ms ease',
     [theme.breakpoints.down('sm')]: {
       padding: '20px 8px 13px 8px',
+      overflow: 'auto',
     },
   },
   welcome: {
+    flexShrink: 0,
     background: 'linear-gradient(90deg, #1F7A12 0%, #259311 55%, #4E73BE 100%)',
     borderRadius: '10px',
     padding: '18px 22px',
@@ -33,6 +38,7 @@ export const useStyles = makeStyles((theme) => ({
   smallCardContainer: {
     display: 'flex',
     gap: '20px',
+    flexShrink: 0,
     [theme.breakpoints.between('sm', 'md')]: {
       flexWrap: 'wrap',
     },
@@ -136,11 +142,11 @@ export const useStyles = makeStyles((theme) => ({
   bigCardContainer: {
     display: 'flex',
     gap: '20px',
-    [theme.breakpoints.up('md')]: {
-      height: 'calc(100vh - 300px)',
-    },
+    flex: 1,
+    minHeight: 0,
     [theme.breakpoints.down('md')]: {
       flexDirection: 'column',
+      overflow: 'auto',
     },
   },
   bigCard: {

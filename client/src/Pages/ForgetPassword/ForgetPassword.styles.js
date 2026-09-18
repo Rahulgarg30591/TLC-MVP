@@ -3,10 +3,12 @@ import { makeStyles } from '@mui/styles';
 export const useStyles = makeStyles((theme) => ({
   root: {
     height: '100%',
+    minHeight: 0,
+    overflowY: 'auto',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    width:"100%"
+    width: '100%',
   },
   mainWrapper: {
     display: 'flex',

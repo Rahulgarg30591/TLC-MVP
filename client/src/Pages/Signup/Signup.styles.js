@@ -2,9 +2,11 @@ import { makeStyles } from '@mui/styles';
 
 export const useStyles = makeStyles((theme) => ({
   root: {
-    minHeight: '100vh',
+    height: '100%',
+    minHeight: 0,
     display: 'flex',
     width: '100%',
+    overflow: 'hidden',
     background: '#F3F6F1',
     alignItems: 'stretch',
   },
@@ -20,9 +22,8 @@ export const useStyles = makeStyles((theme) => ({
         'linear-gradient(165deg, #0F3F0A 0%, #1F7A12 48%, #259311 78%, #3D7AB8 130%)',
       color: '#FFFFFF',
       gap: '18px',
-      position: 'sticky',
-      top: 0,
-      height: '100vh',
+      position: 'relative',
+      height: '100%',
       overflow: 'hidden',
     },
   },
@@ -90,10 +91,12 @@ export const useStyles = makeStyles((theme) => ({
   },
   formColumn: {
     flex: 1,
+    minHeight: 0,
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'flex-start',
     padding: '32px 24px',
+    overflowY: 'auto',
     animation: 'tlcFadeIn 500ms ease both',
   },
   mainWrapper: {

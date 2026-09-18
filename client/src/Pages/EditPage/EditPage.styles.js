@@ -3,17 +3,19 @@ import { makeStyles } from '@mui/styles';
 export const useStyles = makeStyles((theme) => ({
   root: {
     height: '100%',
+    minHeight: 0,
+    overflow: 'hidden',
     position: 'relative',
     background: '#F2F3F4',
-    [theme.breakpoints.down('sm')]: {
-      paddingBottom: '5px',
-      minHeight: '100vh',
-    },
+    display: 'flex',
+    flexDirection: 'column',
   },
 
   HeaderMainContent: {
-    padding: '20px',
-    height: 'calc(100% - 45px )',
+    padding: '16px 20px',
+    flex: 1,
+    minHeight: 0,
+    overflowX: 'hidden',
     overflowY: 'auto',
     display: 'flex',
     flexDirection: 'column',
@@ -30,16 +32,16 @@ export const useStyles = makeStyles((theme) => ({
   },
   actionBar: {
     background: '#FFFFFF',
-    position: 'absolute',
-    bottom: '0',
-    height: '45px',
+    position: 'relative',
+    flexShrink: 0,
+    height: '56px',
     width: '100%',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'flex-end',
     padding: '0 25px',
     gap: '15px',
-    boxShadow: '-4px 0px 5px 0px rgba(0, 0, 0, 0.25)',
+    boxShadow: '0 -8px 24px rgba(27, 59, 20, 0.06)',
     [theme.breakpoints.down('sm')]: {
       position: 'static',
       boxShadow: 'none',

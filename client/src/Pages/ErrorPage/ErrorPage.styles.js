@@ -9,7 +9,6 @@ export const useStyles = makeStyles((theme) => ({
     gap: '40px',
     [theme.breakpoints.down('sm')]: {
       background: '#fff',
-      marginTop: '50px',
     },
   },
   errorHeadingText: {

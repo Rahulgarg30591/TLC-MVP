@@ -1,16 +1,21 @@
 export const formPageShared = (theme) => ({
   root: {
     height: '100%',
+    minHeight: 0,
+    overflow: 'hidden',
     position: 'relative',
     background: '#F3F6F1',
+    display: 'flex',
+    flexDirection: 'column',
     [theme.breakpoints.down('sm')]: {
-      paddingBottom: '5px',
-      minHeight: '100vh',
+      overflow: 'auto',
     },
   },
   HeaderMainContent: {
-    padding: '20px 24px 28px',
-    height: 'calc(100% - 56px)',
+    padding: '16px 24px 16px',
+    flex: 1,
+    minHeight: 0,
+    overflowX: 'hidden',
     overflowY: 'auto',
     display: 'flex',
     flexDirection: 'column',
@@ -18,7 +23,6 @@ export const formPageShared = (theme) => ({
     animation: 'tlcFadeIn 280ms ease',
     [theme.breakpoints.down('sm')]: {
       padding: '12px',
-      height: 'auto',
     },
   },
   pageIntro: {
@@ -41,8 +45,8 @@ export const formPageShared = (theme) => ({
   },
   actionBar: {
     background: '#FFFFFF',
-    position: 'absolute',
-    bottom: 0,
+    position: 'relative',
+    flexShrink: 0,
     height: '56px',
     width: '100%',
     display: 'flex',

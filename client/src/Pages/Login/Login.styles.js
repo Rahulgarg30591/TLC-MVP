@@ -1,9 +1,11 @@
 import { makeStyles } from '@mui/styles';
 export const useStyles = makeStyles((theme) => ({
   root: {
-    minHeight: '100vh',
+    height: '100%',
+    minHeight: 0,
     display: 'flex',
     width: '100%',
+    overflow: 'hidden',
     background: '#F3F6F1',
   },
   brandPanel: {
@@ -96,10 +98,12 @@ export const useStyles = makeStyles((theme) => ({
   },
   formColumn: {
     flex: 1,
+    minHeight: 0,
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
     padding: '32px 24px',
+    overflowY: 'auto',
     animation: 'tlcFadeIn 500ms ease both',
   },
   mainWrapper: {
