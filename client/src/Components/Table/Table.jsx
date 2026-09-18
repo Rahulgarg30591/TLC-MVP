@@ -2,9 +2,17 @@ import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-quartz.css';
 import { useStyles } from './Table.styles';
-import { Box, Button, CircularProgress, Typography } from '@mui/material';
+import { Box, Button, Typography } from '@mui/material';
 import { memo, useCallback, useContext, useMemo, useRef } from 'react';
 import UserContext from '../../store/userContext';
+
+const initialsFrom = (value) => {
+  if (!value || typeof value !== 'string') return '?';
+  const parts = value.trim().split(/\s+/).filter(Boolean);
+  if (!parts.length) return '?';
+  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+  return (parts[0][0] + parts[1][0]).toUpperCase();
+};
 
 const Table = ({
   data,
@@ -16,12 +24,9 @@ const Table = ({
   isError,
   onRowOpen,
 }) => {
-  let rowData;
-  if (data) rowData = data;
-
+  const rowData = data || [];
   const classes = useStyles();
   const { user } = useContext(UserContext);
-
   const gridApi = useRef(null);
 
   const onSelectionChanged = useCallback(() => {
@@ -30,77 +35,61 @@ const Table = ({
     updateSelectedRows(selectedData);
   }, [updateSelectedRows]);
 
-  const gridOptions = useMemo(
-    () => ({
-      rowSelection: 'multiple',
-      onSelectionChanged,
-      rowHeight: 30,
-      headerHeight: 30,
-      overlayNoRowsTemplate: 'No Records Found',
-      animateRows: false,
-      suppressCellFocus: true,
-      rowHeight: 40,
-    }),
-    [onSelectionChanged]
-  );
-  const defaultColDef = useMemo(
-    () => ({
-      flex: 1,
-    }),
-    []
-  );
-
   const handleClickInColumn = function (params) {
     showVerifyStatus(params.data.email);
   };
 
   const IsAdminVerifiedComp = (params) => {
-    const classes = useStyles();
-    return (
-      <>
-        {params.value ? (
-          <Typography className={classes.verified}>Verified</Typography>
-        ) : (
-          <Button
-            className={classes.pending}
-            onClick={
-              user?.isAdmin ? () => handleClickInColumn(params) : () => { }
-            }
-            sx={{
-              cursor: user?.isAdmin ? 'pointer' : 'default',
-            }}
-            disableRipple
-          >
-            Pending
-          </Button>
-        )}
-      </>
+    return params.value ? (
+      <Typography className={classes.verified}>Verified</Typography>
+    ) : (
+      <Button
+        className={classes.pending}
+        onClick={
+          user?.isAdmin ? () => handleClickInColumn(params) : () => {}
+        }
+        sx={{
+          cursor: user?.isAdmin ? 'pointer' : 'default',
+        }}
+        disableRipple
+      >
+        Pending
+      </Button>
     );
   };
 
-  const InfoTable = (params) => {
-    const classes = useStyles();
-
-    return (
-      <>
-        <p className={classes.count} onClick={() => showDetails(params)}>
-          {params.value}
-        </p>
-      </>
-    );
-  };
-
-  const NameLink = (params) => (
-    <span
-      className={classes.nameLink}
-      onClick={(e) => {
-        e.stopPropagation();
-        onRowOpen?.(params.data);
-      }}
-    >
-      {params.value}
+  const CountChip = (params) => (
+    <span className={classes.count} onClick={() => showDetails(params)}>
+      {params.value ?? 0}
     </span>
   );
+
+  const NameCell = (params) => {
+    const label = params.value || '—';
+    return (
+      <span
+        className={classes.nameCell}
+        onClick={(e) => {
+          e.stopPropagation();
+          onRowOpen?.(params.data);
+        }}
+      >
+        <span className={classes.avatar}>{initialsFrom(label)}</span>
+        <span className={classes.nameText}>{label}</span>
+      </span>
+    );
+  };
+
+  const GenderPill = (params) => {
+    const value = (params.value || '').toString().toLowerCase();
+    const kind =
+      value === 'female' ? 'female' : value === 'male' ? 'male' : 'other';
+    return (
+      <span className={`${classes.pill} ${kind}`}>
+        {params.value || '—'}
+      </span>
+    );
+  };
 
   const modifiedColumnDefs = useMemo(() => {
     return colDefs.map((colDef) => {
@@ -111,7 +100,10 @@ const Table = ({
           next.field === 'types' ||
           next.field === 'type')
       ) {
-        next.cellRenderer = NameLink;
+        next.cellRenderer = NameCell;
+      }
+      if (next.field === 'gender') {
+        next.cellRenderer = GenderPill;
       }
       if (next.field === 'isAdminVerified') {
         next.cellRenderer = IsAdminVerifiedComp;
@@ -124,7 +116,7 @@ const Table = ({
         next.field === 'enrollments' ||
         next.field === 'children'
       ) {
-        next.cellRenderer = InfoTable;
+        next.cellRenderer = CountChip;
       }
       return next;
     });
@@ -132,22 +124,49 @@ const Table = ({
 
   const isRowSelectable = useMemo(() => {
     return (params) => {
-      return !!params.data && params.data.email !== user.email;
+      return !!params.data && params.data.email !== user?.email;
     };
   }, [user]);
 
   const getRowStyle = (params) => {
-    if (params.data.email === user.email) {
-      return { background: '#f5f5f5', fontWeight: 'bold' }; // Apply specific styles to the row
+    if (params.data?.email && params.data.email === user?.email) {
+      return { background: '#F3F6F1', fontWeight: 600 };
     }
-    return null; // Return null to apply default styles
+    return null;
   };
+
+  const defaultColDef = useMemo(
+    () => ({
+      flex: 1,
+      sortable: true,
+      resizable: true,
+      suppressMovable: true,
+    }),
+    []
+  );
+
+  const gridOptions = useMemo(
+    () => ({
+      rowSelection: 'multiple',
+      onSelectionChanged,
+      headerHeight: 46,
+      rowHeight: 52,
+      overlayNoRowsTemplate:
+        '<div style="text-align:center;color:#6C6C6C"><div style="font-weight:600;color:#2F2F2F;margin-bottom:4px">Nothing to show</div><div>Try a different search or filter</div></div>',
+      animateRows: true,
+      suppressCellFocus: true,
+      suppressRowClickSelection: true,
+    }),
+    [onSelectionChanged]
+  );
 
   return (
     <Box className={`ag-theme-quartz ${classes.gridContainer}`}>
       {isPending && (
-        <Box className={classes.tableSkeleton}>
-          <CircularProgress className="circularProgress" />
+        <Box className={classes.skeletonWrap}>
+          {Array.from({ length: 8 }).map((_, i) => (
+            <Box key={i} className={classes.skeletonRow} />
+          ))}
         </Box>
       )}
       {isError && (
@@ -157,11 +176,11 @@ const Table = ({
           </Typography>
         </Box>
       )}
-      {data && (
+      {!isPending && !isError && data && (
         <>
           {onRowOpen && (
             <Typography className={classes.tableHint}>
-              Click a name or double-click a row to open it
+              Click a name to open · checkbox to select · double-click a row
             </Typography>
           )}
           <AgGridReact

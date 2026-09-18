@@ -9,7 +9,9 @@ import {
   Select,
   TextField,
   Typography,
+  InputAdornment,
 } from '@mui/material';
+import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import { useStyles } from './Enrollments.styles';
 import Table from '../../Components/Table/Table';
 import { useReactQuery } from '../../hooks/useReactQuery';
@@ -244,6 +246,13 @@ const Enrollments = () => {
             value={searchValue}
             onChange={(e) => {
               setSearchValue(e.target.value);
+            }}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchOutlinedIcon sx={{ fontSize: 18, color: '#6C6C6C' }} />
+                </InputAdornment>
+              ),
             }}
           />
           <IconButton

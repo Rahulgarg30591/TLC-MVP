@@ -21,9 +21,10 @@ export const useStyles = makeStyles((theme) => ({
     display: 'flex',
     justifyContent: 'space-between',
     '& h1': {
-      fontSize: '18px',
-      fontWeight: '600',
-      height: '30px',
+      fontSize: '22px',
+      fontWeight: '700',
+      height: 'auto',
+      letterSpacing: '-0.02em',
     },
   },
   ActionBtn: {
@@ -61,16 +62,18 @@ export const useStyles = makeStyles((theme) => ({
   },
 
   headerTablePagination: {
-    boxShadow: '0px 4px 10px 0px rgba(109, 109, 109, 0.25)',
-    borderRadius: '5px',
+    boxShadow: '0 10px 28px rgba(31, 61, 20, 0.08)',
+    borderRadius: '12px',
     overflowX: 'hidden',
     height: '100%',
+    border: '1px solid #D5E6CE',
+    background: '#FFFFFF',
     [theme.breakpoints.down('sm')]: {
       height: 'calc(100vh - 94px)',
     },
   },
   tableContainer: {
-    height: 'calc(100% - 80px)',
+    height: 'calc(100% - 108px)',
     overflow: 'auto',
     background: '#FFFFFF',
     '&::-webkit-scrollbar': {
@@ -78,13 +81,13 @@ export const useStyles = makeStyles((theme) => ({
     },
   },
   tableHeader: {
-    borderBottom: `1px solid ${theme.palette.primaryGreen}`,
-    background: '#FFFFFF',
-    padding: '0 20px',
-    height: '40px',
+    borderBottom: '1px solid #D5E6CE',
+    background: '#F7FBF5',
+    padding: '10px 16px',
+    height: '56px',
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'flex-end',
+    justifyContent: 'flex-start',
     gap: '10px',
 
     '& .MuiIconButton-root': {
@@ -93,15 +96,17 @@ export const useStyles = makeStyles((theme) => ({
   },
   // search bar
   searchbar: {
+    flex: 1,
+    maxWidth: '380px',
     '& .MuiInputBase-formControl': {
-      border: '1px solid #6C6C6C',
-      borderRadius: '5px',
+      border: '1px solid #D0DCCB',
+      borderRadius: '24px',
       paddingRight: '10px',
-      height: '28px',
+      height: '36px',
       backgroundColor: '#ffffff',
       '& input': {
-        fontSize: '12px',
-        padding: '6px 10px',
+        fontSize: '13px',
+        padding: '8px 4px',
       },
       '& fieldset': {
         display: 'none',
@@ -110,11 +115,12 @@ export const useStyles = makeStyles((theme) => ({
   },
   filterIcon: {
     '&.MuiIconButton-root': {
-      height: '100%',
-      borderRadius: '5px',
-      padding: '2px',
-      height: '28px',
-      border: '1px solid #6C6C6C',
+      borderRadius: '18px',
+      padding: '6px',
+      height: '36px',
+      width: '36px',
+      border: '1px solid #D0DCCB',
+      background: '#FFFFFF',
     },
   },
   // filter selectbox
