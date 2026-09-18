@@ -91,8 +91,7 @@ function Login() {
       <Box className={classes.brandPanel}>
         <span className={`${classes.blob} blobA`} />
         <span className={`${classes.blob} blobB`} />
-        <img className={classes.brandLogo} src={logo} alt="" />
-        <Typography className={classes.brandTitle}>The Last Centre</Typography>
+        <img className={classes.brandLogo} src={logo} alt="The Last Centre" />
         <Typography className={classes.brandCopy}>
           One place for workshops, meetings, volunteers and enrollments.
         </Typography>

@@ -77,3 +77,9 @@ body {
     box-shadow: 0 10px 28px rgba(37, 147, 17, 0.42);
   }
 }
+
+@keyframes tlcSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}

@@ -45,15 +45,19 @@ export const useStyles = makeStyles((theme) => ({
     },
   },
   brandLogo: {
-    width: '132px',
-    background: 'rgba(255,255,255,0.96)',
-    borderRadius: '16px',
-    padding: '10px',
+    width: 'min(360px, 86%)',
+    height: 'auto',
+    display: 'block',
+    background: '#FFFFFF',
+    borderRadius: '24px',
+    padding: '22px 28px',
+    objectFit: 'contain',
+    boxShadow: '0 18px 40px rgba(0, 0, 0, 0.18)',
     animation: 'tlcSlideUp 500ms ease both',
     zIndex: 1,
   },
   brandTitle: {
-    fontSize: '36px !important',
+    fontSize: '28px !important',
     fontWeight: '800 !important',
     lineHeight: '1.15 !important',
     letterSpacing: '-0.03em !important',
@@ -119,7 +123,7 @@ export const useStyles = makeStyles((theme) => ({
     },
   },
   logo: {
-    width: '108px',
+    width: '168px',
     objectFit: 'contain',
   },
   headingBlock: {
