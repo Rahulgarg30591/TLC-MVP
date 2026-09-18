@@ -334,6 +334,20 @@ function WorkshopsDetails() {
               prevPage={'workshops'}
               path={'workshops'}
             />
+            <Box className={classes.pageIntro}>
+              <Typography className="introTitle">
+                {viewType === 'create'
+                  ? 'New workshop'
+                  : viewType === 'edit'
+                  ? 'Edit workshop'
+                  : 'Workshop details'}
+              </Typography>
+              <Typography className="introSub">
+                {viewType === 'view'
+                  ? 'Review this workshop. Use Edit if you need to change it.'
+                  : 'Set type, venue and dates, then add volunteers and participants.'}
+              </Typography>
+            </Box>
             <Box className={classes.mainContent}>
               {/* workshop type */}
               <Box className={classes.formElementBox}>

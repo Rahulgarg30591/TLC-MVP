@@ -3,9 +3,10 @@ import { makeStyles } from '@mui/styles';
 export const useStyles = makeStyles((theme) => ({
   root: {
     '& .pageHeading': {
-      fontSize: '18px',
-      fontWeight: '600',
+      fontSize: '15px',
+      fontWeight: '700',
       textTransform: 'capitalize',
+      color: '#3D5A36',
     },
   },
   breadCrumbs: {

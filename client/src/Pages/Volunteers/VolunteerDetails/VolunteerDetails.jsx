@@ -182,6 +182,16 @@ function VolunteerDetails() {
               prevPage={'volunteers'}
               path={'volunteers'}
             />
+            <Box className={classes.pageIntro}>
+              <Typography className="introTitle">
+                {type === 'edit' ? 'Edit volunteer' : 'Volunteer details'}
+              </Typography>
+              <Typography className="introSub">
+                {type === 'view'
+                  ? 'Review this volunteer. Use Edit if you need to change it.'
+                  : 'Update role or profile fields, then save.'}
+              </Typography>
+            </Box>
             <Box className={classes.mainContent}>
               {/*  PERSONAL INFORMATION*/}
               <Box className={classes.HeadingAndElementBox}>

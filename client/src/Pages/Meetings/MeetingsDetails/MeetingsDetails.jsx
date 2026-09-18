@@ -293,6 +293,20 @@ function MeetingsDetails() {
               prevPage={'Meetings'}
               path={'meetings'}
             />
+            <Box className={classes.pageIntro}>
+              <Typography className="introTitle">
+                {viewType === 'create'
+                  ? 'New meeting'
+                  : viewType === 'edit'
+                  ? 'Edit meeting'
+                  : 'Meeting details'}
+              </Typography>
+              <Typography className="introSub">
+                {viewType === 'view'
+                  ? 'Review this meeting. Use Edit if you need to change it.'
+                  : 'Choose a type and workshop, then add volunteers and enrollments.'}
+              </Typography>
+            </Box>
             <Box className={classes.mainContent}>
               {/* meeting type and workshop autocomplete  */}
               <Box className={classes.formElementBox}>

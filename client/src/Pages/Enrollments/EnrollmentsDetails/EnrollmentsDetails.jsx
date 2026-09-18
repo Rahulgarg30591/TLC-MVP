@@ -301,6 +301,20 @@ function EnrollmentsDetails() {
               prevPage={'Enrollments'}
               path={'enrollments'}
             />
+            <Box className={classes.pageIntro}>
+              <Typography className="introTitle">
+                {viewType === 'create'
+                  ? 'New enrollment'
+                  : viewType === 'edit'
+                  ? 'Edit enrollment'
+                  : 'Enrollment details'}
+              </Typography>
+              <Typography className="introSub">
+                {viewType === 'view'
+                  ? 'Review this record. Use Edit if you need to change it.'
+                  : 'Phone is required. Email is optional. Save when you are done.'}
+              </Typography>
+            </Box>
             <Box className={classes.mainContent}>
               {/*  PERSONAL INFORMATION*/}
               <Box className={classes.HeadingAndElementBox}>
