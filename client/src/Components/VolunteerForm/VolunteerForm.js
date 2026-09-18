@@ -10,6 +10,7 @@ import {
   TextField,
   Typography,
   Button,
+  CircularProgress,
 } from '@mui/material';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -342,8 +343,17 @@ function VolunteerForm({ submit, isRole = false, isPending, isEmail }) {
         </Box>
       </Box>
       <Box className={classes.signUpBtn_loginLink}>
-        <Button disableRipple className={classes.signUpBtn} type="submit">
-          {isPending ? 'loading...' : 'Sign up'}
+        <Button
+          disableRipple
+          className={classes.signUpBtn}
+          type="submit"
+          disabled={isPending}
+        >
+          {isPending ? (
+            <CircularProgress size={18} color="inherit" />
+          ) : (
+            'Create account'
+          )}
         </Button>
       </Box>
     </form>

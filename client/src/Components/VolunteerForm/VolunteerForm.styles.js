@@ -4,31 +4,40 @@ export const useStyles = makeStyles((theme) => ({
   form: {
     display: 'flex',
     flexDirection: 'column',
-    gap: '40px',
+    gap: '22px',
   },
   formHeaderSection: {
     display: 'flex',
     flexDirection: 'column',
-    gap: '20px',
+    gap: '16px',
+    padding: '16px',
+    borderRadius: '14px',
+    border: '1px solid #E7EEE3',
+    background: '#FBFDF9',
     '& .formIconAndHeader': {
       display: 'flex',
       alignItems: 'center',
-      gap: '5px',
+      gap: '8px',
+      paddingBottom: '8px',
+      borderBottom: '1px solid #E7EEE3',
       '& p': {
-        fontWeight: '500',
-        fontSize: '16px',
+        fontWeight: '700',
+        fontSize: '12px',
+        letterSpacing: '0.06em',
+        textTransform: 'uppercase',
+        color: '#3D5A36',
         lineHeight: 'normal',
       },
       '& svg': {
-        width: '20px',
-        height: '20px',
-        color: '#2F2F2F',
+        width: '18px',
+        height: '18px',
+        color: '#259311',
       },
     },
   },
   formElementBox: {
     display: 'flex',
-    gap: '20px',
+    gap: '16px',
     [theme.breakpoints.down('sm')]: {
       flexDirection: 'column',
     },
@@ -36,25 +45,29 @@ export const useStyles = makeStyles((theme) => ({
   formControl: {
     width: '100%',
     display: 'flex',
-    gap: '5px',
-
+    gap: '6px',
     '& label': {
-      fontWeight: '500',
-      fontSize: '14px',
+      fontWeight: '600',
+      fontSize: '13px',
       color: '#2F2F2F !important',
       '& .MuiFormLabel-asterisk': {
         color: theme.palette.primaryRed,
       },
     },
     '& .MuiInputBase-formControl': {
-      border: '1px solid #C6C6C6',
-      borderRadius: '5px',
+      border: '1px solid #D5E0D0',
+      borderRadius: '12px',
       paddingRight: '10px',
-      height: '40px',
-      backgroundColor: '#ffffff',
+      height: '44px',
+      backgroundColor: '#FFFFFF',
+      transition:
+        'border-color 160ms ease, box-shadow 160ms ease, background-color 160ms ease',
+      '&:hover': {
+        borderColor: '#B7CDB0',
+      },
       '& input': {
         fontSize: '14px',
-        padding: '6px 10px',
+        padding: '8px 12px',
         '&:-webkit-autofill': {
           '-webkit-box-shadow': '0 0 0 100px white inset',
         },
@@ -62,7 +75,6 @@ export const useStyles = makeStyles((theme) => ({
       '& fieldset': {
         display: 'none',
       },
-
       '& .MuiInputAdornment-root button': {
         padding: '0px',
         margin: '0px',
@@ -80,7 +92,7 @@ export const useStyles = makeStyles((theme) => ({
   selectBox: {
     fontSize: '14px !important',
     '& .MuiSelect-select': {
-      paddingLeft: '10px !important',
+      paddingLeft: '12px !important',
     },
     '& svg': {
       color: '#2F2F2F',
@@ -90,20 +102,19 @@ export const useStyles = makeStyles((theme) => ({
     },
   },
   selectDropdownMenu: {
-    boxShadow: 'rgba(0, 0, 0, 0.24) 0px 3px 8px !important',
+    boxShadow: '0 12px 28px rgba(27, 59, 20, 0.12) !important',
     maxHeight: '200px !important',
-    borderRadius: '5px !important',
+    borderRadius: '12px !important',
     [theme.breakpoints.down('sm')]: {
       transform: 'translateX(-8px) !important',
     },
-
     '& ul': {
-      padding: '5px 0px',
+      padding: '6px 0px',
       '& li': {
-        padding: '5px 10px',
+        padding: '8px 12px',
         fontSize: '14px',
         '&.Mui-selected': {
-          background: '#F2F3F4 !important',
+          background: '#EAF6E6 !important',
         },
         '& span': {
           display: 'none',
@@ -115,34 +126,46 @@ export const useStyles = makeStyles((theme) => ({
     },
   },
   signUpBtn: {
-    height: '40px',
-    borderRadius: '5px !important',
-    textTransform: 'capitalize !important',
+    height: '46px',
+    borderRadius: '12px !important',
+    textTransform: 'none !important',
     backgroundColor: '#259311 !important',
     color: '#ffffff !important',
-    fontWeight: '400 !important',
-
+    fontWeight: '700 !important',
+    fontSize: '15px !important',
+    position: 'relative',
+    overflow: 'hidden',
+    '&::after': {
+      content: '""',
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      width: '40%',
+      height: '100%',
+      background:
+        'linear-gradient(90deg, transparent, rgba(255,255,255,0.28), transparent)',
+      animation: 'tlcShine 2.6s ease-in-out infinite',
+    },
     '&:hover': {
-      [theme.breakpoints.up('md')]: {
-        opacity: '.9',
-      },
+      backgroundColor: '#1F7A12 !important',
+      filter: 'none',
     },
   },
   signUpBtn_loginLink: {
     display: 'flex',
     flexDirection: 'column',
-    gap: '15px',
+    gap: '12px',
   },
   borderClass: {
-    border: '1px solid #C6C6C6',
-    height: '40px',
+    border: '1px solid #D5E0D0',
+    height: '44px',
     fontSize: '14px',
     fontWeight: '400',
     display: 'flex',
     alignItems: 'center',
-    paddingLeft: '10px',
-    borderRadius: '5px',
-    background: '#E0E0E0',
+    paddingLeft: '12px',
+    borderRadius: '12px',
+    background: '#EEF2EB',
     color: '#696969',
   },
 }));
