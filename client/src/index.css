@@ -26,3 +26,54 @@ body {
     background-position: -100% 0;
   }
 }
+
+@keyframes tlcNavIn {
+  from {
+    opacity: 0;
+    transform: translateX(-14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes tlcSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes tlcFloat {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(18px, -14px) scale(1.08);
+  }
+}
+
+@keyframes tlcShine {
+  0% {
+    transform: translateX(-120%);
+  }
+  100% {
+    transform: translateX(220%);
+  }
+}
+
+@keyframes tlcPulseSoft {
+  0%,
+  100% {
+    box-shadow: 0 8px 24px rgba(37, 147, 17, 0.28);
+  }
+  50% {
+    box-shadow: 0 10px 28px rgba(37, 147, 17, 0.42);
+  }
+}
