@@ -305,7 +305,9 @@ List query params used by the client: `page`, `no_of_records`, `value` (search),
 
 ### `users`
 
-`id`, `name`, `email`, `password`, `token`, `dob`, `gender`, `phoneNumber`, `yearOfJoining`, `location`, `city`, `state`, `pincode`, `isVerified`, `isAdminVerified`, `isAdmin`, `isPassToBeReset`, `isLoggedIn`
+`id`, `name`, `email` (unique), `password` (not unique), `token`, `dob`, `gender`, `phoneNumber` (unique), `yearOfJoining`, `location`, `city`, `state`, `pincode`, `isVerified`, `isAdminVerified`, `isAdmin` (NOT NULL, default false), `isPassToBeReset`, `isLoggedIn` (JWT or SQL NULL)
+
+Integrity notes (applied 2026-09-18, see `server/schema/2026-09-18-integrity-fixes.sql`): unique-on-password removed; `isLoggedIn` no longer defaults to the string `'NULL'`; volunteer phones are unique; DOB/workshop dates no longer default to today. Join tables still key volunteers by **email** (FK to `users.email`); moving those FKs to `users.id` is the later phone-login branch. Unused tables `enrollment_invites`, `enrollment_link_tickets`, `link_tickets` are not referenced by this app.
 
 ### `Invitations`
 
