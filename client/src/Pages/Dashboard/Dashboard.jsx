@@ -87,12 +87,13 @@ const Dashboard = () => {
             className={`${classes.smallCard} ${item.class}`}
             divider={<Divider orientation="vertical" flexItem />}
             direction={'row'}
+            sx={{ display: 'flex', minWidth: 0 }}
             onClick={item?.click}
           >
             {item.icon}
             <Box className={classes.titleAndValue}>
               <Typography className="cardValue">
-                {item.value.toLocaleString()}
+                {Number(item.value || 0).toLocaleString('en-IN')}
               </Typography>
               <Typography className="cardTitle">{item.title}</Typography>
               <Typography className="cardCta">Open →</Typography>
