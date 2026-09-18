@@ -6,7 +6,6 @@ import {
   TextField,
   Typography,
   Button,
-  CircularProgress,
   Select,
   MenuItem,
 } from '@mui/material';
@@ -15,6 +14,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import PageHeader from '../../../Components/PageHeader/PageHeader';
+import Loader from '../../../Components/Loader/Loader';
 import AccordionTable from '../../../Components/AccordionTable/AccordionTable';
 import { useStyles } from './WorkshopsDetails.styles';
 import LeadVolunteerPopup from '../LeadVolunteerPopup/LeadVolunteerPopup';
@@ -302,7 +302,7 @@ function WorkshopsDetails() {
     <>
       {isPending && viewType !== 'create' && (
         <Box className={classes.loader}>
-          <CircularProgress />
+          <Loader compact />
         </Box>
       )}
       {isError && (

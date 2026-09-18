@@ -10,7 +10,6 @@ import {
   Paper,
   TextField,
   Typography,
-  CircularProgress,
 } from '@mui/material';
 import moment from 'moment';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -18,6 +17,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import ExpandMoreOutlinedIcon from '@mui/icons-material/ExpandMoreOutlined';
 import PageHeader from '../../../Components/PageHeader/PageHeader';
+import Loader from '../../../Components/Loader/Loader';
 import { useStyles } from './MeetingsDetails.styles';
 import AccordionTable from '../../../Components/AccordionTable/AccordionTable';
 import AutocompletePopup from '../../../Components/AutocompletePopup/AutocompletePopup';
@@ -261,7 +261,7 @@ function MeetingsDetails() {
     <>
       {isPending && viewType !== 'create' && (
         <Box className={classes.loader}>
-          <CircularProgress />
+          <Loader compact />
         </Box>
       )}
       {isError && (

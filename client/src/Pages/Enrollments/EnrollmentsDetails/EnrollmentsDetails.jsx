@@ -8,7 +8,6 @@ import {
   TextField,
   Typography,
   Button,
-  CircularProgress,
 } from '@mui/material';
 
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -37,6 +36,7 @@ import AlertReact from '../../../Components/Alert/AlertReact';
 import { useMutation } from '@tanstack/react-query';
 import { createEnrollment, updateEnrollment } from '../../../apis/enrollments';
 import UserContext from '../../../store/userContext';
+import Loader from '../../../Components/Loader/Loader';
 
 const city = ['Bangalore', 'Dehradun', 'Noida', 'Gurgaon'];
 
@@ -269,7 +269,7 @@ function EnrollmentsDetails() {
     <>
       {isPending && viewType !== 'create' && (
         <Box className={classes.loader}>
-          <CircularProgress />
+          <Loader compact />
         </Box>
       )}
       {isError && (
