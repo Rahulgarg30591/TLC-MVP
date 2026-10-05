@@ -1,11 +1,12 @@
 import { Request, Response } from "express"
 import getData from "../../utils/getData"
 import jwt from "jsonwebtoken";
-import { UpdateVolunteerRoleByEmail } from "../../gql/volunteers/mutations"
+import { UpdateVolunteerRoleById } from "../../gql/volunteers/mutations"
 
 const updateRole = async (req: Request, res: Response) => {
   const { authorization } = req?.headers
-  const { email, isAdmin } = req.body
+  const id = Number(req.body?.id)
+  const isAdmin = req.body?.isAdmin === true || req.body?.isAdmin === 'true'
 
   let token: any;
   try{
@@ -22,7 +23,7 @@ const updateRole = async (req: Request, res: Response) => {
     })
   }
   
-  if(token?.email === email)
+  if(!id || Number(token?.id) === id)
   {
     return res.status(403).json({
       status: 'error',
@@ -30,8 +31,8 @@ const updateRole = async (req: Request, res: Response) => {
     })
   }
   
-  const variables = {email,isAdmin}
-  const data = await getData(UpdateVolunteerRoleByEmail, variables)
+  const variables = { id, isAdmin }
+  const data = await getData(UpdateVolunteerRoleById, variables)
 
   if(data?.errors)
   {

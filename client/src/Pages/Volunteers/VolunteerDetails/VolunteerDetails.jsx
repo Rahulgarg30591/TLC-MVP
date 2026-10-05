@@ -8,7 +8,6 @@ import {
   TextField,
   Typography,
   Button,
-  CircularProgress,
 } from '@mui/material';
 
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -16,6 +15,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import ExpandMoreOutlinedIcon from '@mui/icons-material/ExpandMoreOutlined';
 import { useStyles } from './VolunteerDetails.styles';
+import Loader from '../../../Components/Loader/Loader';
 import PageHeader from '../../../Components/PageHeader/PageHeader';
 import AccordionTable from '../../../Components/AccordionTable/AccordionTable';
 import { useParams, useNavigate } from 'react-router-dom';
@@ -41,7 +41,7 @@ function VolunteerDetails() {
   const { user } = useContext(UserContext);
   const nav = useNavigate();
 
-  const { email, type } = useParams();
+  const { id, type } = useParams();
 
   useEffect(() => {
     if (type === 'edit') {
@@ -52,7 +52,7 @@ function VolunteerDetails() {
     }
   }, [type]);
 
-  const { data, isPending, isError } = useReactQuery([email], getVolunteer);
+  const { data, isPending, isError } = useReactQuery([id], getVolunteer);
 
   const [role, setRole] = useState(
     data?.user?.isAdmin === true ? 'admin' : 'volunteer'
@@ -89,7 +89,7 @@ function VolunteerDetails() {
 
   const saveVolunteer = function () {
     mutate({
-      email,
+      id,
       isAdmin: role === 'admin' ? 'true' : 'false',
       key: user?.key,
     });
@@ -151,7 +151,7 @@ function VolunteerDetails() {
     <>
       {isPending && (
         <Box className={classes.loader}>
-          <CircularProgress />
+          <Loader compact />
         </Box>
       )}
       {isError && (
@@ -182,6 +182,16 @@ function VolunteerDetails() {
               prevPage={'volunteers'}
               path={'volunteers'}
             />
+            <Box className={classes.pageIntro}>
+              <Typography className="introTitle">
+                {type === 'edit' ? 'Edit volunteer' : 'Volunteer details'}
+              </Typography>
+              <Typography className="introSub">
+                {type === 'view'
+                  ? 'Phone identifies this volunteer or admin. Email is extra information.'
+                  : 'Phone identifies this volunteer or admin. Email is extra information.'}
+              </Typography>
+            </Box>
             <Box className={classes.mainContent}>
               {/*  PERSONAL INFORMATION*/}
               <Box className={classes.HeadingAndElementBox}>
@@ -189,7 +199,6 @@ function VolunteerDetails() {
                   Personal Information
                 </Typography>
 
-                {/* name and email address */}
                 <Box className={classes.formElementBox}>
                   <FormControl className={classes.formControl}>
                     <FormLabel htmlFor="fullNameField">Name</FormLabel>
@@ -199,17 +208,6 @@ function VolunteerDetails() {
                       name="name"
                       disabled={true}
                       value={data.user.name}
-                    />
-                  </FormControl>
-                  <FormControl className={classes.formControl}>
-                    <FormLabel htmlFor="emailField">Email Address</FormLabel>
-                    <TextField
-                      type="email"
-                      id="emailField"
-                      placeholder="Enter Your Email Address"
-                      name="email"
-                      disabled={true}
-                      value={data.user.email}
                     />
                   </FormControl>
                 </Box>
@@ -302,6 +300,20 @@ function VolunteerDetails() {
                     />
                   </FormControl>
                 </Box>
+              </Box>
+              <Box className={classes.HeadingAndElementBox}>
+                <Typography className="heading">Extra information</Typography>
+                <FormControl className={classes.formControl}>
+                  <FormLabel htmlFor="emailField">Email Address</FormLabel>
+                  <TextField
+                    type="email"
+                    id="emailField"
+                    placeholder="Not added"
+                    name="email"
+                    disabled={true}
+                    value={data.user.email || ''}
+                  />
+                </FormControl>
               </Box>
               {/* ADDRESS INFORMATION */}
               <Box className={classes.HeadingAndElementBox}>

@@ -17,7 +17,7 @@ const adminAuth_1 = __importDefault(require("../middlewares/adminAuth"));
 const router = express_1.default.Router();
 // router.get('/', getAllVolunteers)
 // router.get('/filters', getFilteredVolunteers)
-router.get('/:email/details', auth_1.default, getSingleVolunteer_1.default);
+router.get('/:id/details', auth_1.default, getSingleVolunteer_1.default);
 router.get('/searchAndFilter', auth_1.default, searchAndFilterVolunteer_1.default);
 router.put('/updateRole', adminAuth_1.default, updateRole_1.default);
 router.delete('/', adminAuth_1.default, deleteVolunteer_1.default);

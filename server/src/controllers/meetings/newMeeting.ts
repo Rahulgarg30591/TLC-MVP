@@ -11,7 +11,7 @@ const newMeeting = async (req: Request, res: Response) => {
   })
   const volunteers = req?.body?.volunteers?.map((vol: string)=>{
     return {
-      volunteer_email: vol
+      user_id: Number(vol)
     }
   })
   const variables = {

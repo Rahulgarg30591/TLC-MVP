@@ -80,7 +80,7 @@ function VerifyPopup({
   const verifyUser = function () {
     verifyMutation({
       isAdmin: role === 'admin' ? 'true' : 'false',
-      email: selectedUser,
+      id: selectedUser,
       key: user?.key
     });
   };

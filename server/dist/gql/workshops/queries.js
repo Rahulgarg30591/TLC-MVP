@@ -53,6 +53,7 @@ exports.workshopDetails = `
       }
       workshop_lead_volunteers {
         user {
+          id
           city
           dob
           email
@@ -89,6 +90,7 @@ exports.workshopDetails = `
       }
       workshop_volunteers {
         user {
+          id
           city
           dob
           email

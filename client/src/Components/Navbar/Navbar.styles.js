@@ -33,9 +33,17 @@ export const useStyles = makeStyles((theme) => ({
     },
   },
   profile: {
+    position: 'relative',
     display: 'flex',
     gap: '5px',
     alignItems: 'center',
+    cursor: 'pointer',
+    borderRadius: '8px',
+    padding: '4px 6px',
+    transition: 'background-color 160ms ease',
+    '&:hover': {
+      backgroundColor: 'rgba(37, 147, 17, 0.08)',
+    },
     '& .MuiAvatar-circular': {
       height: '30px',
       width: '30px',
@@ -74,35 +82,33 @@ export const useStyles = makeStyles((theme) => ({
   },
   // profile dropdown
   profileDropdown: {
-    '& .MuiPaper-root': {
-      boxShadow: 'rgba(0, 0, 0, 0.24) 0px 3px 8px !important',
-      borderRadius: '2px',
-      width: '124px',
-      transform: 'translate(0px, 13px) !important',
-
-      '& .MuiList-root': {
-        padding: '5px 0px',
-        '& li': {
-          padding: '0px',
-        },
-        '& a': {
-          gap: '8px',
-          padding: '4px 10px',
-          '& .MuiListItemIcon-root': {
-            minWidth: 'max-content',
-          },
-          '& .MuiListItemText-root': {
-            margin: '0px',
-            '& span': {
-              fontSize: '13px',
-              fontWeight: '500',
-            },
-          },
-          '& svg': {
-            fontSize: '18px',
-            color: '#2F2F2F',
-          },
-        },
+    position: 'absolute',
+    top: 'calc(100% + 8px)',
+    right: 0,
+    zIndex: 20,
+    width: '180px',
+    padding: '6px 0',
+    background: '#fffdf8',
+    border: '1px solid #e6dcc8',
+    borderRadius: '12px',
+    boxShadow: '0 12px 28px rgba(61, 53, 37, 0.16)',
+    fontFamily: theme.typography.fontFamily,
+    '& a': {
+      display: 'flex',
+      alignItems: 'center',
+      gap: '8px',
+      padding: '8px 12px',
+      color: '#3d3525',
+      fontFamily: theme.typography.fontFamily,
+      fontSize: '14px',
+      fontWeight: 500,
+      textDecoration: 'none',
+      '&:hover': {
+        backgroundColor: '#f2e8d8',
+      },
+      '& svg': {
+        fontSize: '18px',
+        color: '#3d3525',
       },
     },
   },

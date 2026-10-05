@@ -67,6 +67,7 @@ export const getMeetingByPk = `
       }
       meetings_volunteers {
         user {
+          id
           city
           dob
           email

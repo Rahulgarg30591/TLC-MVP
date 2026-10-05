@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { capitaliseStr, formatDate } from "../../utils/global";
 import getData from "../../utils/getData";
-import { updateUserByEmail } from "../../gql/user/mutations";
+import { updateUserById } from "../../gql/user/mutations";
 import jwt from "jsonwebtoken";
 
 const updateUser = async (req: Request, res: Response) => {
@@ -21,9 +21,9 @@ const updateUser = async (req: Request, res: Response) => {
     })
   }
 
-  const { email } = req?.params
+  const id = Number(req?.params?.id)
 
-  if(token?.email !== email)
+  if(!token?.id || Number(token.id) !== id)
   {
     return res.status(403).json({
       status: 'error',
@@ -33,15 +33,15 @@ const updateUser = async (req: Request, res: Response) => {
 
   const variables = {
     ...req?.body,
+    id,
     name: capitaliseStr(req.body.name),
     state: capitaliseStr(req.body.state),
     location: capitaliseStr(req.body.location),
     city: capitaliseStr(req.body.city),
-    email: email.toLowerCase(),
     dob: formatDate(req.body.dob),
   }
 
-  const data = await getData(updateUserByEmail, variables)
+  const data = await getData(updateUserById, variables)
 
   if(data?.errors)
   {

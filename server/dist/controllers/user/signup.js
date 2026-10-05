@@ -19,13 +19,53 @@ const generateMail_1 = __importDefault(require("../../utils/generateMail"));
 const nodeMailer_1 = __importDefault(require("../../utils/nodeMailer"));
 const global_1 = require("../../utils/global");
 const bcrypt_1 = require("bcrypt");
+const accountExistsMessage = (message) => {
+    const msg = message || '';
+    if (msg.includes('users_phoneNumber_key')) {
+        return 'An account with this phone number already exists';
+    }
+    if (msg.includes('users_email_key')) {
+        return 'An account with this email already exists';
+    }
+    return msg;
+};
 const signup = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a, _b;
+    var _a, _b, _c, _d;
     const mutation = mutations_1.InsertUserMutation;
+    const phoneNumber = (0, global_1.normalizeMobile)((_a = req.body) === null || _a === void 0 ? void 0 : _a.phoneNumber);
+    if (!phoneNumber) {
+        return res.status(400).json({
+            status: 'error',
+            message: 'Please provide a valid 10-digit mobile number',
+        });
+    }
+    const emailRaw = (((_b = req.body) === null || _b === void 0 ? void 0 : _b.email) || '').trim();
+    const email = emailRaw ? emailRaw.toLowerCase() : null;
+    if (emailRaw && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailRaw)) {
+        return res.status(400).json({
+            status: 'error',
+            message: 'Please provide a valid email',
+        });
+    }
     const encryptPass = yield (0, bcrypt_1.hash)(req.body.password, 12);
-    let token = crypto_js_1.default.AES.encrypt((_a = req === null || req === void 0 ? void 0 : req.body) === null || _a === void 0 ? void 0 : _a.email, process.env.CRYPTO_TICKET || '');
-    token = token.toString();
-    const variables = Object.assign(Object.assign({}, req.body), { name: (0, global_1.capitaliseStr)(req.body.name), state: (0, global_1.capitaliseStr)(req.body.state), location: (0, global_1.capitaliseStr)(req.body.location), city: (0, global_1.capitaliseStr)(req.body.city), email: (req.body.email).toLowerCase(), dob: (0, global_1.formatDate)(req.body.dob), password: encryptPass, isVerified: false, token });
+    let token = email
+        ? crypto_js_1.default.AES.encrypt(email, process.env.CRYPTO_TICKET || '').toString()
+        : '';
+    const variables = Object.assign(Object.assign({}, req.body), { name: (0, global_1.capitaliseStr)(req.body.name), state: (0, global_1.capitaliseStr)(req.body.state), location: (0, global_1.capitaliseStr)(req.body.location), city: (0, global_1.capitaliseStr)(req.body.city), email,
+        phoneNumber, dob: (0, global_1.formatDate)(req.body.dob), password: encryptPass, isVerified: !email, token });
+    if (!email) {
+        const created = yield (0, getData_1.default)(mutation, variables);
+        if (created === null || created === void 0 ? void 0 : created.errors) {
+            return res.status(400).json({
+                status: 'error',
+                message: accountExistsMessage((_c = created.errors[0]) === null || _c === void 0 ? void 0 : _c.message),
+            });
+        }
+        return res.status(200).json({
+            status: 'success',
+            message: 'Account created. An admin needs to approve it before you can sign in.',
+        });
+    }
     const data = yield (0, getData_1.default)(mutation, variables);
     if (!data.errors) {
         const mailOptions = {
@@ -54,7 +94,7 @@ const signup = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
     return res.status(400).json({
         status: 'error',
-        message: (_b = data === null || data === void 0 ? void 0 : data.errors[0]) === null || _b === void 0 ? void 0 : _b.message,
+        message: accountExistsMessage((_d = data === null || data === void 0 ? void 0 : data.errors[0]) === null || _d === void 0 ? void 0 : _d.message),
     });
 });
 exports.default = signup;

@@ -10,7 +10,6 @@ import {
   Paper,
   TextField,
   Typography,
-  CircularProgress,
 } from '@mui/material';
 import moment from 'moment';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -18,6 +17,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import ExpandMoreOutlinedIcon from '@mui/icons-material/ExpandMoreOutlined';
 import PageHeader from '../../../Components/PageHeader/PageHeader';
+import Loader from '../../../Components/Loader/Loader';
 import { useStyles } from './MeetingsDetails.styles';
 import AccordionTable from '../../../Components/AccordionTable/AccordionTable';
 import AutocompletePopup from '../../../Components/AutocompletePopup/AutocompletePopup';
@@ -160,7 +160,7 @@ function MeetingsDetails() {
     }
 
     if (mode === 'Volunteers' && data) {
-      const isEvery = compareTwoArrays(volunteersRowData, data, 'email');
+      const isEvery = compareTwoArrays(volunteersRowData, data, 'id');
 
       if (!isEvery) {
         setAlertType({
@@ -216,7 +216,7 @@ function MeetingsDetails() {
       venue_city: venueCity.trim(),
       workshop_id: selectedWorkshop?.id,
       enrollments: enrollmentsRowData.map((enrollment) => enrollment.id),
-      volunteers: volunteersRowData.map((volunteer) => volunteer.email),
+      volunteers: volunteersRowData.map((volunteer) => volunteer.id),
     };
 
     let isValid;
@@ -245,9 +245,9 @@ function MeetingsDetails() {
     return;
   }
 
-  const handleDeleteRow = function ({ email, row, id }) {
+  const handleDeleteRow = function ({ row, id }) {
     if (row === 'Volunteers') {
-      const updatedRow = volunteersRowData.filter((v) => v.email !== email);
+      const updatedRow = volunteersRowData.filter((v) => v.id !== id);
       setVolunteersRowData(updatedRow);
     }
 
@@ -261,7 +261,7 @@ function MeetingsDetails() {
     <>
       {isPending && viewType !== 'create' && (
         <Box className={classes.loader}>
-          <CircularProgress />
+          <Loader compact />
         </Box>
       )}
       {isError && (
@@ -293,6 +293,20 @@ function MeetingsDetails() {
               prevPage={'Meetings'}
               path={'meetings'}
             />
+            <Box className={classes.pageIntro}>
+              <Typography className="introTitle">
+                {viewType === 'create'
+                  ? 'New meeting'
+                  : viewType === 'edit'
+                  ? 'Edit meeting'
+                  : 'Meeting details'}
+              </Typography>
+              <Typography className="introSub">
+                {viewType === 'view'
+                  ? 'Review this meeting. Use Edit if you need to change it.'
+                  : 'Choose a type and workshop, then add volunteers and enrollments.'}
+              </Typography>
+            </Box>
             <Box className={classes.mainContent}>
               {/* meeting type and workshop autocomplete  */}
               <Box className={classes.formElementBox}>

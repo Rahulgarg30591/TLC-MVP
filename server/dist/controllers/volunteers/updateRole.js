@@ -16,9 +16,10 @@ const getData_1 = __importDefault(require("../../utils/getData"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const mutations_1 = require("../../gql/volunteers/mutations");
 const updateRole = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a, _b, _c;
+    var _a, _b, _c, _d, _e, _f;
     const { authorization } = req === null || req === void 0 ? void 0 : req.headers;
-    const { email, isAdmin } = req.body;
+    const id = Number((_a = req.body) === null || _a === void 0 ? void 0 : _a.id);
+    const isAdmin = ((_b = req.body) === null || _b === void 0 ? void 0 : _b.isAdmin) === true || ((_c = req.body) === null || _c === void 0 ? void 0 : _c.isAdmin) === 'true';
     let token;
     try {
         let authToken = authorization;
@@ -32,21 +33,21 @@ const updateRole = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
             message: 'Token expired! Please login again.'
         });
     }
-    if ((token === null || token === void 0 ? void 0 : token.email) === email) {
+    if (!id || Number(token === null || token === void 0 ? void 0 : token.id) === id) {
         return res.status(403).json({
             status: 'error',
             message: 'You cannot update your own role!'
         });
     }
-    const variables = { email, isAdmin };
-    const data = yield (0, getData_1.default)(mutations_1.UpdateVolunteerRoleByEmail, variables);
+    const variables = { id, isAdmin };
+    const data = yield (0, getData_1.default)(mutations_1.UpdateVolunteerRoleById, variables);
     if (data === null || data === void 0 ? void 0 : data.errors) {
         return res.status(400).json({
             status: 'error',
-            message: (_a = data === null || data === void 0 ? void 0 : data.errors[0]) === null || _a === void 0 ? void 0 : _a.message
+            message: (_d = data === null || data === void 0 ? void 0 : data.errors[0]) === null || _d === void 0 ? void 0 : _d.message
         });
     }
-    if ((_c = (_b = data === null || data === void 0 ? void 0 : data.data) === null || _b === void 0 ? void 0 : _b.update_users) === null || _c === void 0 ? void 0 : _c.affected_rows) {
+    if ((_f = (_e = data === null || data === void 0 ? void 0 : data.data) === null || _e === void 0 ? void 0 : _e.update_users) === null || _f === void 0 ? void 0 : _f.affected_rows) {
         return res.status(200).json({
             status: 'success',
             message: "User updated successfully!"

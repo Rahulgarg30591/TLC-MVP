@@ -40,12 +40,13 @@ export const useStyles = makeStyles((theme) => ({
     padding: '0 20px !important',
     gap: '15px',
     '& button': {
-      height: '30px',
-      padding: '0 10px',
-      borderRadius: '5px',
-      textTransform: 'capitalize',
-      fontSize: '12px',
-      minWidth: '75px',
+      height: '40px',
+      padding: '0 16px',
+      borderRadius: '10px',
+      textTransform: 'none',
+      fontSize: '13px',
+      fontWeight: 700,
+      minWidth: '92px',
       marginLeft: '0px !important',
       color: '#FFFFFF',
     },
@@ -63,7 +64,7 @@ export const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'column',
     gap: '20px',
-    background: '#F2F3F4',
+    background: '#faf6ef',
   },
 
   //   autocomplete
@@ -143,7 +144,7 @@ export const useStyles = makeStyles((theme) => ({
       padding: '5px 10px',
       fontSize: '14px',
       '&.MuiAutocomplete-option[aria-selected="true"]': {
-        background: '#F2F3F4 !important',
+        background: '#faf6ef !important',
       },
     },
   },

@@ -1,19 +1,11 @@
 import { API_BASE } from './config';
+import { apiJson, omitEmptyFilters } from './http';
 
 const BASEURL = `${API_BASE}/volunteers`;
 
 export const volunteers = async function ({ signal, queryKey, user }) {
-  let [page, noOfRecords, filters] = queryKey;
-
-  for (const key in filters) {
-    if (
-      filters[key] === 'all' ||
-      filters[key] === '' ||
-      filters[key]?.orderBy === 'none'
-    ) {
-      delete filters[key];
-    }
-  }
+  let [page, noOfRecords, rawFilters] = queryKey;
+  const filters = omitEmptyFilters(rawFilters);
 
   let pageParam = page ? `?page=${page}` : `?page=1`;
   let noOfRecordsParam = noOfRecords ? `&no_of_records=${noOfRecords}` : '';
@@ -29,26 +21,16 @@ export const volunteers = async function ({ signal, queryKey, user }) {
     ? `&sort_by=${filters.sort.sortBy}&order_of_sort=${filters.sort.orderBy}`
     : '';
 
-  const res = await fetch(
+  return apiJson(
     `${BASEURL}/searchAndFilter${pageParam}${noOfRecordsParam}${searchParam}${genderParam}${isAdminParam}${isAdminVerifiedParam}${sortParam}`,
     {
       method: 'GET',
       headers: {
         Authorization: `Bearer ${user.key}`,
       },
-    },
-    signal
+      signal,
+    }
   );
-
-  if (!res.ok) {
-    const error = new Error('An error occured while fetching the data');
-    error.code = res.status;
-    error.info = await res.json();
-    throw error;
-  }
-
-  const resData = await res.json();
-  return resData;
 };
 
 export const inviteVolunteer = async function ({ data, key }) {
@@ -73,18 +55,15 @@ export const inviteVolunteer = async function ({ data, key }) {
 };
 
 export const getVolunteer = async function ({ signal, queryKey, user }) {
-  const [email] = queryKey;
+  const [id] = queryKey;
 
-  const res = await fetch(
-    `${BASEURL}/${email}/details`,
-    {
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${user.key}`,
-      },
+  const res = await fetch(`${BASEURL}/${id}/details`, {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${user.key}`,
     },
-    signal
-  );
+    signal,
+  });
 
   if (!res.ok) {
     const error = new Error('An error occured while fetching the data');
@@ -97,10 +76,10 @@ export const getVolunteer = async function ({ signal, queryKey, user }) {
   return resData;
 };
 
-export const updateVolunteerRole = async function ({ email, isAdmin, key }) {
+export const updateVolunteerRole = async function ({ id, isAdmin, key }) {
   const res = await fetch(`${BASEURL}/updateRole`, {
     method: 'PUT',
-    body: JSON.stringify({ email: email, isAdmin: isAdmin }),
+    body: JSON.stringify({ id, isAdmin }),
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${key}`,
@@ -121,7 +100,7 @@ export const updateVolunteerRole = async function ({ email, isAdmin, key }) {
 export const deleteVolunteers = async function ({ key, data }) {
   const res = await fetch(`${BASEURL}/`, {
     method: 'DELETE',
-    body: JSON.stringify({ emails: data }),
+    body: JSON.stringify({ ids: data }),
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${key}`,
@@ -139,10 +118,10 @@ export const deleteVolunteers = async function ({ key, data }) {
   return resData;
 };
 
-export const verifyVolunteer = async function ({ isAdmin, email, key }) {
+export const verifyVolunteer = async function ({ isAdmin, id, key }) {
   const res = await fetch(`${BASEURL}/adminVerified`, {
     method: 'PUT',
-    body: JSON.stringify({ isAdmin, email }),
+    body: JSON.stringify({ isAdmin, id }),
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${key}`,

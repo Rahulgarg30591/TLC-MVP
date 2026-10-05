@@ -3,17 +3,12 @@ import {
   Avatar,
   Box,
   IconButton,
-  ListItem,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-  Menu,
   Toolbar,
   Typography,
   useMediaQuery,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { useStyles } from './Navbar.styles';
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
@@ -27,15 +22,26 @@ const Navbar = ({ handleSidebarOpen, isSidebarOpen }) => {
   const { user, setUser } = useContext(UserContext);
   const nav = useNavigate();
   const isLargerScreen = useMediaQuery((theme) => theme.breakpoints.up('md'));
-  const [profileAnchorEL, setProfileAnchorEl] = useState(null);
+  const [profileOpen, setProfileOpen] = useState(false);
+  const profileRef = useRef(null);
   const classes = useStyles();
+  useEffect(() => {
+    if (!profileOpen) return undefined;
+    const closeOnOutside = (event) => {
+      if (profileRef.current?.contains(event.target)) return;
+      setProfileOpen(false);
+    };
+    document.addEventListener('pointerdown', closeOnOutside);
+    return () => document.removeEventListener('pointerdown', closeOnOutside);
+  }, [profileOpen]);
+
   const handleSidebar = () => {
     handleSidebarOpen();
   };
 
   const handleLogout = async (e) => {
     e.preventDefault();
-    setProfileAnchorEl(null);
+    setProfileOpen(false);
     const body = {
       email: user?.email,
       key: user?.key,
@@ -78,7 +84,11 @@ const Navbar = ({ handleSidebarOpen, isSidebarOpen }) => {
             }}
           />
         </Box>
-        <Box className={classes.profile}>
+        <Box
+          ref={profileRef}
+          className={classes.profile}
+          onClick={() => setProfileOpen((open) => !open)}
+        >
           <Avatar>{userName}</Avatar>
           <Box className={classes.userNameAndUserRole}>
             <Typography className="userName" sx={{ color: 'black' }}>
@@ -88,46 +98,24 @@ const Navbar = ({ handleSidebarOpen, isSidebarOpen }) => {
               {user?.isAdmin ? 'Admin' : 'Volunteer'}
             </Typography>
           </Box>
-          <IconButton
-            className={classes.arrowProfileIcon}
-            onClick={(e) => setProfileAnchorEl(e.currentTarget)}
-          >
+          <IconButton className={classes.arrowProfileIcon}>
             <ExpandMoreIcon />
           </IconButton>
-          {/* profile dropdown */}
-          <Menu
-            open={Boolean(profileAnchorEL)}
-            anchorEl={profileAnchorEL}
-            onClose={() => setProfileAnchorEl(null)}
-            className={classes.profileDropdown}
-          >
-            <ListItem>
-              <ListItemButton
-                LinkComponent={Link}
-                to={'/editprofile'}
-                disableRipple
-                onClick={() => setProfileAnchorEl(null)}
-              >
-                <ListItemIcon>
-                  <EditOutlinedIcon />
-                </ListItemIcon>
-                <ListItemText>Edit Profile</ListItemText>
-              </ListItemButton>
-            </ListItem>
-            <ListItem>
-              <ListItemButton
-                LinkComponent={Link}
-                to={'/'}
-                onClick={handleLogout}
-                disableRipple
-              >
-                <ListItemIcon>
-                  <LogoutOutlinedIcon />
-                </ListItemIcon>
-                <ListItemText>Logout</ListItemText>
-              </ListItemButton>
-            </ListItem>
-          </Menu>
+          {profileOpen && (
+            <Box
+              className={classes.profileDropdown}
+              onClick={(event) => event.stopPropagation()}
+            >
+              <Link to="/editprofile" onClick={() => setProfileOpen(false)}>
+                <EditOutlinedIcon />
+                Edit Profile
+              </Link>
+              <Link to="/" onClick={handleLogout}>
+                <LogoutOutlinedIcon />
+                Logout
+              </Link>
+            </Box>
+          )}
         </Box>
       </Toolbar>
     </AppBar>

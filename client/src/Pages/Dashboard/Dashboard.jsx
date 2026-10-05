@@ -1,7 +1,8 @@
-import { Box, Divider, Stack, Typography } from '@mui/material';
-import React from 'react';
+import { Box, ButtonBase, Typography } from '@mui/material';
+import React, { useContext } from 'react';
 import { useStyles } from './Dashboard.styles';
 import { useNavigate } from 'react-router-dom'
+import UserContext from '../../store/userContext';
 import { ReactComponent as EnrollmentColorIcon } from '../.././assets/Icons/enrollmentsColorIcon.svg';
 import { ReactComponent as VolunteerColorIcon } from '../.././assets/Icons/volunteerColorIcon.svg';
 import { ReactComponent as MeetingsColorIcon } from '../.././assets/Icons/meetingsColorIcon.svg';
@@ -14,6 +15,7 @@ import Loader from '../../Components/Loader/Loader';
 
 const Dashboard = () => {
   const nav = useNavigate()
+  const { user } = useContext(UserContext);
   const { data, isPending } = useReactQuery(
     ['dashboard'],
     dashboardDetails
@@ -67,26 +69,37 @@ const Dashboard = () => {
 
   return (
     <Box className={classes.root}>
+      <Box className={classes.welcome}>
+        <Box>
+          <Typography className="welcomeTitle">
+            Welcome back, {user?.name || 'there'}
+          </Typography>
+          <Typography className="welcomeSub">
+            Click a card below, or open an upcoming workshop from the list.
+          </Typography>
+        </Box>
+      </Box>
       <Box className={classes.smallCardContainer}>
         {smallCardData.map((item) => (
-          <Stack
+          <Box
             key={item.id}
+            component={ButtonBase}
             className={`${classes.smallCard} ${item.class}`}
-            divider={<Divider orientation="vertical" flexItem />}
-            direction={'row'}
-            sx={{
-              cursor: 'pointer'
-            }}
-            onClick={item?.click}
+            onClick={item.click}
           >
-            {item.icon}
-            <Box className={classes.titleAndValue}>
-              <Typography className="cardValue">
-                {item.value.toLocaleString()}
+            <Box className={classes.cardIcon}>{item.icon}</Box>
+            <Box className={classes.cardCopy}>
+              <Typography className="cardValue" component="p">
+                {Number(item.value || 0).toLocaleString('en-IN')}
               </Typography>
-              <Typography className="cardTitle">{item.title}</Typography>
+              <Typography className="cardTitle" component="p">
+                {item.title}
+              </Typography>
+              <Typography className="cardCta" component="p">
+                Open →
+              </Typography>
             </Box>
-          </Stack>
+          </Box>
         ))}
       </Box>
       <Box className={classes.bigCardContainer}>
@@ -99,14 +112,23 @@ const Dashboard = () => {
           </Box>
         </Box>
         <Box className={classes.bigCard}>
-          <Typography className="bigCardHeading">
-            Upcoming Workshops
-          </Typography>
+          <Box className={classes.bigCardHeadingRow}>
+            <Typography className="bigCardHeading">
+              Upcoming Workshops
+            </Typography>
+            <Typography
+              className="seeAll"
+              onClick={() => nav('/workshops')}
+            >
+              See all
+            </Typography>
+          </Box>
           <Box className={classes.upcominWorkshops}>
             {wkshps?.data?.workshops?.length > 0 ? (
               wkshps?.data?.workshops?.map((workshop) => (
                 <UpcomingWorkshop
                   key={workshop?.id}
+                  id={workshop?.id}
                   title={workshop?.types}
                   startDate={workshop?.start_date}
                   endDate={workshop?.end_date}

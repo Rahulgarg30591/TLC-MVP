@@ -21,5 +21,5 @@ router.post('/forgotPass', forgotPass_1.default);
 router.get('/verifyReset', verifyReset_1.default);
 router.post('/resetPass', resetPass_1.default);
 router.put('/updateLogStatus', updateLogStatus_1.default);
-router.put('/:email/update', auth_1.default, updateUser_1.default);
+router.put('/:id/update', auth_1.default, updateUser_1.default);
 exports.default = router;

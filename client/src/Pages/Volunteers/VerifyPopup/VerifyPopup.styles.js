@@ -31,18 +31,19 @@ export const useStyles = makeStyles((theme) => ({
     },
   },
   DialogActions: {
-    height: '45px',
-    borderTop: '1px solid #C6C6C6',
+    height: '56px',
+    borderTop: '1px solid #e6dcc8',
     padding: '0 20px !important',
-    gap: '15px',
+    gap: '12px',
     '& button': {
-      height: '30px',
-      padding: '0 10px',
-      borderRadius: '5px',
-      textTransform: 'capitalize',
-      fontSize: '12px',
-      minWidth: '75px !important',
+      height: '40px',
+      padding: '0 16px',
+      borderRadius: '10px',
+      textTransform: 'none',
+      fontSize: '13px',
+      minWidth: '92px !important',
       marginLeft: '0px !important',
+      fontWeight: 700,
       color: '#FFFFFF',
     },
     '& .cancelBtn': {
@@ -61,7 +62,7 @@ export const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'column',
     gap: '20px',
-    background: '#F2F3F4',
+    background: '#faf6ef',
   },
   //elemnts
 
@@ -119,7 +120,7 @@ export const useStyles = makeStyles((theme) => ({
         padding: '5px 10px',
         fontSize: '14px',
         '&.Mui-selected': {
-          background: '#F2F3F4 !important',
+          background: '#faf6ef !important',
         },
         '& span': {
           display: 'none',

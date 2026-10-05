@@ -3,9 +3,10 @@ import { makeStyles } from '@mui/styles';
 export const useStyles = makeStyles((theme) => ({
   root: {
     '& .pageHeading': {
-      fontSize: '18px',
-      fontWeight: '600',
+      fontSize: '15px',
+      fontWeight: '700',
       textTransform: 'capitalize',
+      color: '#3d4f1e',
     },
   },
   breadCrumbs: {
@@ -20,6 +21,11 @@ export const useStyles = makeStyles((theme) => ({
       cursor: 'pointer',
       fontSize: '12px',
       fontWeight: '500',
+      transition: 'color 160ms ease',
+      '&:hover': {
+        textDecoration: 'underline',
+        color: '#3d4f1e',
+      },
     },
     '& svg': { fontSize: '20px', color: '#005C8E' },
     '& .currentPage': {

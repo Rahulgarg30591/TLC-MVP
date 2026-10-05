@@ -3,10 +3,12 @@ import { makeStyles } from '@mui/styles';
 export const useStyles = makeStyles((theme) => ({
   root: {
     height: '100%',
+    minHeight: 0,
+    overflowY: 'auto',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    width:"100%"
+    width: '100%',
   },
   mainWrapper: {
     display: 'flex',
@@ -49,7 +51,7 @@ export const useStyles = makeStyles((theme) => ({
     gap: '10px',
     '& .backToLogin': {
       fontSize: '12px',
-      color: '#4E73BE',
+      color: '#a08040',
       fontWeight: '500',
       textDecoration: 'none',
       textAlign: 'center',
@@ -90,7 +92,7 @@ export const useStyles = makeStyles((theme) => ({
     height: '40px',
     borderRadius: '5px !important',
     textTransform: 'none !important',
-    backgroundColor: '#259311 !important',
+    backgroundColor: '#5a7030 !important',
     color: '#ffffff !important',
     fontWeight: '400 !important',
 

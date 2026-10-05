@@ -1,15 +1,19 @@
 import { makeStyles } from '@mui/styles';
+import { actionButtons } from '../../styles/buttonShared';
 
 export const useStyles = makeStyles((theme) => ({
+  ...actionButtons(theme),
   root: {
     padding: '20px',
     display: 'flex',
     flexDirection: 'column',
-    gap: '20px',
+    gap: '16px',
     height: '100%',
-    backgroundColor: '#F2F3F4',
+    minHeight: 0,
+    backgroundColor: '#faf6ef',
     [theme.breakpoints.down('sm')]: {
       padding: '13px 8px',
+      height: 'auto',
     },
     '& .ag-theme-quartz': {
       '--ag-active-color': theme.palette.primaryGreen,
@@ -20,70 +24,45 @@ export const useStyles = makeStyles((theme) => ({
   HeadingAndActionBtn: {
     display: 'flex',
     justifyContent: 'space-between',
+    flexShrink: 0,
     '& h1': {
-      fontSize: '18px',
-      fontWeight: '600',
-      height: '30px',
-    },
-  },
-  ActionBtn: {
-    display: 'flex',
-    gap: '15px',
-    [theme.breakpoints.down('sm')]: {
-      justifyContent: 'flex-end',
-      gap: '6px',
-    },
-    '& button': {
-      height: '30px',
-      minWidth: '75px',
-      padding: '0 10px',
-      borderRadius: '5px',
-      textTransform: 'capitalize',
-      fontSize: '12px',
-      color: '#FFFFFF',
-      [theme.breakpoints.down('sm')]: {
-        minWidth: '70px',
-      },
-    },
-    '& button.viewBtn': {
-      background: `${theme.palette.primaryOrange}`,
-    },
-    '& button.deleteBtn': {
-      background: `${theme.palette.primaryRed}`,
-    },
-    '& button.editBtn': {
-      background: `${theme.palette.primaryBlue}`,
-    },
-    '& button.createWorkshopBtn': {
-      background: `${theme.palette.primaryGreen}`,
+      fontSize: '22px',
+      fontWeight: '700',
+      height: 'auto',
+      letterSpacing: '-0.02em',
     },
   },
 
+
   headerTablePagination: {
-    boxShadow: '0px 4px 10px 0px rgba(109, 109, 109, 0.25)',
-    borderRadius: '5px',
-    overflowX: 'hidden',
-    height: '100%',
-    [theme.breakpoints.down('sm')]: {
-      height: 'calc(100vh - 94px)',
-    },
+    boxShadow: '0 10px 28px rgba(31, 61, 20, 0.08)',
+    borderRadius: '12px',
+    overflow: 'hidden',
+    flex: 1,
+    minHeight: 0,
+    display: 'flex',
+    flexDirection: 'column',
+    border: '1px solid #e6dcc8',
+    background: '#FFFFFF',
   },
   tableContainer: {
-    height: 'calc(100% - 80px)',
-    overflow: 'auto',
+    flex: 1,
+    minHeight: 0,
+    overflow: 'hidden',
     background: '#FFFFFF',
     '&::-webkit-scrollbar': {
       display: 'none',
     },
   },
   tableHeader: {
-    borderBottom: `1px solid ${theme.palette.primaryGreen}`,
-    background: '#FFFFFF',
-    padding: '0 20px',
-    height: '40px',
+    borderBottom: '1px solid #e6dcc8',
+    background: '#faf6ef',
+    padding: '10px 16px',
+    height: '56px',
+    flexShrink: 0,
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'flex-end',
+    justifyContent: 'flex-start',
     gap: '10px',
 
     '& .MuiIconButton-root': {
@@ -92,15 +71,17 @@ export const useStyles = makeStyles((theme) => ({
   },
   // search bar
   searchbar: {
+    flex: 1,
+    maxWidth: '380px',
     '& .MuiInputBase-formControl': {
-      border: '1px solid #6C6C6C',
-      borderRadius: '5px',
+      border: '1px solid #e6dcc8',
+      borderRadius: '24px',
       paddingRight: '10px',
-      height: '28px',
+      height: '36px',
       backgroundColor: '#ffffff',
       '& input': {
-        fontSize: '12px',
-        padding: '6px 10px',
+        fontSize: '13px',
+        padding: '8px 4px',
       },
       '& fieldset': {
         display: 'none',
@@ -109,11 +90,12 @@ export const useStyles = makeStyles((theme) => ({
   },
   filterIcon: {
     '&.MuiIconButton-root': {
-      height: '100%',
-      borderRadius: '5px',
-      padding: '2px',
-      height: '28px',
-      border: '1px solid #6C6C6C',
+      borderRadius: '18px',
+      padding: '6px',
+      height: '36px',
+      width: '36px',
+      border: '1px solid #e6dcc8',
+      background: '#FFFFFF',
     },
   },
   // filter selectbox
@@ -137,7 +119,7 @@ export const useStyles = makeStyles((theme) => ({
         padding: '5px 10px',
         fontSize: '12px',
         '&.Mui-selected': {
-          background: '#F2F3F4 !important',
+          background: '#faf6ef !important',
         },
         '& span': {
           display: 'none',
@@ -218,13 +200,5 @@ export const useStyles = makeStyles((theme) => ({
       fontWeight: '600',
     },
   },
-  resetFilterBtn: {
-    '&.MuiButton-root': {
-      textTransform: 'capitalize',
-      fontSize: '12px',
-      height: '30px',
-      background: `${theme.palette.primaryBlue} !important`,
-      color: '#FFFFFF',
-    },
-  },
+
 }));

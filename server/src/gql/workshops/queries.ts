@@ -51,6 +51,7 @@ export const workshopDetails = `
       }
       workshop_lead_volunteers {
         user {
+          id
           city
           dob
           email
@@ -87,6 +88,7 @@ export const workshopDetails = `
       }
       workshop_volunteers {
         user {
+          id
           city
           dob
           email

@@ -1,29 +1,46 @@
-import React, { useEffect, useState } from 'react';
+import React, { lazy, Suspense, useEffect, useMemo, useState } from 'react';
 import Signup from '../../Pages/Signup/Signup';
 import Login from '../../Pages/Login/Login';
 import ForgetPassword from '../../Pages/ForgetPassword/ForgetPassword';
 import ResetPassword from '../../Pages/ResetPassword/ResetPassword';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Dashboard from '../../Pages/Dashboard/Dashboard';
-import Volunteers from '../../Pages/Volunteers/Volunteers';
+import { Box } from '@mui/material';
 import Wrapper from '../Wrapper/Wrapper';
-import VolunteerDetails from '../../Pages/Volunteers/VolunteerDetails/VolunteerDetails';
-import DeletePopup from '../DeletePopup/DeletePopup';
-import InvitePopup from '../../Pages/Volunteers/InvitePopup/InvitePopup';
-import VerifyPopup from '../../Pages/Volunteers/VerifyPopup/VerifyPopup';
-import WorkshopsDetails from '../../Pages/Workshops/WorkshopsDetails/WorkshopsDetails';
-import Workshops from '../../Pages/Workshops/Workshops';
-import AutocompletePopup from '../AutocompletePopup/AutocompletePopup';
-import InfoTable from '../InfoTable/InfoTable';
-import EnrollmentsDetails from '../../Pages/Enrollments/EnrollmentsDetails/EnrollmentsDetails';
-import MeetingsDetails from '../../Pages/Meetings/MeetingsDetails/MeetingsDetails';
-import Meetings from '../../Pages/Meetings/Meetings';
-import Enrollments from '../../Pages/Enrollments/Enrollments';
 import UserContext from '../../store/userContext';
 import { logStatus } from '../../apis/user';
-import ErrorPage from '../../Pages/ErrorPage/ErrorPage';
 import Loader from '../Loader/Loader';
-import EditPage from '../../Pages/EditPage/EditPage';
+import { PrefetchLists } from '../../hooks/prefetchLists';
+
+const Dashboard = lazy(() => import('../../Pages/Dashboard/Dashboard'));
+const Volunteers = lazy(() => import('../../Pages/Volunteers/Volunteers'));
+const VolunteerDetails = lazy(
+  () => import('../../Pages/Volunteers/VolunteerDetails/VolunteerDetails')
+);
+const DeletePopup = lazy(() => import('../DeletePopup/DeletePopup'));
+const InvitePopup = lazy(
+  () => import('../../Pages/Volunteers/InvitePopup/InvitePopup')
+);
+const VerifyPopup = lazy(
+  () => import('../../Pages/Volunteers/VerifyPopup/VerifyPopup')
+);
+const WorkshopsDetails = lazy(
+  () => import('../../Pages/Workshops/WorkshopsDetails/WorkshopsDetails')
+);
+const Workshops = lazy(() => import('../../Pages/Workshops/Workshops'));
+const AutocompletePopup = lazy(
+  () => import('../AutocompletePopup/AutocompletePopup')
+);
+const InfoTable = lazy(() => import('../InfoTable/InfoTable'));
+const EnrollmentsDetails = lazy(
+  () => import('../../Pages/Enrollments/EnrollmentsDetails/EnrollmentsDetails')
+);
+const MeetingsDetails = lazy(
+  () => import('../../Pages/Meetings/MeetingsDetails/MeetingsDetails')
+);
+const Meetings = lazy(() => import('../../Pages/Meetings/Meetings'));
+const Enrollments = lazy(() => import('../../Pages/Enrollments/Enrollments'));
+const ErrorPage = lazy(() => import('../../Pages/ErrorPage/ErrorPage'));
+const EditPage = lazy(() => import('../../Pages/EditPage/EditPage'));
 
 let SESSIONUSER = localStorage.getItem('keys');
 SESSIONUSER = SESSIONUSER ? JSON.parse(SESSIONUSER) : null;
@@ -63,15 +80,28 @@ function Main() {
     }
   }, []);
 
-  const value = {
-    user,
-    setUser,
-  };
+  const value = useMemo(
+    () => ({
+      user,
+      setUser,
+    }),
+    [user]
+  );
 
   return (
     <UserContext.Provider value={value}>
+      <PrefetchLists user={user} />
       <BrowserRouter>
         <Wrapper>
+          <Suspense fallback={<Loader />}>
+          <Box
+            sx={{
+              height: '100%',
+              minHeight: 0,
+              display: 'flex',
+              flexDirection: 'column',
+            }}
+          >
           <Routes>
             {!user && !loader && <Route exact path="/" element={<Login />} />}
             {!user && !loader && (
@@ -105,7 +135,7 @@ function Main() {
             {user && !loader && (
               <Route
                 exact
-                path="/volunteers/detail/:email/:type"
+                path="/volunteers/detail/:id/:type"
                 element={<VolunteerDetails />}
               />
             )}
@@ -191,6 +221,8 @@ function Main() {
               <Route exact path="*" element={<ErrorPage />} />
             )}
           </Routes>
+          </Box>
+          </Suspense>
         </Wrapper>
       </BrowserRouter>
     </UserContext.Provider>

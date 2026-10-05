@@ -20,119 +20,81 @@ const global_1 = require("../../utils/global");
 const generateMail_1 = __importDefault(require("../../utils/generateMail"));
 const nodeMailer_1 = __importDefault(require("../../utils/nodeMailer"));
 const inviteVolunteer = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o;
-    const { email, name, isAdmin } = req.body;
-    const isEmailAvailable = yield (0, getData_1.default)(queries_1.checkEmailAvailability, { email });
-    if (isEmailAvailable === null || isEmailAvailable === void 0 ? void 0 : isEmailAvailable.errors) {
+    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m;
+    const name = (0, global_1.capitaliseStr)(((_a = req.body) === null || _a === void 0 ? void 0 : _a.name) || '');
+    const phone = (0, global_1.normalizeMobile)(((_b = req.body) === null || _b === void 0 ? void 0 : _b.phoneNumber) || ((_c = req.body) === null || _c === void 0 ? void 0 : _c.phone));
+    const emailRaw = (((_d = req.body) === null || _d === void 0 ? void 0 : _d.email) || '').trim();
+    const email = emailRaw ? emailRaw.toLowerCase() : null;
+    const isAdmin = ((_e = req.body) === null || _e === void 0 ? void 0 : _e.isAdmin) === true || ((_f = req.body) === null || _f === void 0 ? void 0 : _f.isAdmin) === 'true';
+    if (!name || name.length < 3) {
         return res.status(400).json({
             status: 'error',
-            message: (_a = isEmailAvailable === null || isEmailAvailable === void 0 ? void 0 : isEmailAvailable.errors[0]) === null || _a === void 0 ? void 0 : _a.message
+            message: 'Name must be at least 3 characters long',
         });
     }
-    if ((_c = (_b = isEmailAvailable === null || isEmailAvailable === void 0 ? void 0 : isEmailAvailable.data) === null || _b === void 0 ? void 0 : _b.users) === null || _c === void 0 ? void 0 : _c.length) {
+    if (!phone) {
         return res.status(400).json({
             status: 'error',
-            message: "Email already registered!"
+            message: 'Please provide a valid 10-digit mobile number',
         });
     }
-    if (!((_e = (_d = isEmailAvailable === null || isEmailAvailable === void 0 ? void 0 : isEmailAvailable.data) === null || _d === void 0 ? void 0 : _d.Invitations) === null || _e === void 0 ? void 0 : _e.length)) {
-        let token = crypto_js_1.default.AES.encrypt(email, process.env.CRYPTO_TICKET || '');
-        token = token.toString();
-        const variables = {
-            name: (0, global_1.capitaliseStr)(name),
-            email: email.toLowerCase(),
-            token,
-            isAdmin
-        };
-        const data = yield (0, getData_1.default)(mutations_1.newInvite, variables);
-        if (data === null || data === void 0 ? void 0 : data.errors) {
-            return res.status(400).json({
-                status: 'error',
-                message: (_f = data === null || data === void 0 ? void 0 : data.errors[0]) === null || _f === void 0 ? void 0 : _f.message
-            });
-        }
-        if ((_h = (_g = data === null || data === void 0 ? void 0 : data.data) === null || _g === void 0 ? void 0 : _g.insert_Invitations) === null || _h === void 0 ? void 0 : _h.affected_rows) {
-            const body = "TLC invites you to be a volunteer for TLC.";
-            const mailOptions = {
-                from: 'infotech@thelastcentre.com',
-                to: email,
-                subject: 'TLC Invitation',
-                text: '',
-                html: (0, generateMail_1.default)(`https://tlc-mvp-server.vercel.app/volunteers/verifyInvite?invite=${token}`, name, 'Accept Invitation', body)
-            };
-            nodeMailer_1.default.sendMail(mailOptions, (err) => __awaiter(void 0, void 0, void 0, function* () {
-                if (!err) {
-                    return res.status(200).json({
-                        status: 'success',
-                        message: 'Invitation sent successfully!'
-                    });
-                }
-                start_position: while (true) {
-                    const deleteSentInvite = yield (0, getData_1.default)(mutations_1.deleteInvite, { email, token });
-                    if (deleteSentInvite === null || deleteSentInvite === void 0 ? void 0 : deleteSentInvite.errors) {
-                        continue start_position;
-                    }
-                    break;
-                }
-                return res.status(400).json({
-                    status: 'error',
-                    message: "Something went wrong! Please try again!"
-                });
-            }));
-            return;
-        }
+    if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
         return res.status(400).json({
             status: 'error',
-            message: "Something went wrong! Please try again!"
+            message: 'Please provide a valid email',
         });
     }
-    const created = new Date((_k = (_j = isEmailAvailable === null || isEmailAvailable === void 0 ? void 0 : isEmailAvailable.data) === null || _j === void 0 ? void 0 : _j.Invitations[0]) === null || _k === void 0 ? void 0 : _k.created_at).toLocaleDateString();
-    const today = new Date().toLocaleDateString();
-    if (created === today) {
+    const existing = yield (0, getData_1.default)(queries_1.checkPhoneAvailability, { phoneNumber: phone });
+    if (existing === null || existing === void 0 ? void 0 : existing.errors) {
         return res.status(400).json({
             status: 'error',
-            message: 'Invitation has already been sent today!'
+            message: (_g = existing.errors[0]) === null || _g === void 0 ? void 0 : _g.message,
         });
     }
-    let token = crypto_js_1.default.AES.encrypt(email, process.env.CRYPTO_TICKET || '');
-    token = token.toString();
-    const variables = {
-        email: email.toLowerCase(),
-        token
-    };
-    const data = yield (0, getData_1.default)(mutations_1.resendInvite, variables);
-    if (data === null || data === void 0 ? void 0 : data.errors) {
+    if ((_j = (_h = existing === null || existing === void 0 ? void 0 : existing.data) === null || _h === void 0 ? void 0 : _h.users) === null || _j === void 0 ? void 0 : _j.length) {
         return res.status(400).json({
             status: 'error',
-            message: (_l = data === null || data === void 0 ? void 0 : data.errors[0]) === null || _l === void 0 ? void 0 : _l.message
+            message: 'This phone number is already registered',
         });
     }
-    if ((_o = (_m = data === null || data === void 0 ? void 0 : data.data) === null || _m === void 0 ? void 0 : _m.update_Invitations) === null || _o === void 0 ? void 0 : _o.affected_rows) {
-        const body = "TLC invites you to be a volunteer for TLC.";
+    if ((_l = (_k = existing === null || existing === void 0 ? void 0 : existing.data) === null || _k === void 0 ? void 0 : _k.Invitations) === null || _l === void 0 ? void 0 : _l.length) {
+        return res.status(400).json({
+            status: 'error',
+            message: 'An invitation is already waiting for this phone number',
+        });
+    }
+    const token = crypto_js_1.default.AES.encrypt(phone, process.env.CRYPTO_TICKET || '').toString();
+    const created = yield (0, getData_1.default)(mutations_1.newInvite, {
+        name,
+        email,
+        phone_number: phone,
+        token,
+        isAdmin,
+    });
+    if (created === null || created === void 0 ? void 0 : created.errors) {
+        return res.status(400).json({
+            status: 'error',
+            message: (_m = created.errors[0]) === null || _m === void 0 ? void 0 : _m.message,
+        });
+    }
+    const signupPath = `/signup?ticket=${encodeURIComponent(token)}&phone=${phone}`;
+    if (email) {
         const mailOptions = {
             from: 'infotech@thelastcentre.com',
             to: email,
             subject: 'TLC Invitation',
             text: '',
-            html: (0, generateMail_1.default)(`https://tlc-mvp-server.vercel.app/volunteers/verifyInvite?invite=${token}`, name, 'Accept Invitation', body)
+            html: (0, generateMail_1.default)(`https://tlc-mvp-app.vercel.app${signupPath}`, name, 'Accept Invitation', 'TLC invites you to join. You will sign up with your phone number.'),
         };
-        nodeMailer_1.default.sendMail(mailOptions, (err) => __awaiter(void 0, void 0, void 0, function* () {
-            if (!err) {
-                return res.status(200).json({
-                    status: 'success',
-                    message: 'Invitation re-sent successfully!'
-                });
-            }
-            return res.status(400).json({
-                status: 'error',
-                message: "Something went wrong! Please try again!"
-            });
-        }));
-        return;
+        nodeMailer_1.default.sendMail(mailOptions, () => { });
     }
-    return res.status(400).json({
-        status: 'error',
-        message: "Something went wrong! Please try again!"
+    return res.status(200).json({
+        status: 'success',
+        message: email
+            ? 'Invitation ready. Share the phone signup link. A copy was also emailed.'
+            : 'Invitation ready. Share this phone signup link.',
+        signupPath,
+        phone,
     });
 });
 exports.default = inviteVolunteer;

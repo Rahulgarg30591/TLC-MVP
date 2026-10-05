@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateUserByEmail = exports.verifyAndUpdateKey = exports.updateStatus = exports.VerifyAndUpdatePass = exports.CheckAndUpdateToken = exports.VerifyTokenAndUpdate = exports.DeleteUserByEmail = exports.InsertUserMutation = void 0;
+exports.updateUserById = exports.verifyAndUpdateKey = exports.verifyAndUpdateKeyById = exports.updateStatusById = exports.updateStatus = exports.VerifyAndUpdatePass = exports.CheckAndUpdateToken = exports.VerifyTokenAndUpdate = exports.DeleteUserByEmail = exports.InsertUserMutation = void 0;
 exports.InsertUserMutation = `
-  mutation InsertUser($name: String!, $email: String!, $password: String!, $isVerified: Boolean!, $token: String!, $dob: date!, $gender: String!,
+  mutation InsertUser($name: String!, $email: String, $password: String!, $isVerified: Boolean!, $token: String!, $dob: date!, $gender: String!,
     $phoneNumber: String!,  $yearOfJoining: Int!, 
     $location: String!, $city: String!, $state: String!, $pincode: Int!, 
     $isAdmin: Boolean) {
@@ -64,6 +64,36 @@ exports.updateStatus = `
     }
   }
 `;
+exports.updateStatusById = `
+  mutation UpdateStatusById($isLoggedIn: String, $id: Int!) {
+    update_users(where: {id: {_eq: $id}}, _set: {isLoggedIn: $isLoggedIn}) {
+      affected_rows
+    }
+  }
+`;
+exports.verifyAndUpdateKeyById = `
+  mutation VerifyAndUpdateKeyById($id: Int!, $key: String!, $isLoggedIn: String) {
+    update_users(where: {id: {_eq: $id}, isLoggedIn: {_eq: $key}}, _set: {isLoggedIn: $isLoggedIn}) {
+      affected_rows
+      returning {
+        id
+        name
+        isVerified
+        isAdminVerified
+        gender
+        phoneNumber
+        email
+        yearOfJoining
+        location
+        city
+        state
+        pincode
+        isAdmin
+        dob
+      }
+    }
+  }
+`;
 exports.verifyAndUpdateKey = `
   mutation MyMutation($email: String!, $key: String!, $isLoggedIn: String) {
     update_users(where: {email: {_eq: $email}, isLoggedIn: {_eq: $key}}, _set: {isLoggedIn: $isLoggedIn}) {
@@ -88,9 +118,9 @@ exports.verifyAndUpdateKey = `
     }
   }
 `;
-exports.updateUserByEmail = `
-  mutation MyMutation($email: String!, $city: String!, $dob: date!, $gender: String!, $location: String!, $name: String!, $phoneNumber: String!, $pincode: Int!, $yearOfJoining: Int!, $state: String!) {
-    update_users(where: {email: {_eq: $email}, isVerified: {_eq: true}, isAdminVerified: {_eq: true}}, _set: {city: $city, dob: $dob, gender: $gender, location: $location, name: $name, phoneNumber: $phoneNumber, pincode: $pincode, yearOfJoining: $yearOfJoining, state: $state}) {
+exports.updateUserById = `
+  mutation UpdateUserById($id: Int!, $city: String!, $dob: date!, $gender: String!, $location: String!, $name: String!, $phoneNumber: String!, $pincode: Int!, $yearOfJoining: Int!, $state: String!) {
+    update_users(where: {id: {_eq: $id}, isVerified: {_eq: true}, isAdminVerified: {_eq: true}}, _set: {city: $city, dob: $dob, gender: $gender, location: $location, name: $name, phoneNumber: $phoneNumber, pincode: $pincode, yearOfJoining: $yearOfJoining, state: $state}) {
       affected_rows
     }
   }

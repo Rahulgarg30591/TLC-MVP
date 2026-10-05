@@ -10,7 +10,9 @@ import {
   TextField,
   ThemeProvider,
   Typography,
+  InputAdornment,
 } from '@mui/material';
+import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers';
@@ -224,12 +226,19 @@ const Workshops = () => {
       <Box className={classes.headerTablePagination}>
         <Box className={classes.tableHeader}>
           <TextField
-            placeholder="Search"
+            placeholder="Search workshops"
             className={classes.searchbar}
             autoComplete="off"
             value={searchValue}
             onChange={(e) => {
               setSearchValue(e.target.value);
+            }}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchOutlinedIcon sx={{ fontSize: 18, color: '#6C6C6C' }} />
+                </InputAdornment>
+              ),
             }}
           />
           <IconButton
@@ -323,6 +332,7 @@ const Workshops = () => {
             showVerifyStatus={showVerifyStatus}
             showDetails={showDetails}
             isError={isError}
+            onRowOpen={(row) => navigate(`/workshops/detail/${row.id}/view`)}
           />
         </Box>
         <PaginationComp

@@ -8,7 +8,6 @@ import {
   TextField,
   Typography,
   Button,
-  CircularProgress,
 } from '@mui/material';
 
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -37,6 +36,7 @@ import AlertReact from '../../../Components/Alert/AlertReact';
 import { useMutation } from '@tanstack/react-query';
 import { createEnrollment, updateEnrollment } from '../../../apis/enrollments';
 import UserContext from '../../../store/userContext';
+import Loader from '../../../Components/Loader/Loader';
 
 const city = ['Bangalore', 'Dehradun', 'Noida', 'Gurgaon'];
 
@@ -238,7 +238,7 @@ function EnrollmentsDetails() {
     if (viewType === 'create') {
       body = {
         ...body,
-        enrolled_by: user?.email,
+        enrolled_by_id: user?.id,
       };
     }
     const isValid = validateEnrollment(body);
@@ -269,7 +269,7 @@ function EnrollmentsDetails() {
     <>
       {isPending && viewType !== 'create' && (
         <Box className={classes.loader}>
-          <CircularProgress />
+          <Loader compact />
         </Box>
       )}
       {isError && (
@@ -301,6 +301,20 @@ function EnrollmentsDetails() {
               prevPage={'Enrollments'}
               path={'enrollments'}
             />
+            <Box className={classes.pageIntro}>
+              <Typography className="introTitle">
+                {viewType === 'create'
+                  ? 'New enrollment'
+                  : viewType === 'edit'
+                  ? 'Edit enrollment'
+                  : 'Enrollment details'}
+              </Typography>
+              <Typography className="introSub">
+                {viewType === 'view'
+                  ? 'Review this record. Use Edit if you need to change it.'
+                  : 'Phone is required. Email is optional. Save when you are done.'}
+              </Typography>
+            </Box>
             <Box className={classes.mainContent}>
               {/*  PERSONAL INFORMATION*/}
               <Box className={classes.HeadingAndElementBox}>

@@ -1,6 +1,27 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.verifyResetQuery = exports.getUserByEmail = void 0;
+exports.verifyResetQuery = exports.getUserByEmail = exports.getUserByPhone = void 0;
+exports.getUserByPhone = `
+  query UserByPhone($phoneNumber: String!) {
+    users(where: { phoneNumber: { _eq: $phoneNumber } }) {
+      id
+      name
+      password
+      isVerified
+      isAdminVerified
+      gender
+      phoneNumber
+      email
+      yearOfJoining
+      location
+      city
+      state
+      pincode
+      isAdmin
+      dob
+    }
+  }
+`;
 exports.getUserByEmail = `
   query MyQuery($email: String!) {
     users(where: { email: { _eq: $email } }) {

@@ -9,7 +9,6 @@ export const useStyles = makeStyles((theme) => ({
     gap: '40px',
     [theme.breakpoints.down('sm')]: {
       background: '#fff',
-      marginTop: '50px',
     },
   },
   errorHeadingText: {
@@ -31,12 +30,14 @@ export const useStyles = makeStyles((theme) => ({
   },
   errorBtn: {
     '&.MuiButton-root': {
-      height: '30px',
-      fontSize: '12px',
-      textTransform: 'capitalize',
-      background: '#259311 !important',
+      height: '40px',
+      fontSize: '13px',
+      textTransform: 'none',
+      background: '#5a7030 !important',
       color: '#FFFFFF',
-      fontWeight: '400',
+      fontWeight: '700',
+      borderRadius: '10px',
+      padding: '0 18px',
     },
   },
 }));

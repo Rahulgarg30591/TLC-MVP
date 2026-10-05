@@ -1,32 +1,46 @@
 import { makeStyles } from '@mui/styles';
 
 export const useStyles = makeStyles((theme) => ({
-  root: {},
+  root: {
+    height: '100%',
+    overflow: 'hidden',
+    [theme.breakpoints.down('sm')]: {
+      height: 'auto',
+      overflow: 'visible',
+      minHeight: '100%',
+    },
+  },
   main: {
     width: 'calc(100% - 16%)',
+    /* AppBar is 64px and position:fixed, so remaining viewport is 100vh - 64 */
     height: 'calc(100vh - 64px)',
     marginLeft: 'auto',
-    overflowY: 'auto',
+    marginTop: '64px',
+    display: 'flex',
+    flexDirection: 'column',
+    minHeight: 0,
+    overflow: 'hidden',
+    '& > *': {
+      flex: 1,
+      minHeight: 0,
+      height: '100%',
+      overflow: 'hidden',
+    },
     [theme.breakpoints.between('xs', 'md')]: {
       width: '100%',
     },
-    '&::-webkit-scrollbar': {
-      display: 'none',
-    },
-    marginTop: '64px',
     [theme.breakpoints.down('sm')]: {
       height: 'auto',
+      minHeight: 'calc(100vh - 64px)',
+      overflow: 'visible',
+      '& > *': {
+        height: 'auto',
+        overflow: 'visible',
+      },
     },
   },
   notUser: {
-    minHeight: '100vh',
-    background: '#F2F3F4',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    [theme.breakpoints.down('sm')]: {
-      minHeight: 'auto',
-      display: 'block',
-    },
+    minHeight: '100%',
+    background: '#faf6ef',
   },
 }));

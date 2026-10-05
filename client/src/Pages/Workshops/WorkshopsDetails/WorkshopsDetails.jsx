@@ -6,7 +6,6 @@ import {
   TextField,
   Typography,
   Button,
-  CircularProgress,
   Select,
   MenuItem,
 } from '@mui/material';
@@ -15,6 +14,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import PageHeader from '../../../Components/PageHeader/PageHeader';
+import Loader from '../../../Components/Loader/Loader';
 import AccordionTable from '../../../Components/AccordionTable/AccordionTable';
 import { useStyles } from './WorkshopsDetails.styles';
 import LeadVolunteerPopup from '../LeadVolunteerPopup/LeadVolunteerPopup';
@@ -66,6 +66,7 @@ function WorkshopsDetails() {
 
   const classes = useStyles();
   const [openLeadPopup, setOpenLeadPopup] = useState(false);
+  const [leadRole, setLeadRole] = useState('volunteer');
   const [openPopup, setopenPopup] = useState(false);
   const [mode, setMode] = useState('');
 
@@ -141,7 +142,7 @@ function WorkshopsDetails() {
 
     if (data) {
       const combinedArray = [...volunteersRowData, ...leadVolunteersRowData];
-      const isEvery = compareTwoArrays(combinedArray, data, 'email');
+      const isEvery = compareTwoArrays(combinedArray, data, 'id');
 
       if (!isEvery) {
         setAlertType({
@@ -242,8 +243,8 @@ function WorkshopsDetails() {
       start_date: modifiedStartDate,
       end_date: modifiedEndDate,
       concluding_date: modifiedConcludingDate,
-      vols: volunteersRowData.map((vol) => vol.email),
-      leads: leadVolunteersRowData.map((vol) => vol.email),
+      vols: volunteersRowData.map((vol) => vol.id),
+      leads: leadVolunteersRowData.map((vol) => vol.id),
       participants: participantsRowData.map((participant) => participant.id),
       meetings: meetingsRowData.map((meeting) => meeting.id),
     };
@@ -256,13 +257,13 @@ function WorkshopsDetails() {
     mutate({ body, id, key: user?.key });
   };
 
-  const handleDeleteRow = function ({ email, row, id }) {
+  const handleDeleteRow = function ({ row, id }) {
     if (row === 'Volunteers') {
-      const updatedRow = volunteersRowData.filter((v) => v.email !== email);
+      const updatedRow = volunteersRowData.filter((v) => v.id !== id);
       setVolunteersRowData(updatedRow);
     }
     if (row === 'Lead Volunteers') {
-      const updatedRow = leadVolunteersRowData.filter((v) => v.email !== email);
+      const updatedRow = leadVolunteersRowData.filter((v) => v.id !== id);
       setLeadVolunteersRowData(updatedRow);
     }
     if (row === 'Participants') {
@@ -302,7 +303,7 @@ function WorkshopsDetails() {
     <>
       {isPending && viewType !== 'create' && (
         <Box className={classes.loader}>
-          <CircularProgress />
+          <Loader compact />
         </Box>
       )}
       {isError && (
@@ -334,6 +335,20 @@ function WorkshopsDetails() {
               prevPage={'workshops'}
               path={'workshops'}
             />
+            <Box className={classes.pageIntro}>
+              <Typography className="introTitle">
+                {viewType === 'create'
+                  ? 'New workshop'
+                  : viewType === 'edit'
+                  ? 'Edit workshop'
+                  : 'Workshop details'}
+              </Typography>
+              <Typography className="introSub">
+                {viewType === 'view'
+                  ? 'Review this workshop. Use Edit if you need to change it.'
+                  : 'Set type, venue and dates, then add volunteers and participants.'}
+              </Typography>
+            </Box>
             <Box className={classes.mainContent}>
               {/* workshop type */}
               <Box className={classes.formElementBox}>
@@ -449,24 +464,50 @@ function WorkshopsDetails() {
             {/* add lead volunteer and volunteer */}
             <Box className={classes.HeaderAndAccordionBox}>
               <Box className={classes.HeaderAndBtn}>
-                <Typography>Add Volunteers and Lead Volunteers</Typography>
+                <Typography>Volunteers and lead volunteers</Typography>
                 {!isView && (
-                  <Button
-                    className={classes.addBtn}
-                    disableRipple
-                    onClick={() => setOpenLeadPopup(true)}
-                  >
-                    Add
-                  </Button>
+                  <Box sx={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                    <Button
+                      className={classes.addBtn}
+                      disableRipple
+                      onClick={() => {
+                        setLeadRole('volunteer');
+                        setOpenLeadPopup(true);
+                      }}
+                    >
+                      Add volunteer
+                    </Button>
+                    <Button
+                      className={classes.addBtn}
+                      disableRipple
+                      onClick={() => {
+                        setLeadRole('leadvolunteer');
+                        setOpenLeadPopup(true);
+                      }}
+                    >
+                      Add lead volunteer
+                    </Button>
+                  </Box>
+                )}
+                {isView && user?.isAdmin && (
+                  <Typography className="introSub">
+                    Choose Edit to add a volunteer or a lead volunteer.
+                  </Typography>
                 )}
                 {openLeadPopup && (
                   <LeadVolunteerPopup
                     closeLeadPopupAndSetRows={closeLeadPopupAndSetRows}
                     openLeadPopup={openLeadPopup}
                     closeLeadPopup={closeLeadPopup}
+                    initialRole={leadRole}
                   />
                 )}
               </Box>
+              {!volunteersRowData.length && !leadVolunteersRowData.length && (
+                <Typography sx={{ color: '#5a5040', fontSize: 14 }}>
+                  No volunteers added yet.
+                </Typography>
+              )}
               <Box className={classes.AccordionContainer}>
                 <AccordionTable
                   rowData={volunteersRowData}

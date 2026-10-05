@@ -1,10 +1,16 @@
 import { Request, Response } from "express"
 import getData from "../../utils/getData";
-import { VolunteerByEmail } from "../../gql/volunteers/queries";
+import { VolunteerById } from "../../gql/volunteers/queries";
 
 const getSingleVolunteer = async (req: Request, res: Response) => {
-  const { email } = req.params;
-  const data = await getData(VolunteerByEmail, {email})
+  const id = Number(req.params.id);
+  if (!id) {
+    return res.status(400).json({
+      status: 'error',
+      message: 'User not found!',
+    })
+  }
+  const data = await getData(VolunteerById, { id })
 
   if(data?.errors)
   {

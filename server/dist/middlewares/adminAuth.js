@@ -12,10 +12,10 @@ const adminAuth = (req, res, next) => {
             authToken = authToken[1];
             try {
                 const token = jsonwebtoken_1.default.verify(authToken, process.env.JWT_SECRET_KEY || '');
-                if ((token === null || token === void 0 ? void 0 : token.email) && (token === null || token === void 0 ? void 0 : token.isAdmin)) {
+                if (((token === null || token === void 0 ? void 0 : token.id) || (token === null || token === void 0 ? void 0 : token.email)) && (token === null || token === void 0 ? void 0 : token.isAdmin)) {
                     return next();
                 }
-                if (token === null || token === void 0 ? void 0 : token.email) {
+                if ((token === null || token === void 0 ? void 0 : token.id) || (token === null || token === void 0 ? void 0 : token.email)) {
                     return res.status(403).json({
                         status: 'error',
                         message: 'Anuathorized action!'

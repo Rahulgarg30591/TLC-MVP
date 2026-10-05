@@ -26,7 +26,7 @@ const editMeeting = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     });
     const volunteers = (_d = (_c = req === null || req === void 0 ? void 0 : req.body) === null || _c === void 0 ? void 0 : _c.volunteers) === null || _d === void 0 ? void 0 : _d.map((vol) => {
         return {
-            volunteer_email: vol,
+            user_id: Number(vol),
             meeting_id: id
         };
     });

@@ -1,6 +1,6 @@
 import { API_BASE } from './config';
 
-export const dashboardDetails = async ({ user }) => {
+export const dashboardDetails = async ({ user, signal }) => {
   try {
     const response = await fetch(
       `${API_BASE}/dashboard`,
@@ -9,6 +9,7 @@ export const dashboardDetails = async ({ user }) => {
         headers: {
           Authorization: `Bearer ${user.key}`,
         },
+        signal,
       }
     );
     return await response.json();
@@ -20,7 +21,7 @@ export const dashboardDetails = async ({ user }) => {
   }
 };
 
-export const dashboardWorkshops = async ({ user }) => {
+export const dashboardWorkshops = async ({ user, signal }) => {
   try {
     const response = await fetch(
       `${API_BASE}/workshops?pastOrUpcoming=upcoming&sort_by=start_date`,
@@ -29,6 +30,7 @@ export const dashboardWorkshops = async ({ user }) => {
         headers: {
           Authorization: `Bearer ${user.key}`,
         },
+        signal,
       }
     );
     return await response.json();

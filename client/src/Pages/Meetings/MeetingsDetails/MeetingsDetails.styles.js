@@ -1,214 +1,8 @@
 import { makeStyles } from '@mui/styles';
+import { formPageShared } from '../../../styles/formPageShared';
+
 export const useStyles = makeStyles((theme) => ({
-  root: {
-    height: '100%',
-    position: 'relative',
-    backgroundColor: '#F2F3F4',
-    [theme.breakpoints.down('sm')]: {
-      paddingBottom: '5px',
-      minHeight: '100vh',
-    },
-  },
-
-  HeaderMainContent: {
-    padding: '20px',
-    height: 'calc(100% - 45px )',
-    overflowY: 'auto',
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '20px',
-    [theme.breakpoints.down('sm')]: {
-      padding: '10px',
-      height: 'auto',
-    },
-  },
-  actionBar: {
-    background: '#FFFFFF',
-    position: 'absolute',
-    bottom: '0',
-    height: '45px',
-    width: '100%',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    padding: '0 25px',
-    gap: '15px',
-    boxShadow: '-4px 0px 5px 0px rgba(0, 0, 0, 0.25)',
-    [theme.breakpoints.down('sm')]: {
-      position: 'static',
-      boxShadow: 'none',
-      background: 'none',
-      justifyContent: 'flex-start',
-      padding:"10px"
-    },
-    '& button': {
-      height: '30px',
-      minWidth: '75px',
-      padding: '0 10px',
-      borderRadius: '5px',
-      textTransform: 'capitalize',
-      fontSize: '12px',
-      color: '#FFFFFF',
-    },
-    '& button.cancelBtn': {
-      background: `${theme.palette.primaryGray}`,
-      color: theme.palette.text.primary,
-    },
-    '& button.saveBtn': {
-      background: `${theme.palette.primaryGreen}`,
-    },
-    '& button.editBtn': {
-      background: `${theme.palette.primaryBlue}`,
-    },
-  },
-
-  mainContent: {
-    width: '70%',
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '15px',
-    marginBottom: '10px',
-    [theme.breakpoints.between('sm', 'md')]: {
-      width: '100%',
-    },
-    [theme.breakpoints.down('sm')]: {
-      width: '100%',
-      gap: '20px',
-    },
-    '& p.heading': {
-      fontSize: '14px',
-      fontWeight: '600',
-    },
-  },
-
-  formElementBox: {
-    display: 'flex',
-    gap: '20px',
-    [theme.breakpoints.down('sm')]: {
-      flexDirection: 'column',
-      gap: '15px',
-    },
-  },
-  formControl: {
-    width: '100%',
-    display: 'flex',
-    gap: '5px',
-
-    '& label.MuiFormLabel-root': {
-      fontWeight: '500',
-      fontSize: '14px',
-      color: '#2F2F2F',
-      '& .MuiFormLabel-asterisk': {
-        color: theme.palette.primaryRed,
-      },
-    },
-    '& .MuiInputBase-formControl': {
-      border: '1px solid #C6C6C6',
-      borderRadius: '5px',
-      paddingRight: '10px',
-      height: '40px',
-      backgroundColor: '#ffffff',
-      '& input': {
-        fontSize: '14px',
-        padding: '6px 10px',
-        '&:-webkit-autofill': {
-          '-webkit-box-shadow': '0 0 0 100px white inset',
-        },
-      },
-      '& fieldset': {
-        display: 'none',
-      },
-
-      '& .MuiInputAdornment-root button': {
-        padding: '0px',
-        margin: '0px',
-        '& svg': {
-          width: '20px',
-          height: '20px',
-          color: '#2F2F2F',
-        },
-        '& .MuiTouchRipple-root': {
-          display: 'none',
-        },
-      },
-      '&.Mui-disabled': {
-        background: '#E0E0E0 !important',
-        '& input.Mui-disabled': {
-          '-webkit-text-fill-color': '#696969',
-        },
-        '& .MuiInputAdornment-root button svg': {
-          color: '#696969',
-        },
-      },
-    },
-  },
-  selectBox: {
-    '&.MuiInputBase-root': {
-      fontSize: '14px',
-      '& .MuiSelect-select': {
-        paddingLeft: '10px',
-      },
-    },
-    '& svg': {
-      color: '#2F2F2F',
-      width: '20px',
-      height: '20px',
-      top: '25%',
-    },
-  },
-  selectDropdownMenu: {
-    '&.MuiPaper-root': {
-      maxHeight: '200px ',
-      borderRadius: '5px',
-      boxShadow: 'rgba(0, 0, 0, 0.24) 0px 3px 8px',
-    },
-    [theme.breakpoints.down('sm')]: {
-      transform: 'translateX(-6px) !important',
-    },
-
-    '& ul': {
-      padding: '5px 0px',
-      '& li': {
-        padding: '5px 10px',
-        fontSize: '14px',
-        '&.MuiMenuItem-root.Mui-selected': {
-          background: '#F2F3F4',
-        },
-        '& span': {
-          display: 'none',
-        },
-      },
-    },
-  },
-
-  HeaderAndAccordionBox: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '10px',
-  },
-  HeaderAndBtn: {
-    height: '30px',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    '& p': {
-      fontSize: '14px ',
-      fontWeight: '600',
-    },
-  },
-  addBtn: {
-    '&.MuiButtonBase-root': {
-      minWidth: '75px',
-      height: '30px',
-      padding: '0 10px',
-      borderRadius: '5px',
-      textTransform: 'capitalize',
-      fontSize: '12px',
-      background: `${theme.palette.primaryGreen} !important`,
-      color: '#ffffff',
-    },
-  },
-
+  ...formPageShared(theme),
   autocomplete: {
     '& .MuiAutocomplete-endAdornment button': {
       padding: '0px',
@@ -216,7 +10,6 @@ export const useStyles = makeStyles((theme) => ({
       '&:hover': {
         background: 'transparent',
       },
-
       '& svg': {
         color: '#2F2F2F',
         fontSize: '20px',
@@ -226,11 +19,11 @@ export const useStyles = makeStyles((theme) => ({
       },
     },
   },
-
   autocompleteTextField: {
     '& .MuiInputBase-root.MuiOutlinedInput-root': {
       paddingTop: '0px',
       paddingBottom: '0px',
+      minHeight: '44px',
       '&.Mui-disabled': {
         '& .MuiAutocomplete-endAdornment svg': {
           color: '#696969',
@@ -238,50 +31,26 @@ export const useStyles = makeStyles((theme) => ({
       },
     },
   },
-  //   autocomplete dropdown
   customAutocompleteDropdown: {
     '&.MuiPaper-rounded': {
-      boxShadow: 'rgba(0, 0, 0, 0.24) 0px 3px 8px ',
-      maxHeight: '200px',
-      borderRadius: '5px',
+      boxShadow: '0 12px 28px rgba(27, 59, 20, 0.12)',
+      maxHeight: '220px',
+      borderRadius: '12px',
     },
-
     '& ul': {
-      maxHeight: '200px',
-      padding: '5px 0px',
+      maxHeight: '220px',
+      padding: '6px 0px',
     },
     '& li': {
-      padding: '5px 10px',
+      padding: '8px 12px',
       fontSize: '14px',
       '&.MuiAutocomplete-option[aria-selected="true"]': {
-        background: '#F2F3F4 !important',
+        background: '#f2e8d8 !important',
       },
     },
   },
   notFound: {
     color: '#2F2F2F',
     fontSize: '12px !important',
-  },
-  workshopHistory: {
-    '& .historyHeading': {
-      fontSize: '14px',
-      fontWeight: '600',
-      marginBottom: '20px',
-    },
-  },
-  loader: {
-    height: 'calc(100vh - 64px)',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F2F3F4',
-    '& svg': {
-      color: theme.palette.primaryGreen,
-    },
-    '& .errorMessage': {
-      color: '#6C6C6C',
-      fontSize: '14px',
-      fontWeight: '500',
-    },
   },
 }));

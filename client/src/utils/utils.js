@@ -375,7 +375,15 @@ export const validateInvite = function (body) {
       message: 'Name must be less than 60 characters',
     };
 
-  if (!validator.isEmail(body.email))
+  const digits = String(body.phoneNumber || '').replace(/\D/g, '');
+  if (!/^[6-9]\d{9}$/.test(digits.slice(-10))) {
+    return {
+      type: 'error',
+      message: 'Please provide a valid 10-digit mobile number',
+    };
+  }
+
+  if (body.email && body.email.trim() && !validator.isEmail(body.email.trim()))
     return {
       type: 'error',
       message: 'Please provide a valid email',
@@ -440,6 +448,14 @@ export const validateSignup = function (data) {
     return {
       type: 'error',
       message: 'please provide a valid mobile number',
+    };
+  }
+
+  const emailValue = data.email?.value?.trim() || '';
+  if (emailValue && !validator.isEmail(emailValue)) {
+    return {
+      type: 'error',
+      message: 'Please provide a valid email',
     };
   }
 

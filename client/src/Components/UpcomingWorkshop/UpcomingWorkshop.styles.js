@@ -5,6 +5,24 @@ export const useStyles = makeStyles((theme) => ({
     display: 'flex',
     alignItems: 'center',
     gap: '20px',
+    cursor: 'pointer',
+    borderRadius: '10px',
+    padding: '10px 12px',
+    outline: 'none',
+    background: '#faf6ef',
+    border: '1px solid #DCEBD4',
+    transition: 'background-color 160ms ease, border-color 160ms ease, box-shadow 160ms ease',
+    '&:hover': {
+      backgroundColor: '#f2e8d8',
+      borderColor: '#3d4f1e',
+      boxShadow: '0 4px 12px rgba(37, 147, 17, 0.16)',
+    },
+    '&:active': {
+      transform: 'scale(0.995)',
+    },
+    '&:hover $card': {
+      transform: 'scale(1.06)',
+    },
     [theme.breakpoints.down("sm")]:{
      gap:"15px",
     },
@@ -20,12 +38,15 @@ export const useStyles = makeStyles((theme) => ({
     justifyContent: 'center',
     color: 'white',
     borderRadius: '5px',
+    transition: 'transform 160ms ease',
     '& p': {
       fontWeight: '500',
       lineHeight: 'normal',
     },
   },
   titleAndInfo: {
+    flex: 1,
+    minWidth: 0,
     [theme.breakpoints.down("sm")]:{
       width:"100%",
     },
@@ -60,5 +81,10 @@ export const useStyles = makeStyles((theme) => ({
       fontSize: '12px',
       fontWeight: '500',
     },
+  },
+  chevron: {
+    marginLeft: 'auto',
+    color: '#3d4f1e',
+    fontSize: '22px !important',
   },
 }));

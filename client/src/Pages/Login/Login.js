@@ -4,6 +4,7 @@ import { useStyles } from './Login.styles';
 import {
   Box,
   Button,
+  CircularProgress,
   FormControl,
   FormLabel,
   IconButton,
@@ -13,6 +14,8 @@ import {
 } from '@mui/material';
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
+import PhoneOutlinedIcon from '@mui/icons-material/PhoneOutlined';
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { login } from '../../apis/user';
 import { useMutation } from '@tanstack/react-query';
 import AlertReact from '../../Components/Alert/AlertReact';
@@ -36,7 +39,7 @@ function Login() {
     onSuccess: (data) => {
       if (
         data.status === 'error' ||
-        data?.message === 'Please provide email and password!'
+        data?.message === 'Please provide your phone number and password!'
       ) {
         setAlertType({
           type: data.status || 'error',
@@ -78,80 +81,118 @@ function Login() {
           message={alertType.message}
         />
       )}
-      <Box className={classes.mainWrapper}>
-        <img className={classes.logo} src={logo} alt="The Last Center Logo" />
-        <Typography className={classes.header}>
-          Login into <span>The Last Center</span> to continue
+      <Box className={classes.panel}>
+        <Typography className={`${classes.eyebrow} loginEyebrow`}>
+          Our philosophy
         </Typography>
-        <Box className={classes.formWrapper}>
-          <form className={classes.form} onSubmit={handleSignInSubmit}>
-            <FormControl required className={classes.formControl}>
-              <FormLabel htmlFor="emailField">Email Address</FormLabel>
-              <TextField
-                type="email"
-                id="emailField"
-                placeholder="Enter Your Email Address"
-                name="email"
-                required
-              />
-            </FormControl>
-            <Box className={classes.FormElementInBox}>
+        <Typography className={`${classes.panelTitle} loginDisplay`}>
+          Not a solution, but a quest.
+        </Typography>
+        <Typography className={`${classes.panelCopy} loginCopy`}>
+          An exploration of life’s fundamental questions, in pursuit of joy,
+          creativity, and fulfillment.
+        </Typography>
+        <Box className={classes.panelList}>
+          {['Who am I?', 'What am I doing?', 'What do I truly want?'].map(
+            (item) => (
+              <Typography key={item} className={`${classes.panelItem} loginCopy`}>
+                {item}
+              </Typography>
+            )
+          )}
+        </Box>
+      </Box>
+      <Box className={classes.formColumn}>
+        <Box className={classes.mainWrapper}>
+          <img className={classes.logo} src={logo} alt="The Last Center Logo" />
+          <Box className={classes.headingBlock}>
+            <Typography className={classes.welcome}>Welcome back</Typography>
+            <Typography className={classes.header}>
+              Sign in to <span>The Last Centre</span>
+            </Typography>
+          </Box>
+          <Box className={classes.formWrapper}>
+            <form className={classes.form} onSubmit={handleSignInSubmit}>
               <FormControl required className={classes.formControl}>
-                <FormLabel htmlFor="passwordField">Password</FormLabel>
+                <FormLabel htmlFor="emailField">Phone number</FormLabel>
                 <TextField
-                  type={showPassword ? 'text' : 'password'}
-                  placeholder="Enter Your Password"
-                  id="passwordField"
-                  name="password"
+                  type="text"
+                  id="emailField"
+                  placeholder="10-digit mobile number"
+                  name="email"
                   required
+                  inputProps={{ inputMode: 'tel', autoComplete: 'username' }}
                   InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <IconButton
-                          disableRipple
-                          onClick={() => setShowPassword(!showPassword)}
-                        >
-                          {showPassword ? (
-                            <VisibilityOutlinedIcon />
-                          ) : (
-                            <VisibilityOffOutlinedIcon />
-                          )}
-                        </IconButton>
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <PhoneOutlinedIcon className={classes.fieldIcon} />
                       </InputAdornment>
                     ),
                   }}
                 />
+                <Typography className={classes.fieldHint}>
+                  Email also works when the account has one.
+                </Typography>
               </FormControl>
-              <Link to={'/forgotPass'} className="forgotPassword">
-                Forgot Password?
-              </Link>
-            </Box>
-            <Box className={classes.FormElementInBox}>
-              <Button
-                type="submit"
-                disableRipple
-                className={`${classes.signInBtn} continueBtn`}
-              >
-                {isPending ? 'loading...' : 'Continue'}
-              </Button>
-              <Typography>
-                Don't have an account?{' '}
-                <Link to={'/signup'} className="signup">
-                  Sign up
+              <Box className={classes.FormElementInBox}>
+                <FormControl required className={classes.formControl}>
+                  <FormLabel htmlFor="passwordField">Password</FormLabel>
+                  <TextField
+                    type={showPassword ? 'text' : 'password'}
+                    placeholder="Enter your password"
+                    id="passwordField"
+                    name="password"
+                    required
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <LockOutlinedIcon className={classes.fieldIcon} />
+                        </InputAdornment>
+                      ),
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            disableRipple
+                            onClick={() => setShowPassword(!showPassword)}
+                            aria-label="toggle password visibility"
+                          >
+                            {showPassword ? (
+                              <VisibilityOutlinedIcon />
+                            ) : (
+                              <VisibilityOffOutlinedIcon />
+                            )}
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    }}
+                  />
+                </FormControl>
+                <Link to={'/forgotPass'} className="forgotPassword">
+                  Forgot Password?
                 </Link>
-              </Typography>
-            </Box>
-          </form>
-
-          {/* <Divider sx={{ fontSize: '12px' }}>OR</Divider>
-          <Button
-            startIcon={<GoogleIcon />}
-            disableRipple
-            className={`${classes.signInBtn} googleBtn`}
-            onClick={() => alert('login with google')}
-          >
-            Continue with Google
-          </Button> */}
+              </Box>
+              <Box className={classes.FormElementInBox}>
+                <Button
+                  type="submit"
+                  disableRipple
+                  disabled={isPending}
+                  className={`${classes.signInBtn} continueBtn`}
+                >
+                  {isPending ? (
+                    <CircularProgress size={18} color="inherit" />
+                  ) : (
+                    'Continue'
+                  )}
+                </Button>
+                <Typography>
+                  Don't have an account?{' '}
+                  <Link to={'/signup'} className="signup">
+                    Sign up
+                  </Link>
+                </Typography>
+              </Box>
+            </form>
+          </Box>
         </Box>
       </Box>
     </Box>

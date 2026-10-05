@@ -13,13 +13,13 @@ const updateWorkshop = async (req: Request, res: Response) => {
   }
   const vols = req.body.vols.map((vol: string)=>{
     return {
-      user_email: vol,
+      user_id: Number(vol),
       workshop_id: req?.params?.id
     }
   })
   const leads = req.body.leads.map((lead: string)=>{
     return {
-      user_email: lead,
+      user_id: Number(lead),
       workshop_id: req?.params?.id
     }
   })

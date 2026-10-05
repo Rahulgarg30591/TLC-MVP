@@ -29,6 +29,7 @@ function LeadVolunteerPopup({
   openLeadPopup,
   closeLeadPopup,
   closeLeadPopupAndSetRows,
+  initialRole = 'volunteer',
 }) {
   const classes = useStyles();
 
@@ -55,7 +56,7 @@ function LeadVolunteerPopup({
 
   const [volunteersList, setVolunteersList] = useState([]);
   const [selectedVolunteers, setSelectedVolunteers] = useState([]);
-  const [role, setRole] = useState('volunteer');
+  const [role, setRole] = useState(initialRole);
 
   useEffect(() => {
     if (data) {
@@ -98,7 +99,9 @@ function LeadVolunteerPopup({
           <Autocomplete
             loading={isPending}
             options={volunteersList}
-            getOptionLabel={(option) => `${option.name} (${option.email})`}
+            getOptionLabel={(option) =>
+              `${option.name} (${option.phoneNumber || 'no phone'})`
+            }
             onChange={(event, selectedElements) => {
               setSelectedVolunteers((prev) => selectedElements);
             }}
@@ -150,7 +153,7 @@ function LeadVolunteerPopup({
         <FormControl className={classes.formControl}>
           <FormLabel id="volunteerRadioBtn">Role Type</FormLabel>
           <RadioGroup
-            defaultValue="volunteer"
+            value={role}
             name="role"
             className={classes.radioGroup}
             onChange={(e) => setRole(e.target.value)}

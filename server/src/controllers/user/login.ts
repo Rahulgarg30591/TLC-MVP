@@ -1,27 +1,26 @@
 import { Request, Response } from 'express';
 import CryptoJS from 'crypto-js';
 import getData from '../../utils/getData';
-import { getUserByEmail } from '../../gql/user/queries';
-import { updateStatus } from '../../gql/user/mutations';
+import { getUserByEmail, getUserByPhone } from '../../gql/user/queries';
+import { updateStatus, updateStatusById } from '../../gql/user/mutations';
 import jwt from 'jsonwebtoken';
 import { compare } from 'bcrypt';
+import { normalizeMobile } from '../../utils/global';
 
 const login = async (req: Request, res: Response) => {
-  const { email, password } = req.body;
+  const identifier = (req.body?.email || req.body?.phoneNumber || '').trim();
+  const { password } = req.body;
 
-  // 1) Check if email and password exist
-  if (!email || !password) {
+  if (!identifier || !password) {
     return res
       .status(400)
-      .json({ message: 'Please provide email and password!', status: 'error' });
+      .json({ message: 'Please provide your phone number and password!', status: 'error' });
   }
 
-  const query = getUserByEmail;
-  const variables = {
-    email,
-  };
-
-  const data = await getData(query, variables);
+  const phone = normalizeMobile(identifier);
+  const data = phone
+    ? await getData(getUserByPhone, { phoneNumber: phone })
+    : await getData(getUserByEmail, { email: identifier.toLowerCase() });
 
   if (data?.errors?.length) {
     return res.status(500).json({
@@ -62,16 +61,18 @@ const login = async (req: Request, res: Response) => {
   delete userToSend?.password
   
   const tokenObj = {
-    email,
+    id: user?.id,
+    email: user?.email,
+    phoneNumber: user?.phoneNumber,
     isAdmin: user?.isAdmin
   }
   const token = jwt.sign(tokenObj, process.env.JWT_SECRET_KEY || '', {
     expiresIn: '24h'
   })
 
-  const updateUserStatus = await getData(updateStatus, {
-    email, isLoggedIn: token
-  })
+  const updateUserStatus = user?.email
+    ? await getData(updateStatus, { email: user.email, isLoggedIn: token })
+    : await getData(updateStatusById, { id: user.id, isLoggedIn: token })
   userToSend = {
     ...userToSend,
     key: token

@@ -17,7 +17,7 @@ const getData_1 = __importDefault(require("../../utils/getData"));
 const mutations_1 = require("../../gql/user/mutations");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const updateUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a, _b, _c;
+    var _a, _b, _c, _d;
     const { authorization } = req === null || req === void 0 ? void 0 : req.headers;
     let token;
     try {
@@ -32,22 +32,22 @@ const updateUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
             message: 'Token expired! Please login again.'
         });
     }
-    const { email } = req === null || req === void 0 ? void 0 : req.params;
-    if ((token === null || token === void 0 ? void 0 : token.email) !== email) {
+    const id = Number((_a = req === null || req === void 0 ? void 0 : req.params) === null || _a === void 0 ? void 0 : _a.id);
+    if (!(token === null || token === void 0 ? void 0 : token.id) || Number(token.id) !== id) {
         return res.status(403).json({
             status: 'error',
             message: 'You are not allowed to update user details!'
         });
     }
-    const variables = Object.assign(Object.assign({}, req === null || req === void 0 ? void 0 : req.body), { name: (0, global_1.capitaliseStr)(req.body.name), state: (0, global_1.capitaliseStr)(req.body.state), location: (0, global_1.capitaliseStr)(req.body.location), city: (0, global_1.capitaliseStr)(req.body.city), email: email.toLowerCase(), dob: (0, global_1.formatDate)(req.body.dob) });
-    const data = yield (0, getData_1.default)(mutations_1.updateUserByEmail, variables);
+    const variables = Object.assign(Object.assign({}, req === null || req === void 0 ? void 0 : req.body), { id, name: (0, global_1.capitaliseStr)(req.body.name), state: (0, global_1.capitaliseStr)(req.body.state), location: (0, global_1.capitaliseStr)(req.body.location), city: (0, global_1.capitaliseStr)(req.body.city), dob: (0, global_1.formatDate)(req.body.dob) });
+    const data = yield (0, getData_1.default)(mutations_1.updateUserById, variables);
     if (data === null || data === void 0 ? void 0 : data.errors) {
         return res.status(400).json({
             status: 'error',
-            message: (_a = data === null || data === void 0 ? void 0 : data.errors[0]) === null || _a === void 0 ? void 0 : _a.message,
+            message: (_b = data === null || data === void 0 ? void 0 : data.errors[0]) === null || _b === void 0 ? void 0 : _b.message,
         });
     }
-    if (!((_c = (_b = data === null || data === void 0 ? void 0 : data.data) === null || _b === void 0 ? void 0 : _b.update_users) === null || _c === void 0 ? void 0 : _c.affected_rows)) {
+    if (!((_d = (_c = data === null || data === void 0 ? void 0 : data.data) === null || _c === void 0 ? void 0 : _c.update_users) === null || _d === void 0 ? void 0 : _d.affected_rows)) {
         return res.status(404).json({
             status: 'error',
             message: 'User not found!',

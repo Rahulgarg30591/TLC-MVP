@@ -3,17 +3,18 @@ import { makeStyles } from '@mui/styles';
 export const useStyles = makeStyles((theme) => ({
   root: {
     height: '100%',
+    minHeight: 0,
     position: 'relative',
-    background: '#F2F3F4',
-    [theme.breakpoints.down('sm')]: {
-      paddingBottom: '5px',
-      minHeight: '100vh',
-    },
+    background: '#faf6ef',
+    display: 'flex',
+    flexDirection: 'column',
   },
 
   HeaderMainContent: {
-    padding: '20px',
-    height: 'calc(100% - 45px )',
+    padding: '16px 20px',
+    height: 'calc(100% - 56px)',
+    minHeight: 0,
+    overflowX: 'hidden',
     overflowY: 'auto',
     display: 'flex',
     flexDirection: 'column',
@@ -30,16 +31,16 @@ export const useStyles = makeStyles((theme) => ({
   },
   actionBar: {
     background: '#FFFFFF',
-    position: 'absolute',
-    bottom: '0',
-    height: '45px',
+    position: 'relative',
+    flexShrink: 0,
+    height: '56px',
     width: '100%',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'flex-end',
     padding: '0 25px',
     gap: '15px',
-    boxShadow: '-4px 0px 5px 0px rgba(0, 0, 0, 0.25)',
+    boxShadow: '0 -8px 24px rgba(27, 59, 20, 0.06)',
     [theme.breakpoints.down('sm')]: {
       position: 'static',
       boxShadow: 'none',
@@ -48,12 +49,13 @@ export const useStyles = makeStyles((theme) => ({
       padding: '10px',
     },
     '& button': {
-      height: '30px',
-      minWidth: '75px',
-      padding: '0 10px',
-      borderRadius: '5px',
-      textTransform: 'capitalize',
-      fontSize: '12px',
+      height: '40px',
+      minWidth: '92px',
+      padding: '0 16px',
+      borderRadius: '10px',
+      textTransform: 'none',
+      fontSize: '13px',
+      fontWeight: 700,
     },
     '& .cancelBtn': {
       background: `${theme.palette.primaryGray} !important`,
@@ -175,7 +177,7 @@ export const useStyles = makeStyles((theme) => ({
         padding: '5px 10px',
         fontSize: '14px',
         '&.Mui-selected': {
-          background: '#F2F3F4 !important',
+          background: '#faf6ef !important',
         },
         '& span': {
           display: 'none',

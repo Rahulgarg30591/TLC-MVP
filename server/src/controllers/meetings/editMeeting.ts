@@ -13,7 +13,7 @@ const editMeeting = async (req: Request, res: Response) => {
   })
   const volunteers = req?.body?.volunteers?.map((vol: string)=>{
     return {
-      volunteer_email: vol,
+      user_id: Number(vol),
       meeting_id: id
     }
   })

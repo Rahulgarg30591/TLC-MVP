@@ -105,8 +105,12 @@ const allPageEnrollments = async (req: Request, res: Response) => {
           }
         },
         {
-          enrolled_by: {
-            _like: `${email}%`
+          enrollment_done_by: {
+            _or: [
+              { email: { _like: `${email}%` } },
+              { name: { _like: `${name}%` } },
+              { phoneNumber: { _like: `${digits || phone}%` } },
+            ]
           }
         }
       ]
@@ -117,7 +121,7 @@ const allPageEnrollments = async (req: Request, res: Response) => {
   {
     filters = {
       ...filters,
-      enrolled_by: {
+      enrolled_by_id: {
         _is_null: enrolled_is_null === 'true' ? true : false
       }
     }

@@ -1,3 +1,25 @@
+export const getUserByPhone = `
+  query UserByPhone($phoneNumber: String!) {
+    users(where: { phoneNumber: { _eq: $phoneNumber } }) {
+      id
+      name
+      password
+      isVerified
+      isAdminVerified
+      gender
+      phoneNumber
+      email
+      yearOfJoining
+      location
+      city
+      state
+      pincode
+      isAdmin
+      dob
+    }
+  }
+`;
+
 export const getUserByEmail = `
   query MyQuery($email: String!) {
     users(where: { email: { _eq: $email } }) {

@@ -19,12 +19,12 @@ const newWorkshop = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r;
     const vols = req.body.vols.map((vol) => {
         return {
-            user_email: vol
+            user_id: Number(vol)
         };
     });
     const leads = req.body.leads.map((lead) => {
         return {
-            user_email: lead
+            user_id: Number(lead)
         };
     });
     const variables = {

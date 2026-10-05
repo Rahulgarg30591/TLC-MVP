@@ -20,6 +20,7 @@ exports.allEnrollments = `
         }
       }
       enrollment_done_by {
+        id
         email
         name
         phoneNumber
@@ -73,6 +74,7 @@ exports.enrollmentByPK = `
         }
       }
       enrollment_done_by {
+        id
         email
         name
         phoneNumber

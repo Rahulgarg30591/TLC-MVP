@@ -18,6 +18,6 @@ router.post('/forgotPass', forgotPass);
 router.get('/verifyReset', verifyReset);
 router.post('/resetPass', resetPass)
 router.put('/updateLogStatus', updateLogStatus)
-router.put('/:email/update', auth, updateUser)
+router.put('/:id/update', auth, updateUser)
 
 export default router;

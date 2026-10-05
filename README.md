@@ -1,8 +1,30 @@
 # TLC-MVP — The Last Centre
 
-Internal operations web app for **The Last Centre** (UI copy also says “The Last Center”). Volunteers and admins manage workshops, meetings, enrollments (participants and their children), and volunteer accounts.
+Operations app for [The Last Centre](https://thelastcentre.org/the-last-centre/). Admins and volunteers use it to run workshops, meetings, participant enrollments, and volunteer accounts.
 
-This README is a full map of the current codebase (branch `dev`). There is **no seed user and no password in the repo**. Login credentials live only in the Hasura `users` table.
+A **volunteer** and an **admin** are accounts. A **participant** is an enrollment record (a person and their children). Participants do not sign in.
+
+The phone number is the account’s contact. Email is optional extra information. Sign-in accepts a 10-digit mobile number, and also an email when the account has one.
+
+---
+
+## Contents
+
+1. [Quick facts](#quick-facts)
+2. [How the app is built](#how-the-app-is-built)
+3. [Repository layout](#repository-layout)
+4. [Prerequisites](#prerequisites)
+5. [Local setup](#local-setup)
+6. [Dummy accounts](#dummy-accounts)
+7. [Roles](#roles)
+8. [Flows and use cases](#flows-and-use-cases)
+9. [Screens](#screens)
+10. [REST API](#rest-api)
+11. [Data model](#data-model)
+12. [Email](#email)
+13. [Tests](#tests)
+14. [What can be added](#what-can-be-added)
+15. [Limits to know about](#limits-to-know-about)
 
 ---
 
@@ -10,18 +32,47 @@ This README is a full map of the current codebase (branch `dev`). There is **no 
 
 | | |
 |---|---|
-| Product | Volunteer / workshop / enrollment admin portal |
-| Client | Create React App (React 18, MUI 5, React Query, AG Grid) |
-| Server | Express + TypeScript BFF on port **8080** |
-| Database | **Hasura GraphQL** (Postgres behind Hasura) |
-| Email | Brevo SMTP (`smtp-relay.brevo.com:587`) as `infotech@thelastcentre.com` |
-| Auth | JWT in `Authorization: Bearer <token>` (24h). Not cookies. |
-| Production app | https://tlc-mvp-app.vercel.app |
+| Product | Internal portal for workshops, meetings, enrollments, and volunteers |
+| Client | Create React App, React 18, MUI 5, TanStack Query, AG Grid, Chart.js. Port **3000** |
+| API | Express + TypeScript, compiled to `server/dist`. Port **8080** |
+| Database | Postgres behind **Hasura GraphQL**. The API is the only caller |
+| Auth | JWT in `Authorization: Bearer <token>`, 24 hours, stored in `localStorage` |
+| Identity | `users.phoneNumber` (required, unique). `users.email` is optional |
+| Look | Forest theme from the public site: cream pages, olive buttons, Outfit at 14px |
+| Production UI | https://tlc-mvp-app.vercel.app |
 | Production API | https://tlc-mvp-server.vercel.app |
-| Older API URL | https://tlc-two.vercel.app (dead / 404 as of this write-up) |
-| Git remote | https://github.com/gaurav-celestial/TLC-MVP.git (fork of shreya-celestial/TLC-MVP) |
+| Git | https://github.com/gaurav-celestial/TLC-MVP.git |
 
-The client **hardcodes** `https://tlc-mvp-server.vercel.app` in every API module. Running the UI locally still talks to the **deployed** API unless those URLs are changed.
+There is no root `package.json`. Install and run `client/` and `server/` separately. `e2e/` is a third package for Playwright.
+
+---
+
+## How the app is built
+
+```
+Browser  →  http://localhost:3000
+              REST + Bearer JWT
+                    ↓
+Express BFF  →  http://localhost:8080
+              GraphQL + x-hasura-admin-secret
+                    ↓
+Hasura  →  Postgres
+           users, Invitations, workshops, meetings,
+           enrollments, children, and the join tables
+```
+
+Every Hasura call from the API uses the admin secret. The app does not send a Hasura user JWT, and it does not use row-level permissions.
+
+The browser also calls `https://api.postalpincode.in/pincode/{code}` to fill city and state from an Indian pincode.
+
+`client/src/apis/config.js` sets the API host:
+
+```js
+export const API_BASE =
+  process.env.REACT_APP_API_URL || 'https://tlc-mvp-server.vercel.app';
+```
+
+A local UI with no `REACT_APP_API_URL` talks to the deployed API.
 
 ---
 
@@ -30,361 +81,477 @@ The client **hardcodes** `https://tlc-mvp-server.vercel.app` in every API module
 ```
 TLC-MVP/
 ├── README.md
-├── .prettierrc                 # { "singleQuote": true }
-├── client/                     # React SPA (package name: tlcapp)
-│   ├── public/                 # index.html title: "The Last Centre"
+├── .prettierrc                      # single quotes
+├── client/                          # React app (package name: tlcapp)
+│   ├── .npmrc                       # legacy-peer-deps=true
+│   ├── .env.local                   # gitignored; REACT_APP_API_URL
 │   └── src/
-│       ├── App.js              # MUI Theme + React Query
-│       ├── Theme.js            # brand colors
-│       ├── index.js
-│       ├── apis/               # fetch wrappers (hardcoded Vercel host)
-│       ├── Components/         # layout, tables, popups, VolunteerForm
-│       ├── Pages/              # Login, Dashboard, Volunteers, Workshops, …
-│       ├── hooks/              # useReactQuery, useAlerts
-│       ├── store/userContext.js
-│       └── utils/              # validators, date helpers
-└── server/
-    ├── src/app.ts              # Express entry
-    ├── src/Routes/             # REST routers
-    ├── src/controllers/        # one file per endpoint
-    ├── src/gql/                # Hasura query/mutation strings
-    ├── src/middlewares/        # auth, adminAuth
-    ├── src/utils/              # getData, mailer, generateMail
-    ├── dist/                   # compiled JS (checked in)
-    ├── vercel.json             # @vercel/node, catch-all to src/app.ts
-    └── tsconfig.json           # CommonJS → dist/
+│       ├── App.js                   # theme + React Query
+│       ├── Theme.js                 # forest palette, Outfit
+│       ├── apis/                    # fetch wrappers; API_BASE
+│       ├── Components/              # shell, tables, popups, forms
+│       ├── Pages/                   # Login, Dashboard, Volunteers, …
+│       ├── hooks/                   # useReactQuery, prefetch, alerts
+│       └── store/userContext.js
+├── server/
+│   ├── .env                         # gitignored secrets
+│   ├── .env.example
+│   ├── schema/                      # SQL applied to Hasura
+│   ├── src/                         # TypeScript source
+│   │   ├── app.ts
+│   │   ├── Routes/
+│   │   ├── controllers/
+│   │   ├── gql/
+│   │   └── middlewares/             # auth, adminAuth
+│   └── dist/                        # compiled JS; this is what npm start runs
+└── e2e/                             # Playwright, Pixel 5 / mobile-chrome
 ```
 
-Root `package-lock.json` is empty (no root package.json scripts). Work from `client/` and `server/`.
+SQL lives in `server/schema/`. Applied files:
+
+| File | What it changed |
+|---|---|
+| `2026-09-18-integrity-fixes.sql` | Password is no longer unique. `isAdmin` is a real boolean. Volunteer phones are unique |
+| `2026-09-24-users-email-optional.sql` | `users.email` may be empty |
+| `2026-09-24-account-id-links.sql` | Workshop, meeting, and “enrolled by” links store `users.id` |
+| `2026-09-25-invite-by-phone.sql` | Invitations are keyed by phone. Email on an invite is optional |
 
 ---
 
-## Architecture
+## Prerequisites
 
-```
-Browser (localhost:3000 or tlc-mvp-app.vercel.app)
-    │  REST + Bearer JWT
-    ▼
-Express BFF (localhost:8080 or tlc-mvp-server.vercel.app)
-    │  POST GraphQL + x-hasura-admin-secret
-    ▼
-Hasura (HASURA_DB_URL)
-    ▼
-Postgres tables: users, Invitations, workshops, enrollments,
-                 children, meetings, and join tables
-```
+- **Node.js 20.16.0** and npm. Load it with nvm before any server command. Node 16 (the copy at `/usr/local/bin/node` on this machine) has no global `fetch`. The API then answers login with “Database is unavailable”.
+- A **Hasura** project that already has the TLC tables. This checkout’s `server/.env` points at the dev project. If GraphQL comes back as HTML saying the project is not reachable, wake that project in Hasura Cloud.
+- The five server environment variables below. They are already filled in on this machine. They are not in git.
+- **Brevo** mail (`MAIL_API_KEY`) only when a flow sends a message: signup verification, password reset, or an invite that includes an email. Phone signup and the invite link the API returns work without mail.
 
-The BFF is a privileged proxy: **every** Hasura call uses the admin secret. There is no Hasura user JWT / RLS from the app.
-
-Pincode lookup is a third-party call from the browser: `https://api.postalpincode.in/pincode/{code}`.
+Optional, for the browser tests: Playwright browsers (`npx playwright install` inside `e2e/`).
 
 ---
 
-## How to run locally
+## Local setup
 
-### Prerequisites
+Do these in order. Leave both terminals open.
 
-- Node.js (tested with v20) and npm
-- For a **working login**, you also need Hasura env vars (see [Credentials](#credentials--how-to-log-in))
-
-### 1. Client (UI)
+### 1. Select Node 20.16.0
 
 ```bash
-cd client
-npm install          # uses .npmrc: legacy-peer-deps=true
-npm start            # http://localhost:3000
+export NVM_DIR="$HOME/.nvm"
+. "$NVM_DIR/nvm.sh"
+nvm install 20.16.0
+nvm use 20.16.0
+node -v    # v20.16.0
 ```
 
-Other scripts: `npm test`, `npm run build`.
+Run `nvm use 20.16.0` again in every new terminal before `npm start` in `server/`.
 
-This UI still calls **production** (`https://tlc-mvp-server.vercel.app`). That deployment currently returns `FUNCTION_INVOCATION_FAILED` (HTTP 500) on login, so the login page will render but sign-in will fail until either:
+### 2. Server environment
 
-- the Vercel API is healthy again, or
-- you point the client at a local server (replace `https://tlc-mvp-server.vercel.app` with `http://localhost:8080` in `client/src/apis/*.js`).
+From `server/`, if `.env` is missing:
 
-### 2. Server (API)
+```bash
+cp .env.example .env
+```
+
+Fill these keys. Do not commit the file, and do not paste the values into docs or chat.
+
+| Key | Purpose |
+|---|---|
+| `HASURA_DB_URL` | Hasura GraphQL HTTP endpoint. The **uncommented** line is the live project |
+| `HASURA_ADMIN_SECRET` | Sent as `x-hasura-admin-secret` |
+| `JWT_SECRET_KEY` | Signs the 24-hour session token |
+| `CRYPTO_TICKET` | AES key for invite, verification, and reset tickets |
+| `MAIL_API_KEY` | Brevo SMTP password for `infotech@thelastcentre.com` |
+
+`dotenv` loads `server/.env` from the `server/` working directory. The commented Hasura URL in that file is an empty project. Leave it commented.
+
+### 3. Install, build, and start the API
 
 ```bash
 cd server
-cp .env.example .env   # then fill in real values
-npm install            # already present in this checkout
-npm run build          # tsc → dist/
-npm run server         # nodemon ./dist/app.js
-# or: npm start        # node ./dist/app.js
+npm install
+npm run build     # tsc → dist/
+npm start         # node ./dist/app.js
 ```
 
-Listens on **http://localhost:8080/**. Port is hardcoded (not `process.env.PORT`).
+The API listens on **http://localhost:8080/**. The port is hardcoded.
 
-`dotenv.config()` loads `server/.env`. That file is gitignored.
+`npm start` runs the compiled files in `server/dist`, not `server/src`. After any TypeScript change, run `npm run build` again and restart. `npm run server` is the same process under nodemon; it still needs a fresh `dist/`.
 
----
+### 4. Point the client at that API
 
-## Credentials / how to log in
-
-**There are no default emails or passwords in this repository.** Git history, client, and server were searched: nothing to log in with.
-
-Login (`POST /user/login`) only succeeds when **all** of these are true for a `users` row:
-
-1. Email exists
-2. Password matches bcrypt hash (cost 12)
-3. `isVerified === true` (email link clicked, or invite signup)
-4. `isAdminVerified === true` (an admin approved the account, or the user came in via invite)
-
-### Env vars the server needs (not login passwords)
-
-Create `server/.env`:
+Create `client/.env.local` (gitignored):
 
 ```
-HASURA_DB_URL=                 # Hasura GraphQL HTTP endpoint
-HASURA_ADMIN_SECRET=           # sent as header x-hasura-admin-secret
-JWT_SECRET_KEY=                # signs session JWTs
-CRYPTO_TICKET=                 # AES key for email / invite / reset tickets
-MAIL_API_KEY=                  # Brevo SMTP password for infotech@thelastcentre.com
+REACT_APP_API_URL=http://localhost:8080
 ```
 
-These live on the Vercel project for `tlc-mvp-server` and are **not** in git. Get them from:
+Restart the React app after changing this file. Create React App only reads `REACT_APP_*` at startup.
 
-- Vercel → project `tlc-mvp-server` → Settings → Environment Variables
-- or the Hasura Cloud / self-hosted console for the GraphQL URL + admin secret
-- Brevo (Sendinblue) SMTP key for `MAIL_API_KEY`
-
-Without `HASURA_*`, the server process will listen but every API call fails.
-
-### How to get an app login (once Hasura is reachable)
-
-**Option A — existing production users.** Ask a TLC admin (mailbox `infotech@thelastcentre.com`) for an account, or use **Forgot password** if that user is already verified + admin-verified and mail is working.
-
-**Option B — invite path (skips email + admin verification).** An existing admin invites you; you open the mail link (valid **5 days**), sign up, and can log in immediately. `isAdmin` is copied from the invitation.
-
-**Option C — first admin, via Hasura console.** Insert a row into `users`:
-
-| Column | Value |
-|---|---|
-| `email` | your email |
-| `password` | bcrypt hash, cost 12 |
-| `name` | any |
-| `isVerified` | `true` |
-| `isAdminVerified` | `true` |
-| `isAdmin` | `true` |
-| `dob`, `gender`, `phoneNumber`, `yearOfJoining`, `location`, `city`, `state`, `pincode` | required by schema (use dummy valid values) |
-
-Generate the hash from `server/` (bcrypt is already a dependency):
+### 5. Install and start the UI
 
 ```bash
-node -e "require('bcrypt').hash('YourPassword1!', 12).then(console.log)"
+cd client
+npm install       # .npmrc sets legacy-peer-deps=true
+npm start         # http://localhost:3000
 ```
 
-Password rules in the UI: min 8 chars, 1 lowercase, 1 uppercase, 1 number, 1 symbol.
+`npm run build` writes a production bundle. `npm test` runs the CRA unit runner.
 
-**Option D — public signup.** `POST /user/signup` creates `isVerified: false`. You must click the Brevo email, then wait for an admin to verify you. You still cannot log in until `isAdminVerified` is true.
+### 6. Confirm Hasura is awake
+
+Open http://localhost:3000 and sign in with a dummy account from the next section. A login response of “Database is unavailable” means the API process is on the wrong Node version, or Hasura is asleep or unreachable. Wake the project named by the uncommented `HASURA_DB_URL`, then try again.
+
+### 7. Stop both processes
+
+Stop the terminal running `npm start` in `client/` and the one running it in `server/`, or stop whatever is bound to ports 3000 and 8080. The React app and the API need those ports.
 
 ---
 
-## Auth and roles
+## Dummy accounts
 
-### Session
+These two accounts live in the **dev** Hasura database. Both are email-verified and admin-approved, so they can sign in immediately.
 
-- Login returns `user` plus `user.key` (JWT).
-- Client stores `localStorage.keys = { id: email, key }`.
-- JWT payload: `{ email, isAdmin }`, signed with `JWT_SECRET_KEY`, expiry **24h**.
-- Full JWT string is also stored on `users.isLoggedIn`. Logout sets it to `null`.
-- Reload: `PUT /user/updateLogStatus` with `Authorization: Bearer <key>` and `{ isLoggingOut: false }`.
+The sign-in box is labeled **Phone number**. Typing the email also works. The JSON field is still named `email` in both cases.
 
-### Flags on `users`
+| | Admin | Volunteer |
+|---|---|---|
+| Name | Local Admin | Local Volunteer |
+| Phone | `9000000037` | `9000000038` |
+| Email | `dev.admin@thelastcentre.com` | `dev.volunteer@thelastcentre.com` |
+| Password | `TlcLocal@123` | `TlcVolunteer@123` |
+| Role | Admin | Volunteer |
 
-| Flag | Meaning |
-|---|---|
-| `isVerified` | Email verified (or invite signup) |
-| `isAdminVerified` | Admin approved the account |
-| `isAdmin` | Admin privileges |
+Use the admin account to invite people, approve signups, and create workshops. Use the volunteer account to see the same lists without those admin actions.
 
-Navbar shows **Admin** vs **Volunteer** from `user.isAdmin`.
+Other people already have rows in `users`. Their passwords are not stored in this repository.
 
-### Who can do what
+Password rules for any new account: at least 8 characters, with 1 lowercase letter, 1 uppercase letter, 1 number, and 1 symbol.
+
+Login succeeds only when all of these are true:
+
+1. The phone or email matches a `users` row.
+2. The password matches the bcrypt hash (cost 12).
+3. `isVerified` is true. Invite signup sets this. A signup with no email sets it immediately. A signup that includes an email waits for the verification link.
+4. `isAdminVerified` is true. An admin approves a public signup. An invited person is already approved.
+
+---
+
+## Roles
+
+The navbar shows **Admin** or **Volunteer** from `user.isAdmin`.
 
 | Action | Admin | Volunteer |
 |---|---|---|
-| View dashboard, lists, details | Yes | Yes |
-| Invite / verify / reject / delete volunteers | Yes | No |
-| Change volunteer role | Yes (not own) | No |
-| Create / edit / delete workshops | Yes | View only |
-| Create / edit / delete meetings | **UI allows all logged-in users** | same |
-| Create / edit / delete enrollments | **UI allows all logged-in users** | same |
+| Dashboard, lists, and detail pages | Yes | Yes |
 | Edit own profile | Yes | Yes |
+| Invite, approve, reject, or delete a volunteer | Yes | No |
+| Change someone else’s role | Yes | No |
+| Change your own role | No | No |
+| Delete your own account | No | No |
+| Create, edit, or delete a workshop | Yes | View only |
+| Add a volunteer or a lead volunteer on a workshop | Yes, in edit or create | No |
+| Create, edit, or delete a meeting | Yes | Yes |
+| Create, edit, or delete an enrollment | Yes | Yes |
 
-Server enforces admin on volunteer invite/verify/role/delete and workshop CUD via `adminAuth`. Meetings and enrollments only require a valid JWT (`auth`).
+The server enforces the admin column with `adminAuth` on volunteer invite, verify, role, and delete, and on workshop create, update, and delete. Meetings, enrollments, and the dashboard only require a signed-in user (`auth`).
+
+A session JWT carries `{ id, email, phoneNumber, isAdmin }`. The client keeps it in `localStorage` under `keys`, together with the user’s email, and sends it as `Authorization: Bearer <token>`. Logout clears that storage and sets `users.isLoggedIn` back to null. Reloading the page calls `PUT /user/updateLogStatus` to restore the session.
 
 ---
 
-## Client routes
+## Flows and use cases
 
-Unauthenticated: `/` Login, `/signup`, `/forgotPass`, `/resetPass`. Unknown paths → Login.
+### Sign in
 
-Authenticated:
+**Who:** any approved admin or volunteer.
+
+1. Open http://localhost:3000.
+2. Enter the phone number (or the email) and the password.
+3. The app lands on the dashboard and starts loading the first page of volunteers, workshops, meetings, and enrollments in the background.
+
+A wrong password returns “Invalid Credentials”. An unverified email asks the person to use the mail link. An account still waiting on an admin returns 403 and asks them to contact an admin.
+
+### Create an account from the public signup page
+
+**Who:** someone who does not have an invite.
+
+1. Open `/signup`.
+2. Phone number is required. Email sits under **Extra information** and can be left blank.
+3. Fill name, password, date of birth, year of joining (2012 through the current year), gender, address, and an Indian pincode. City and state fill from the pincode lookup.
+4. With no email, the account is marked verified and waits for an admin to approve it.
+5. With an email, Brevo sends a verification link. After the person opens it, an admin still has to approve the account before login works.
+
+### Invite a volunteer or another admin
+
+**Who:** an admin, from the Volunteers page.
+
+1. Choose invite and enter a name and a 10-digit phone. Email is optional. Choose whether the new person is an admin.
+2. The API stores an invitation and returns a signup path: `/signup?ticket=...&phone=...`. The dialog shows that link so it can be copied.
+3. When an email was entered, the same link is also mailed. The mailed link currently points at the production site.
+4. The invited person opens the link, completes the form, and can sign in at once. Invite signup sets both `isVerified` and `isAdminVerified`. `isAdmin` is copied from the invitation.
+5. Signup matches the invitation on that phone number. The ticket is an AES encryption of the phone. The link inside the invitation email stops working after 5 days.
+
+### Approve or reject a public signup
+
+**Who:** an admin, on the Volunteers list, filtered to people who are not yet approved.
+
+Approving sets `isAdminVerified` and the chosen role. Until that happens, the person cannot sign in.
+
+### Change a role, or remove an account
+
+**Who:** an admin.
+
+Role change calls `PUT /volunteers/updateRole` with the account id. Changing your own role returns 403. Delete calls `DELETE /volunteers/` with a list of ids. Deleting yourself returns an error. Deleting an account also removes invitations for the emails that were on those accounts.
+
+### Edit your own profile
+
+**Who:** the signed-in person, from the profile menu → Edit Profile, or `/editprofile`.
+
+Phone stays required. Email stays under extra information. The save request is `PUT /user/<id>/update`. The id in the URL has to be the signed-in user; another id returns 403. After a successful save the app goes back to the previous page.
+
+The profile menu is the name in the top bar. It closes when you choose an item or click outside it.
+
+### Reset a password
+
+**Who:** a person who has an email on the account.
+
+1. `/forgotPass` asks for that email. Resend is throttled by about 20 seconds.
+2. The mail link lands on `/resetPass?reset=<token>`.
+3. The new password follows the same strength rules.
+
+A phone-only account has nowhere for that mail to go. Reset still requires an email. See [What can be added](#what-can-be-added).
+
+### Run a workshop
+
+**Who:** everyone can open the list and the view page. An admin creates and edits.
+
+1. The Workshops list filters by upcoming, past, or all, and by a date range. Each row shows counts of leads, volunteers, and participants.
+2. Create or edit opens the workshop form: type, venue, city, start, end, and concluding date.
+3. On create, and after switching a workshop into edit, two actions appear: **Add volunteer** and **Add lead volunteer**. Each opens the same picker with that role already selected. Membership is stored as `users.id`.
+4. Participants on a workshop are enrollment records, linked by `enrollment_id`.
+5. View mode tells an admin to switch to edit before staffing the workshop.
+
+Workshop types the form accepts: None, Freedom Workshop, Holy Trail, Leadership Workshop, Talk on Bhagwad Gita, Wisdom Workshop, Free to Grow, Free to Choose Workshop, Integrity, Service & Responsibility Workshop, Confidence Power & Excellence Workshop, Love, Relationship & Romance Workshop, Meditation Retreat, Parent Child - Child Parent Workshop, Krodh Workshop, Tension Workshop, Grounding Series, Enlightenment Workshop.
+
+### Hold a meeting
+
+**Who:** any signed-in admin or volunteer can create, edit, and delete.
+
+A meeting has a type, a date, a venue, a city, an optional workshop, volunteers, and enrollments. Types in the form are None and Meeting Type 1 through Meeting Type 4.
+
+When a meeting belongs to a workshop, the people enrolled in the meeting should be that workshop’s participants, and the volunteers should be that workshop’s leads and volunteers. The detail page shows both lists.
+
+### Enroll a participant
+
+**Who:** any signed-in admin or volunteer.
+
+An enrollment is the participant: name, a unique 10-digit `mobile_number`, optional email, date of birth, gender, address, and pincode. Children are separate rows (name, date of birth, gender) under that enrollment.
+
+`enrolled_by_id` stores the account id of the volunteer who enrolled them. The list can filter by who enrolled the participant. The detail page shows workshop history and meeting history.
+
+Enrollments are not accounts. They do not have passwords, and they do not appear in the volunteer list.
+
+### Read the dashboard
+
+**Who:** any signed-in user.
+
+The dashboard shows counts for volunteers, workshops, enrollments, and meetings, a doughnut of enrollments over the last six calendar months (including the current month), and the upcoming workshops. The chart groups rows by `enrollments.created_at`. The page itself does not scroll; the upcoming list scrolls inside its card.
+
+---
+
+## Screens
+
+Signed out: `/` is login. Unknown paths also show login.
 
 | Path | Page |
 |---|---|
-| `/`, `/dashboard` | Dashboard |
-| `/editprofile` | Edit own profile |
-| `/volunteers` | Volunteer list |
-| `/volunteers/detail/:email/:type` | View / edit volunteer (`type` = `view` \| `edit`) |
-| `/workshops/:createSuccess?` | Workshop list (`success` flash) |
-| `/workshops/detail/:type` | Create workshop |
-| `/workshops/detail/:id/:type` | View / edit workshop |
-| `/meetings/...` | Same pattern as workshops |
-| `/enrollments/...` | Same pattern as workshops |
+| `/` | Login when signed out. Dashboard when signed in |
+| `/signup` | Create an account. Invite links add `ticket` and `phone` |
+| `/forgotPass` | Ask for a reset mail |
+| `/resetPass` | Set a new password (`?reset=`) |
+| `/dashboard` | Counts, chart, upcoming workshops |
+| `/editprofile` | Edit the signed-in profile |
+| `/volunteers` | Search and filters: status, role, gender |
+| `/volunteers/detail/:id/:type` | One volunteer. `type` is `view` or `edit` |
+| `/workshops` | Workshop list. Optional `success` flash |
+| `/workshops/detail/:type` | Create |
+| `/workshops/detail/:id/:type` | View or edit |
+| `/meetings` | Meeting list |
+| `/meetings/details/:type` | Create |
+| `/meetings/details/:id/:type` | View or edit |
+| `/enrollments` | Enrollment list |
+| `/enrollments/details/:type` | Create |
+| `/enrollments/details/:id/:type` | View or edit |
 
-Invite signup lands on `/signup?ticket=<AES>&for=<email>`. Reset lands on `/resetPass?reset=<token>`.
+The sidebar (a temporary drawer below the `md` breakpoint) links to Dashboard, Volunteers, Workshops, Meetings, and Enrollments.
 
----
-
-## Pages (what they do)
-
-- **Login** — email + password. Google button is commented out.
-- **Signup** — `VolunteerForm`: name, email, password, confirm, phone, DOB, year of joining (2012–current), gender, address, Indian pincode → city/state. Invite mode locks email.
-- **Forgot / Reset password** — 20s resend throttle on forgot.
-- **Dashboard** — counts (volunteers, workshops, enrollments, meetings), doughnut of last ~6 months enrollments, upcoming workshops.
-- **Volunteers** — search, filters (status / role / gender), AG Grid. Admin: invite, verify pending, delete, edit.
-- **Workshops** — filter past/upcoming/all, date range. Counts of leads, volunteers, participants.
-- **Meetings** — type, optional workshop, date, venue, volunteers, enrollments.
-- **Enrollments** — participant + children; “Enrolled By” filter (self / others).
-- **Edit profile** — all profile fields except email and role.
-
-Brand colors (`Theme.js`): green `#259311`, red `#C1423F`, blue `#005C8E`, orange `#DF6D10`, gray `#E6E6E6`, text `#2F2F2F`. Font: Inter.
+On a small screen, AG Grid lists use automatic row height so a row can be tapped. The first page of each list is prefetched after sign-in (page 1, 12 rows, default filters). A new search, filter, or page is a new request.
 
 ---
 
-## REST API (Express)
+## REST API
 
-Base in production: `https://tlc-mvp-server.vercel.app`. Local: `http://localhost:8080`.
+Local base: `http://localhost:8080`. Production base: `https://tlc-mvp-server.vercel.app`.
 
 Authenticated routes expect `Authorization: Bearer <jwt>`.
 
 ### `/user`
 
-| Method | Path | Auth | Purpose |
+| Method | Path | Who | Purpose |
 |---|---|---|---|
-| POST | `/user/signup` | public | Create unverified user, send verify mail |
-| POST | `/user/login` | public | `{ email, password }` → `{ status, user }` |
-| GET | `/user/verifyUser?token=` | public | Mark email verified, redirect to app |
-| POST | `/user/forgotPass` | public | `{ email }` |
-| GET | `/user/verifyReset?token=` | public | Redirect to `/resetPass?reset=` |
-| POST | `/user/resetPass` | public | `{ token, password }` |
-| PUT | `/user/updateLogStatus` | JWT in handler | Session refresh / logout |
-| PUT | `/user/:email/update` | `auth` | Update profile (JWT email must match) |
+| POST | `/user/signup` | Public | Create an account. Sends verify mail when an email is present |
+| POST | `/user/login` | Public | Body `{ email, password }`. `email` may be a phone number. Returns `{ status, user }` and `user.key` |
+| GET | `/user/verifyUser?token=` | Public | Mark the email verified, then redirect |
+| POST | `/user/forgotPass` | Public | `{ email }` |
+| GET | `/user/verifyReset?token=` | Public | Redirect to `/resetPass?reset=` |
+| POST | `/user/resetPass` | Public | `{ token, password }` |
+| PUT | `/user/updateLogStatus` | Bearer token | Restore the session, or log out |
+| PUT | `/user/:id/update` | Signed in | Update that profile. The id must be the caller |
 
 ### `/volunteers`
 
-| Method | Path | Auth | Purpose |
+| Method | Path | Who | Purpose |
 |---|---|---|---|
-| GET | `/volunteers/searchAndFilter` | `auth` | Paginated list + filters |
-| GET | `/volunteers/:email/details` | `auth` | One volunteer + workshop/meeting history |
-| PUT | `/volunteers/updateRole` | `adminAuth` | `{ email, isAdmin }` |
-| DELETE | `/volunteers/` | `adminAuth` | `{ emails: [] }` (cannot delete self) |
-| PUT | `/volunteers/adminVerified` | `adminAuth` | Approve signup |
-| POST | `/volunteers/invite` | `adminAuth` | `{ email, name, isAdmin }` |
-| GET | `/volunteers/verifyInvite?invite=` | public | 5-day invite → signup redirect |
-| POST | `/volunteers/inviteSignup` | public | Create already-verified user from ticket |
+| GET | `/volunteers/searchAndFilter` | Signed in | Paginated list |
+| GET | `/volunteers/:id/details` | Signed in | One account, plus workshop and meeting history. An email in the path returns 400 |
+| PUT | `/volunteers/updateRole` | Admin | `{ id, isAdmin }` |
+| DELETE | `/volunteers/` | Admin | `{ ids: [] }` |
+| PUT | `/volunteers/adminVerified` | Admin | Approve a signup |
+| POST | `/volunteers/invite` | Admin | `{ name, phoneNumber, email?, isAdmin }`. Returns `signupPath` |
+| GET | `/volunteers/verifyInvite?invite=` | Public | Open an invite ticket and redirect to signup |
+| POST | `/volunteers/inviteSignup` | Public | Create the already-approved user from the ticket |
 
-### `/workshops` · `/meetings` · `/enrollments` · `/dashboard`
+### Workshops, meetings, enrollments, dashboard
 
-| Method | Path | Auth |
+| Method | Path | Who |
 |---|---|---|
-| POST/GET `/workshops/` | create list | admin / auth |
-| GET `/workshops/:id/details` | | auth |
-| PUT `/workshops/:id/update` · DELETE `/workshops/` | | admin |
-| CRUD `/meetings/` and `/meetings/:id/details` · `/:id/edit` | | auth (mounted) |
-| CRUD `/enrollments/` similarly | | auth (mounted) |
-| GET `/dashboard/` | counts + recent enrollments | auth |
+| POST | `/workshops/` | Admin |
+| GET | `/workshops/` | Signed in |
+| GET | `/workshops/:id/details` | Signed in |
+| PUT | `/workshops/:id/update` | Admin |
+| DELETE | `/workshops/` | Admin |
+| POST | `/meetings/` | Signed in |
+| GET | `/meetings/` | Signed in |
+| GET | `/meetings/:id/details` | Signed in |
+| PUT | `/meetings/:id/edit` | Signed in |
+| DELETE | `/meetings/` | Signed in |
+| POST | `/enrollments/` | Signed in |
+| GET | `/enrollments/` | Signed in |
+| GET | `/enrollments/:id/details` | Signed in |
+| PUT | `/enrollments/:id/edit` | Signed in |
+| DELETE | `/enrollments/` | Signed in |
+| GET | `/dashboard/` | Signed in |
 
-List query params used by the client: `page`, `no_of_records`, `value` (search), `gender`, `isAdmin`, `isAdminVerified`, `sort_by`, `order_of_sort`, `pastOrUpcoming`, `start`/`end` or `start_date`/`end_date` (`MM/DD/YYYY`), `enrolled_is_null`, `isNull` (meetings not linked to a workshop).
+List calls use `page`, `no_of_records`, and a search value, plus filters the screen cares about: gender, role, approval, past or upcoming, start and end dates (`MM/DD/YYYY`), and who enrolled the participant.
+
+Workshop and meeting save bodies send volunteer **ids**. A new enrollment sends `enrolled_by_id`.
 
 ---
 
-## Data model (Hasura tables)
+## Data model
+
+Hasura source name for this database is `TLC DB`.
 
 ### `users`
 
-`id`, `name`, `email`, `password`, `token`, `dob`, `gender`, `phoneNumber`, `yearOfJoining`, `location`, `city`, `state`, `pincode`, `isVerified`, `isAdminVerified`, `isAdmin`, `isPassToBeReset`, `isLoggedIn`
+`id`, `name`, `email` (unique when set, otherwise empty), `password`, `token`, `dob`, `gender`, `phoneNumber` (unique), `yearOfJoining`, `location`, `city`, `state`, `pincode`, `isVerified`, `isAdminVerified`, `isAdmin` (default false), `isPassToBeReset`, `isLoggedIn` (the current JWT, or null).
 
 ### `Invitations`
 
-`email`, `name`, `token`, `isAccepted`, `isAdmin`, `created_at`
+`phone_number` (required, unique), `email` (optional), `name`, `token`, `isAccepted`, `isAdmin`, `created_at`.
 
 ### `workshops`
 
-`id`, `types`, `venue`, `venue_city`, `start_date`, `end_date`, `concluding_date`
+`id`, `types`, `venue`, `venue_city`, `start_date`, `end_date`, `concluding_date`.
 
-Join: `workshop_volunteers` (`user_email`), `workshop_lead_volunteers` (`user_email`), `workshop_participants` (`enrollment_id`, `workshop_id`)
+Joins:
 
-### `enrollments`
-
-`id` (PK), `name`, `mobile_number` (required, unique, 10-digit India), `email` (optional, unique when set), `dob`, `gender`, `address`, `city`, `state`, `pincode`, `enrolled_by` (volunteer email), `created_at`  
-Children: `children` (`id`, `name`, `dob`, `gender`, `enrollment_id`)
-
-New enrollments are identified by **phone**, not email. Workshop/meeting joins still use `enrollment_id`. Volunteer login is still email (later branch).
+- `workshop_volunteers` (`workshop_id`, `user_id` → `users.id`)
+- `workshop_lead_volunteers` (`workshop_id`, `user_id` → `users.id`)
+- `workshop_participants` (`workshop_id`, `enrollment_id`)
 
 ### `meetings`
 
-`id`, `date`, `type`, `venue`, `venue_city`, `workshop_id`  
-Join: `meetings_enrollments`, `meetings_volunteers` (`volunteer_email`)
+`id`, `date`, `type`, `venue`, `venue_city`, `workshop_id`.
 
-### Workshop types (client enum)
+Joins: `meetings_volunteers` (`user_id` → `users.id`), `meetings_enrollments` (`enrollment_id`).
 
-None, Freedom Workshop, Holy Trail, Leadership Workshop, Talk on Bhagwad Gita, Wisdom Workshop, Free to Grow, Free to Choose Workshop, Integrity, Service & Responsibility Workshop, Confidence Power & Excellence Workshop, Love, Relationship & Romance Workshop, Meditation Retreat, Parent Child - Child Parent Workshop, Krodh Workshop, Tension Workshop, Grounding Series, Enlightenment Workshop.
+### `enrollments` and `children`
 
-### Meeting types (client enum)
+Enrollment: `id`, `name`, `mobile_number` (required, unique, 10 digits), `email` (optional), `dob`, `gender`, `address`, `city`, `state`, `pincode`, `enrolled_by_id` → `users.id`, `created_at`.
 
-None, Meeting Type 1–4.
+Child: `id`, `name`, `dob`, `gender`, `enrollment_id`.
+
+The relationship from an enrollment to the volunteer who enrolled them is `enrollment_done_by`.
 
 ---
 
 ## Email
 
-Transporter: Brevo, user `infotech@thelastcentre.com`, password `MAIL_API_KEY`.
+Mail is sent through Brevo as `infotech@thelastcentre.com` when `MAIL_API_KEY` is set.
 
-| Flow | Subject | Link (hardcoded production host) |
+| Flow | Subject | When it sends |
 |---|---|---|
-| Signup | Verification of TLC Email | `/user/verifyUser?token=` |
-| Forgot password | Reset Password Link | `/user/verifyReset?token=` |
-| Invite | TLC Invitation | `/volunteers/verifyInvite?invite=` |
+| Signup with an email | Verification of TLC Email | Always for that signup |
+| Forgot password | Reset Password Link | Always |
+| Invite that includes an email | TLC Invitation | Only when the invite has an email |
 
-Tickets are `CryptoJS.AES.encrypt(email, CRYPTO_TICKET)`, not JWTs. Spaces in query strings are turned back into `+`.
+Tickets are `CryptoJS.AES.encrypt(...)` with `CRYPTO_TICKET`, not JWTs. Verification and invite links in those messages are built against the production Vercel hosts, even when the API is running on localhost. The invite dialog in the app shows a path you can open on localhost yourself.
 
-Verify / reset / invite **redirects** always go to `https://tlc-mvp-app.vercel.app`, even if you run locally.
-
----
-
-## Environment and deploy
-
-Server `vercel.json`: build `src/app.ts` with `@vercel/node`, route `/(.*)` to that file. Set the five env vars on Vercel.
-
-Client has no `REACT_APP_*` variables.
+A signup or invite with no email does not send mail.
 
 ---
 
-## Known quirks (from the code)
+## Tests
 
-1. Client API host is hardcoded to Vercel; local server is unused unless URLs change.
-2. Mail and redirect URLs are also hardcoded to Vercel, not localhost.
-3. `cookie-parser` is a dependency but unused. Auth is Bearer JWT.
-4. CORS is wide open (`cors()` with no origin list).
-5. Port 8080 is hardcoded; Vercel serverless ignores `listen` anyway.
-6. Public signup does not set `isAdmin` even though the GraphQL mutation declares the variable.
-7. Invite signup skips both email verification and admin approval.
-8. Meetings and enrollments are not admin-gated in the UI (workshops and volunteers are).
-9. `fetch(..., signal)` in several API files passes `AbortSignal` as a **third argument** (ignored by `fetch`; should be in the options object).
-10. Typos in API messages: `"Anuathorized action!"`, `"User does not exists!"`.
-11. Branding mix: HTML “The Last Centre” vs login “The Last Center”.
-12. Dashboard query uses ~7 months of enrollments but the UI says “Last 6 Months”.
-13. `VolunteerDetails` has a leftover `const isAdmin = true`.
-14. Dead volunteer list controllers exist (`getAllVolunteers`, `filteredVolunteers`) but routes are commented out.
-15. Root README previously listed `https://tlc-two.vercel.app/` — that host 404s; current code uses `tlc-mvp-server`.
+Playwright lives in `e2e/`. The `mobile-chrome` project uses a Pixel 5 viewport against http://localhost:3000, with the API on http://localhost:8080. Both servers have to be running.
+
+```bash
+cd e2e
+npm install
+npx playwright install
+npm run test:mobile
+```
+
+`e2e/tests/admin.js` reads the admin phone and password from `.grok/skills/tlc-mvp/SKILL.md`. The specs cover phone sign-in, profile and signup fields, volunteer search, and account-id checks (detail by id, profile update, role, workshop and meeting membership).
 
 ---
 
-## Tech versions (from package.json)
+## What can be added
 
-**Client:** React 18.2, react-router-dom 6.22, MUI 5.15, TanStack Query 5.24, ag-grid 31.1, chart.js 4.4, dayjs, moment, validator.
+These follow from the way the app works today. None of them are required to run it locally.
 
-**Server:** Express 4.18, TypeScript 5.4, bcrypt 5.1, jsonwebtoken 9, crypto-js 4.2, nodemailer 6.9, helmet 7, cors, dotenv, nodemon.
+**Phone layout.** Below the `md` breakpoint the app still uses the sidebar drawer and AG Grid. A phone-first pass would add a bottom navigation bar, card lists instead of grids, a sticky save button, and full-screen sheets for dialogs. Desktop would keep the sidebar and the grids.
+
+**Deliver the invite to the phone.** The invite already requires a mobile number and returns a signup link. Nothing sends that link as an SMS. The admin copies it, or adds an email and relies on mail.
+
+**Reset a password with a phone number.** Forgot-password only sends mail. An account with no email cannot recover the password from the login screen.
+
+**Decide who may change meetings and enrollments.** Any signed-in volunteer can create, edit, and delete them. Workshops and volunteer administration are already limited to admins. The same limit could be applied here if volunteers should only view.
+
+**Send mail back to the environment you are using.** Verification, reset, and invite messages always link to the production Vercel app and API. Local testing of those links means copying the token onto localhost by hand.
+
+**Tighten the database permissions.** The API uses the Hasura admin secret for every query. Per-role Hasura permissions would keep a volunteer token from reading or writing rows the UI already hides.
+
+**Home-screen install.** A web app manifest would let a phone add the portal to the home screen. A service worker is a separate choice and is not required for that.
+
+**Real meeting names.** The meeting form still offers Meeting Type 1 through 4. Those can be replaced with the names the centre actually uses, the same way workshop types already are.
+
+**Search hint.** The volunteer grid searches by phone and finds people that way. The placeholder still says to search by name or email.
+
+**Google sign-in.** A Google button exists in the login code and is commented out. Turning it on needs an identity provider and a decision about how it maps to the phone number.
+
+---
+
+## Limits to know about
+
+- The API port is 8080, not `process.env.PORT`. On Vercel the serverless function ignores `listen`.
+- CORS is open (`cors()` with no origin list).
+- `cookie-parser` is installed and unused. Auth is the Bearer token.
+- Public signup does not set `isAdmin`. Admin rights come from an invite or from a later role change.
+- A few API messages still have typos (“Anuathorized action!”, “User does not exists!”).
+- Old list controllers `getAllVolunteers` and `filteredVolunteers` remain in the server, with their routes commented out.
+- `VolunteerDetails` still has a leftover `const isAdmin = true` in the client. The server, not that constant, decides who can change a role.
+- The login page uses a larger Outfit size for the philosophy panel. Everywhere else, UI text is Outfit at 14px, including grids and the dashboard chart.
+- Filled buttons and the selected sidebar item use olive `#5a7030`. Page background is cream `#faf6ef`. Charcoal `#3d3525` is for text.

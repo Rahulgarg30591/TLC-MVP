@@ -1,6 +1,7 @@
 export const getVolunteers = `
   query Volunteers($offset: Int!, $limit: Int!) {
     users(offset: $offset, limit: $limit, where: {isVerified: {_eq: true}}, order_by: {id: desc}) {
+      id
       gender
       email
       dob
@@ -25,6 +26,7 @@ export const getVolunteers = `
 export const filterVolunteersQuery = `
   query filterVolunteersQuery($where: users_bool_exp = {}, $offset: Int!, $limit: Int!, $order_by: [users_order_by!]) {
     users(where: $where, offset: $offset, limit: $limit, order_by: $order_by){
+      id
       gender
       email
       dob
@@ -49,6 +51,7 @@ export const filterVolunteersQuery = `
 export const searchAndFilterVolunteers = `
   query SearchAndFilter($where: users_bool_exp = {}, $offset: Int!, $limit: Int!, $order_by: [users_order_by!]) {
     users(where: $where, offset: $offset, limit: $limit, order_by: $order_by) {
+      id
       gender
       email
       dob
@@ -70,9 +73,10 @@ export const searchAndFilterVolunteers = `
   }
 `;
 
-export const VolunteerByEmail = `
-  query MyQuery($email: String!, $isVerified: Boolean = true) {
-    users(where: {email: {_eq: $email}, isVerified: {_eq: $isVerified}}) {
+export const VolunteerById = `
+  query VolunteerById($id: Int!, $isVerified: Boolean = true) {
+    users(where: {id: {_eq: $id}, isVerified: {_eq: $isVerified}}) {
+      id
       gender
       email
       dob
@@ -120,6 +124,19 @@ export const VolunteerByEmail = `
   }
 `;
 
+export const checkPhoneAvailability = `
+  query CheckPhone($phoneNumber: String!) {
+    users(where: {phoneNumber: {_eq: $phoneNumber}}) {
+      id
+      phoneNumber
+    }
+    Invitations(where: {phone_number: {_eq: $phoneNumber}, isAccepted: {_eq: false}}) {
+      phone_number
+      name
+    }
+  }
+`;
+
 export const checkEmailAvailability = `
   query checkEmailAvailability($email: String!) {
     users(where: {email: {_eq: $email}}) {
@@ -140,6 +157,7 @@ export const verifyVolunteerInvite = `
     Invitations(where: {token: {_eq: $token}, isAccepted: {_eq: $isAccepted}}) {
       created_at
       email
+      phone_number
       isAdmin
     }
   }

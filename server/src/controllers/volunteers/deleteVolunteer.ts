@@ -1,12 +1,10 @@
 import { Request, Response } from "express"
 import getData from "../../utils/getData"
-import { DeleteVolunteersByEmail } from "../../gql/volunteers/mutations"
+import { DeleteInvitationsByEmail, DeleteVolunteersById } from "../../gql/volunteers/mutations"
 import jwt from "jsonwebtoken";
 
 const deleteVolunteer = async (req: Request, res: Response) => {
   const { authorization } = req?.headers
-  const { emails } = req.body
-
   let token: any;
   try{
     let authToken: any = authorization
@@ -22,19 +20,11 @@ const deleteVolunteer = async (req: Request, res: Response) => {
     })
   }
 
-  const volunteers = emails?.reduce((current: any, email: string)=>{
-    if(token?.email !== email)
-    {
-      current.push({
-        email: {
-          _eq: email
-        }
-      })
-    }
-    return current
-  },[])
-  
-  if(volunteers?.length === 0)
+  const ids = (req.body?.ids || [])
+    .map((id: any) => Number(id))
+    .filter((id: number) => id && id !== Number(token?.id))
+
+  if(!ids.length)
   {
     return res.status(403).json({
       status: 'error',
@@ -42,19 +32,7 @@ const deleteVolunteer = async (req: Request, res: Response) => {
     })
   }
 
-  const variables = {
-    where: {
-      _or: [...volunteers], 
-      isVerified: {
-        _eq: true
-      }
-    },
-    where1: {
-      _or: [...volunteers]
-    }
-  }
-
-  const data = await getData(DeleteVolunteersByEmail, variables)
+  const data = await getData(DeleteVolunteersById, { ids })
 
   if(data?.errors)
   {
@@ -66,6 +44,12 @@ const deleteVolunteer = async (req: Request, res: Response) => {
 
   if(data?.data?.delete_users?.affected_rows)
   {
+    const emails = (data.data.delete_users.returning || [])
+      .map((row: { email?: string }) => row.email)
+      .filter(Boolean)
+    if (emails.length) {
+      await getData(DeleteInvitationsByEmail, { emails })
+    }
     return res.status(200).json({
       status: 'success',
       message: "Users deleted successfully!"
