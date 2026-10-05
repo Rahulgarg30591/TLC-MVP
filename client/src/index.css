@@ -9,7 +9,55 @@ body,
   height: 100%;
 }
 body {
-  font-family: "Inter", sans-serif;
+  font-family: "Outfit", system-ui, sans-serif;
+  font-size: 14px;
+}
+
+#root button,
+#root input,
+#root textarea,
+#root select,
+#root p,
+#root span,
+#root label,
+#root a,
+#root li,
+#root h1,
+#root h2,
+#root h3,
+#root h4,
+#root h5,
+#root h6,
+#root .MuiTypography-root,
+#root .MuiButton-root,
+#root .MuiInputBase-root,
+#root .MuiFormLabel-root,
+#root .MuiMenuItem-root,
+#root .MuiChip-label,
+#root .ag-header-cell-text,
+#root .ag-cell {
+  font-family: "Outfit", system-ui, sans-serif !important;
+  font-size: 14px !important;
+  letter-spacing: 0 !important;
+}
+
+#root .loginDisplay {
+  font-family: "Outfit", system-ui, sans-serif !important;
+  font-size: 44px !important;
+  line-height: 1.05 !important;
+  letter-spacing: 0 !important;
+}
+
+#root .loginEyebrow {
+  font-family: "Outfit", system-ui, sans-serif !important;
+  font-size: 12px !important;
+  letter-spacing: 0.18em !important;
+}
+
+#root .loginCopy {
+  font-family: "Outfit", system-ui, sans-serif !important;
+  font-size: 15px !important;
+  letter-spacing: 0 !important;
 }
 
 @keyframes tlcFadeIn {

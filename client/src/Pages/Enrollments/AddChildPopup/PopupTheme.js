@@ -1,9 +1,7 @@
 import { createTheme } from '@mui/material';
+import { Theme } from '../../../Theme';
 
-export const ChildTheme = createTheme({
-  typography: {
-    fontFamily: ['Inter', 'sans-serif'].join(','),
-  },
+export const ChildTheme = createTheme(Theme, {
   components: {
     MuiPopper: {
       styleOverrides: {

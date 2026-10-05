@@ -17,6 +17,7 @@ export const allEnrollments = `
         }
       }
       enrollment_done_by {
+        id
         email
         name
         phoneNumber
@@ -71,6 +72,7 @@ export const enrollmentByPK = `
         }
       }
       enrollment_done_by {
+        id
         email
         name
         phoneNumber

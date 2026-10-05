@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import CryptoJS from 'crypto-js';
 import getData from "../../utils/getData";
-import { verifyAndUpdateKey } from "../../gql/user/mutations";
+import { verifyAndUpdateKey, verifyAndUpdateKeyById } from "../../gql/user/mutations";
 import jwt from "jsonwebtoken";
 
 const updateLogStatus = async (req: Request, res: Response) => {
@@ -42,7 +42,9 @@ const updateLogStatus = async (req: Request, res: Response) => {
   }
   else {
     const tokenObj = {
+      id: token?.id,
       email: token?.email,
+      phoneNumber: token?.phoneNumber,
       isAdmin: token?.isAdmin
     }
     updatedToken = jwt.sign(tokenObj, process.env.JWT_SECRET_KEY || '', {
@@ -58,9 +60,13 @@ const updateLogStatus = async (req: Request, res: Response) => {
     isLoggedIn = null;
   }
 
-  const data = await getData(verifyAndUpdateKey, {
-    email: token?.email, key: authToken, isLoggedIn
-  })
+  const data = token?.id
+    ? await getData(verifyAndUpdateKeyById, {
+        id: token.id, key: authToken, isLoggedIn
+      })
+    : await getData(verifyAndUpdateKey, {
+        email: token?.email, key: authToken, isLoggedIn
+      })
 
   if(data?.errors)
   {
@@ -111,16 +117,23 @@ const updateLogStatus = async (req: Request, res: Response) => {
     })
   }
 
+  const freshUser = data?.data?.update_users?.returning[0]
   const tokenObj = {
-    email: updateTokenObj?.email,
-    isAdmin: data?.data?.update_users?.returning[0]?.isAdmin
+    id: freshUser?.id || updateTokenObj?.id,
+    email: freshUser?.email || updateTokenObj?.email,
+    phoneNumber: freshUser?.phoneNumber || updateTokenObj?.phoneNumber,
+    isAdmin: freshUser?.isAdmin
   }
   const updatedRoleToken = jwt.sign(tokenObj, process.env.JWT_SECRET_KEY || '', {
     expiresIn: '24h'
   })
-  const roleData = await getData(verifyAndUpdateKey, {
-    email: updateTokenObj?.email, key: updatedToken, isLoggedIn: updatedRoleToken
-  })
+  const roleData = tokenObj.id
+    ? await getData(verifyAndUpdateKeyById, {
+        id: tokenObj.id, key: updatedToken, isLoggedIn: updatedRoleToken
+      })
+    : await getData(verifyAndUpdateKey, {
+        email: updateTokenObj?.email, key: updatedToken, isLoggedIn: updatedRoleToken
+      })
   if(roleData?.errors)
   {
     return res.status(400).json({

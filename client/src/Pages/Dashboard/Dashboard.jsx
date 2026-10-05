@@ -1,4 +1,4 @@
-import { Box, ButtonBase, Divider, Stack, Typography } from '@mui/material';
+import { Box, ButtonBase, Typography } from '@mui/material';
 import React, { useContext } from 'react';
 import { useStyles } from './Dashboard.styles';
 import { useNavigate } from 'react-router-dom'
@@ -81,24 +81,25 @@ const Dashboard = () => {
       </Box>
       <Box className={classes.smallCardContainer}>
         {smallCardData.map((item) => (
-          <Stack
+          <Box
             key={item.id}
             component={ButtonBase}
             className={`${classes.smallCard} ${item.class}`}
-            divider={<Divider orientation="vertical" flexItem />}
-            direction={'row'}
-            sx={{ display: 'flex', minWidth: 0 }}
-            onClick={item?.click}
+            onClick={item.click}
           >
-            {item.icon}
-            <Box className={classes.titleAndValue}>
-              <Typography className="cardValue">
+            <Box className={classes.cardIcon}>{item.icon}</Box>
+            <Box className={classes.cardCopy}>
+              <Typography className="cardValue" component="p">
                 {Number(item.value || 0).toLocaleString('en-IN')}
               </Typography>
-              <Typography className="cardTitle">{item.title}</Typography>
-              <Typography className="cardCta">Open →</Typography>
+              <Typography className="cardTitle" component="p">
+                {item.title}
+              </Typography>
+              <Typography className="cardCta" component="p">
+                Open →
+              </Typography>
             </Box>
-          </Stack>
+          </Box>
         ))}
       </Box>
       <Box className={classes.bigCardContainer}>

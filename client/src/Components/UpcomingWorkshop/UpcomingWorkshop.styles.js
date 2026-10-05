@@ -9,12 +9,12 @@ export const useStyles = makeStyles((theme) => ({
     borderRadius: '10px',
     padding: '10px 12px',
     outline: 'none',
-    background: '#F7FBF5',
+    background: '#faf6ef',
     border: '1px solid #DCEBD4',
     transition: 'background-color 160ms ease, border-color 160ms ease, box-shadow 160ms ease',
     '&:hover': {
-      backgroundColor: '#EAF6E6',
-      borderColor: '#259311',
+      backgroundColor: '#f2e8d8',
+      borderColor: '#3d4f1e',
       boxShadow: '0 4px 12px rgba(37, 147, 17, 0.16)',
     },
     '&:active': {
@@ -84,7 +84,7 @@ export const useStyles = makeStyles((theme) => ({
   },
   chevron: {
     marginLeft: 'auto',
-    color: '#259311',
+    color: '#3d4f1e',
     fontSize: '22px !important',
   },
 }));

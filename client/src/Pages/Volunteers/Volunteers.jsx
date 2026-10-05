@@ -161,7 +161,7 @@ const Volunteers = () => {
                   disableRipple
                   onClick={() => {
                     navigate(
-                      `/volunteers/detail/${selectedRows[0].email}/edit`
+                      `/volunteers/detail/${selectedRows[0].id}/edit`
                     );
                   }}
                 >
@@ -172,7 +172,7 @@ const Volunteers = () => {
                 className="viewBtn"
                 disableRipple
                 onClick={() => {
-                  navigate(`/volunteers/detail/${selectedRows[0].email}/view`);
+                  navigate(`/volunteers/detail/${selectedRows[0].id}/view`);
                 }}
               >
                 View
@@ -342,7 +342,7 @@ const Volunteers = () => {
             isError={isError}
             showVerifyStatus={showVerifyStatus}
             onRowOpen={(row) =>
-              navigate(`/volunteers/detail/${row.email}/view`)
+              navigate(`/volunteers/detail/${row.id}/view`)
             }
           />
         </Box>

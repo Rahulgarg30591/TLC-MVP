@@ -16,8 +16,14 @@ const getData_1 = __importDefault(require("../../utils/getData"));
 const queries_1 = require("../../gql/volunteers/queries");
 const getSingleVolunteer = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a, _b, _c;
-    const { email } = req.params;
-    const data = yield (0, getData_1.default)(queries_1.VolunteerByEmail, { email });
+    const id = Number(req.params.id);
+    if (!id) {
+        return res.status(400).json({
+            status: 'error',
+            message: 'User not found!',
+        });
+    }
+    const data = yield (0, getData_1.default)(queries_1.VolunteerById, { id });
     if (data === null || data === void 0 ? void 0 : data.errors) {
         return res.status(400).json({
             status: 'error',

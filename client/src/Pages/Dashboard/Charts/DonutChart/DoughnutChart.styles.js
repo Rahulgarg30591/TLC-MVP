@@ -5,6 +5,8 @@ export const useStyles = makeStyles((theme) => ({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
+    flexShrink: 0,
+    flexWrap: 'wrap',
     gap: '10px',
     [theme.breakpoints.down('sm')]: {
       flexDirection: 'column',
@@ -14,7 +16,8 @@ export const useStyles = makeStyles((theme) => ({
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'end',
-      fontSize: '12px',
+      fontFamily: theme.typography.fontFamily,
+      fontSize: theme.typography.fontSize,
       color: 'grey',
       gap: '5px',
       padding: '2px 6px',
@@ -30,6 +33,8 @@ export const useStyles = makeStyles((theme) => ({
   root: {
     width: '100%',
     height: '100%',
+    minHeight: 0,
+    overflow: 'hidden',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
@@ -48,6 +53,10 @@ export const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.down('sm')]: {
       width: '70%',
     },
-    height: 'calc(100% - 15px)',
+    flex: 1,
+    minHeight: 0,
+    height: 'auto',
+    width: '100%',
+    position: 'relative',
   },
 }));

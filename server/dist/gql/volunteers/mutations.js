@@ -1,33 +1,40 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.signupInvitation = exports.resendInvite = exports.deleteInvite = exports.newInvite = exports.updateAdminVerification = exports.DeleteVolunteersByEmail = exports.UpdateVolunteerRoleByEmail = void 0;
-exports.UpdateVolunteerRoleByEmail = `
-  mutation UpdateByEmail($email: String!, $isAdmin: Boolean!) {
-    update_users(where: {email: {_eq: $email}, isAdminVerified: {_eq: true}, isVerified: {_eq: true}}, _set: {isAdmin: $isAdmin}) {
+exports.signupInvitation = exports.resendInvite = exports.deleteInvite = exports.newInvite = exports.updateAdminVerification = exports.DeleteInvitationsByEmail = exports.DeleteVolunteersById = exports.UpdateVolunteerRoleById = void 0;
+exports.UpdateVolunteerRoleById = `
+  mutation UpdateById($id: Int!, $isAdmin: Boolean!) {
+    update_users(where: {id: {_eq: $id}, isAdminVerified: {_eq: true}, isVerified: {_eq: true}}, _set: {isAdmin: $isAdmin}) {
       affected_rows
     }
   }
 `;
-exports.DeleteVolunteersByEmail = `
-  mutation DeleteMultipleVolunteers($where: users_bool_exp!, $where1: Invitations_bool_exp!) {
-    delete_users(where: $where) {
+exports.DeleteVolunteersById = `
+  mutation DeleteVolunteersById($ids: [Int!]!) {
+    delete_users(where: {id: {_in: $ids}, isVerified: {_eq: true}}) {
       affected_rows
+      returning {
+        email
+      }
     }
-    delete_Invitations(where: $where1) {
+  }
+`;
+exports.DeleteInvitationsByEmail = `
+  mutation DeleteInvitationsByEmail($emails: [String!]!) {
+    delete_Invitations(where: {email: {_in: $emails}}) {
       affected_rows
     }
   }
 `;
 exports.updateAdminVerification = `
-  mutation UpdateAdminVerification($email: String!, $isVerified: Boolean = true, $isAdmin: Boolean!, $isAdminVerifiedUpdated: Boolean!, $isAdminVerified: Boolean = false) {
-    update_users(where: {email: {_eq: $email}, isVerified: {_eq: $isVerified}, isAdminVerified: {_eq: $isAdminVerified}}, _set: {isAdmin: $isAdmin, isAdminVerified: $isAdminVerifiedUpdated}) {
+  mutation UpdateAdminVerification($id: Int!, $isAdmin: Boolean!) {
+    update_users(where: {id: {_eq: $id}, isVerified: {_eq: true}, isAdminVerified: {_eq: false}}, _set: {isAdmin: $isAdmin, isAdminVerified: true}) {
       affected_rows
     }
   }
 `;
 exports.newInvite = `
-  mutation NewInvite($isAccepted: Boolean = false, $isAdmin: Boolean = false, $name: String!, $token: String!, $email: String!, $created_at: timestamptz = "now()") {
-    insert_Invitations(objects: {isAccepted: $isAccepted, isAdmin: $isAdmin, name: $name, token: $token, email: $email, created_at: $created_at}) {
+  mutation NewInvite($isAccepted: Boolean = false, $isAdmin: Boolean = false, $name: String!, $token: String!, $email: String, $phone_number: String!, $created_at: timestamptz = "now()") {
+    insert_Invitations(objects: {isAccepted: $isAccepted, isAdmin: $isAdmin, name: $name, token: $token, email: $email, phone_number: $phone_number, created_at: $created_at}) {
       affected_rows
     }
   }
@@ -47,8 +54,8 @@ exports.resendInvite = `
   }
 `;
 exports.signupInvitation = `
-  mutation SignupInvitation($email: String!, $token: String, $isAccepted: Boolean!, $city: String!, $dob: date!, $gender: String!, $isAdmin: Boolean!, $isAdminVerified: Boolean!, $isVerified: Boolean!, $location: String!, $name: String!, $password: String!, $phoneNumber: String!, $pincode: Int!, $state: String!, $yearOfJoining: Int!) {
-    update_Invitations(where: {email: {_eq: $email}}, _set: {token: $token, isAccepted: $isAccepted}) {
+  mutation SignupInvitation($inviteToken: String!, $email: String, $token: String, $isAccepted: Boolean!, $city: String!, $dob: date!, $gender: String!, $isAdmin: Boolean!, $isAdminVerified: Boolean!, $isVerified: Boolean!, $location: String!, $name: String!, $password: String!, $phoneNumber: String!, $pincode: Int!, $state: String!, $yearOfJoining: Int!) {
+    update_Invitations(where: {token: {_eq: $inviteToken}}, _set: {token: $token, isAccepted: $isAccepted}) {
       affected_rows
     }
     insert_users(objects: {city: $city, dob: $dob, email: $email, gender: $gender, isAdmin: $isAdmin, isAdminVerified: $isAdminVerified, isVerified: $isVerified, location: $location, name: $name, password: $password, phoneNumber: $phoneNumber, pincode: $pincode, state: $state, token: $token, yearOfJoining: $yearOfJoining}) {

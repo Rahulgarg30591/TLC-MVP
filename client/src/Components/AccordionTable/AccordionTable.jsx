@@ -86,7 +86,6 @@ function AccordionTable({
           disableRipple
           onClick={() =>
             handleDeleteRow({
-              email: param.data.email,
               row: headingName,
               id: param.data.id,
             })
@@ -114,7 +113,6 @@ function AccordionTable({
         disableRipple
         onClick={() =>
           handleDeleteRow({
-            email: param.data.email,
             row: headingName,
             id: param.data.id,
           })

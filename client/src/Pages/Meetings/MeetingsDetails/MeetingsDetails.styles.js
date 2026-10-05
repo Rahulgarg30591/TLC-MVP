@@ -45,7 +45,7 @@ export const useStyles = makeStyles((theme) => ({
       padding: '8px 12px',
       fontSize: '14px',
       '&.MuiAutocomplete-option[aria-selected="true"]': {
-        background: '#EAF6E6 !important',
+        background: '#f2e8d8 !important',
       },
     },
   },

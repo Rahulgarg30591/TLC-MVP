@@ -7,7 +7,8 @@ export const useStyles = makeStyles((theme) => ({
       boxShadow: '8px 0 24px rgba(27, 59, 20, 0.08)',
       width: '16%',
       padding: '12px 12px 16px',
-      background: 'linear-gradient(180deg, #F3F9F0 0%, #FFFFFF 42%)',
+      background: 'linear-gradient(180deg, #faf6ef 0%, #fffdf8 55%)',
+      borderRight: '1px solid #e6dcc8',
       display: 'flex',
       flexDirection: 'column',
       overflow: 'hidden',
@@ -36,15 +37,16 @@ export const useStyles = makeStyles((theme) => ({
     boxShadow: '0 2px 8px rgba(37, 147, 17, 0.16)',
   },
   brandName: {
-    fontSize: '13px !important',
-    fontWeight: '700 !important',
-    color: '#1B3B14',
+    fontFamily: '"Cormorant Garamond", Georgia, serif !important',
+    fontSize: '20px !important',
+    fontWeight: '600 !important',
+    color: '#3d4f1e',
     lineHeight: '1.2 !important',
   },
   brandTag: {
     fontSize: '11px !important',
     fontWeight: '500 !important',
-    color: '#6C8A64',
+    color: '#8b9a70',
   },
   sectionLabel: {
     padding: '4px 12px 8px',
@@ -52,7 +54,7 @@ export const useStyles = makeStyles((theme) => ({
     fontWeight: '700 !important',
     letterSpacing: '0.08em !important',
     textTransform: 'uppercase',
-    color: '#7A9274',
+    color: '#8b9a70',
   },
   navList: {
     display: 'flex',
@@ -88,7 +90,7 @@ export const useStyles = makeStyles((theme) => ({
         transition: 'background-color 180ms ease, transform 180ms ease',
       },
       '&:hover': {
-        backgroundColor: '#EAF6E6',
+        backgroundColor: '#f2e8d8',
         transform: 'translateX(4px)',
       },
     },
@@ -101,7 +103,7 @@ export const useStyles = makeStyles((theme) => ({
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      color: '#1F7A12',
+      color: '#2a3814',
       transition: 'transform 180ms ease, background-color 180ms ease',
       '& svg': {
         width: '16px',
@@ -121,7 +123,7 @@ export const useStyles = makeStyles((theme) => ({
   },
   navlink: {
     '&.active': {
-      background: 'linear-gradient(90deg, #1F7A12 0%, #259311 100%)',
+      background: '#5a7030',
       boxShadow: '0 8px 18px rgba(37, 147, 17, 0.28)',
       transform: 'translateX(2px)',
       '&::before': {
@@ -155,7 +157,7 @@ export const useStyles = makeStyles((theme) => ({
     width: '32px',
     height: '32px',
     borderRadius: '50%',
-    background: '#259311',
+    background: '#5a7030',
     color: '#FFFFFF',
     fontSize: '11px',
     fontWeight: 700,
@@ -168,7 +170,7 @@ export const useStyles = makeStyles((theme) => ({
     '& .name': {
       fontSize: '12px !important',
       fontWeight: '700 !important',
-      color: '#1B3B14',
+      color: '#2a3814',
       lineHeight: '1.2 !important',
       overflow: 'hidden',
       textOverflow: 'ellipsis',
@@ -176,7 +178,7 @@ export const useStyles = makeStyles((theme) => ({
     },
     '& .role': {
       fontSize: '11px !important',
-      color: '#6C8A64',
+      color: '#8b9a70',
       fontWeight: '500 !important',
     },
   },

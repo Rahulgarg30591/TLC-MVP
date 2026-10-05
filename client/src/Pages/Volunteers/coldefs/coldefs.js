@@ -39,19 +39,20 @@ const colDefs = [
     headerName: 'Name',
   },
   {
-    field: 'email',
-    filter: false,
-    editable: false,
-    minWidth: 250,
-    headerName: 'Email ID',
-    cellStyle: { textTransform: 'lowercase' },
-  },
-  {
     field: 'phoneNumber',
     filter: false,
     editable: false,
     minWidth: 150,
     headerName: 'Phone Number',
+  },
+  {
+    field: 'email',
+    filter: false,
+    editable: false,
+    minWidth: 250,
+    headerName: 'Email (extra)',
+    cellStyle: { textTransform: 'lowercase' },
+    valueGetter: (params) => params.data?.email || '—',
   },
   {
     field: 'gender',

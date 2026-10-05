@@ -3,14 +3,12 @@ import getData from "../../utils/getData"
 import { updateAdminVerification } from "../../gql/volunteers/mutations"
 
 const adminVerified = async (req: Request, res: Response) => {
-  const { email, isAdmin } = req.body
+  const id = Number(req.body?.id)
+  const isAdmin = req.body?.isAdmin === true || req.body?.isAdmin === 'true'
 
   const variables = {
-    email,
-    isVerified: true,
-    isAdminVerified: false,
+    id,
     isAdmin,
-    isAdminVerifiedUpdated: true
   }
 
   const data = await getData(updateAdminVerification,variables);

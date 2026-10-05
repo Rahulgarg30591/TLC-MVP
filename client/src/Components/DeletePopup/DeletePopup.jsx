@@ -61,10 +61,8 @@ function DeletePopup({
   });
 
   const deleteVolunteersHandler = function () {
-    const emailsOfDeleteVolunteers = selectedRows.map(
-      (selectedRow) => selectedRow.email
-    );
-    mutate({ data: emailsOfDeleteVolunteers, key: user?.key });
+    const ids = selectedRows.map((selectedRow) => selectedRow.id);
+    mutate({ data: ids, key: user?.key });
   };
 
   const deleteWorkshopsHandler = function () {

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Chart from 'chart.js/auto';
-import { Box, useMediaQuery } from '@mui/material';
+import { Box, useMediaQuery, useTheme } from '@mui/material';
 import { useStyles } from './DoughnutChart.styles';
 
 const MONTHS = [
@@ -19,7 +19,9 @@ const MONTHS = [
 ];
 
 const DoughnutChart = ({ data }) => {
+  const theme = useTheme();
   const isSmScreen = useMediaQuery((theme) => theme.breakpoints.down('sm'));
+  const chartFont = `${theme.typography.fontSize}px ${theme.typography.fontFamily}`;
   const chartRef = useRef(null);
   const [dataObj, setDataObj] = useState({});
   const [chartInstance, setChartInstance] = useState(null);
@@ -63,7 +65,7 @@ const DoughnutChart = ({ data }) => {
         const { ctx, data } = chart;
         const datasets = data.datasets;
         ctx.save();
-        ctx.font = ' 12px Inter';
+        ctx.font = chartFont;
         ctx.fillStyle = '#fff';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
@@ -102,7 +104,7 @@ const DoughnutChart = ({ data }) => {
         const { ctx, data } = chart;
 
         ctx.save();
-        ctx.font = 'bold 12px Inter';
+        ctx.font = `600 ${chartFont}`;
         ctx.textAlign = 'center';
         ctx.fillStyle = '#2F2F2F';
         ctx.textBaseLine = 'middle';
@@ -137,7 +139,7 @@ const DoughnutChart = ({ data }) => {
               '#D14343',
               '#DF8244',
               '#9580C5',
-              '#4E73BE',
+              '#a08040',
             ],
 
             cutout: '75%',
@@ -145,6 +147,10 @@ const DoughnutChart = ({ data }) => {
         ],
       },
       options: {
+        font: {
+          family: theme.typography.fontFamily,
+          size: theme.typography.fontSize,
+        },
         layout: {
           padding: isSmScreen ? 0 : 20,
         },
@@ -174,7 +180,7 @@ const DoughnutChart = ({ data }) => {
         <canvas ref={chartRef} />
       </Box>
       <Box className={classes.labelBox}>
-        {['#4CB140', '#14B8A6', '#D14343', '#DF8244', '#9580C5', '#4E73BE'].map(
+        {['#4CB140', '#14B8A6', '#D14343', '#DF8244', '#9580C5', '#a08040'].map(
           (item, index) => (
             <Box variant="body2" className="label" key={index}>
               <Box

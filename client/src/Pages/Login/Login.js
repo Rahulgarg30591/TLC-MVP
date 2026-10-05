@@ -14,21 +14,14 @@ import {
 } from '@mui/material';
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
-import MailOutlineIcon from '@mui/icons-material/MailOutline';
+import PhoneOutlinedIcon from '@mui/icons-material/PhoneOutlined';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import { login } from '../../apis/user';
 import { useMutation } from '@tanstack/react-query';
 import AlertReact from '../../Components/Alert/AlertReact';
 import logo from '../../assets/Icons/tlcLogo.png';
 import { useNavigate } from 'react-router-dom';
 import UserContext from '../../store/userContext';
-
-const FEATURES = [
-  'Plan and track workshops',
-  'Keep meetings with the right people',
-  'Enroll participants by phone',
-];
 
 function Login() {
   const navigate = useNavigate();
@@ -46,7 +39,7 @@ function Login() {
     onSuccess: (data) => {
       if (
         data.status === 'error' ||
-        data?.message === 'Please provide email and password!'
+        data?.message === 'Please provide your phone number and password!'
       ) {
         setAlertType({
           type: data.status || 'error',
@@ -88,24 +81,25 @@ function Login() {
           message={alertType.message}
         />
       )}
-      <Box className={classes.brandPanel}>
-        <span className={`${classes.blob} blobA`} />
-        <span className={`${classes.blob} blobB`} />
-        <img className={classes.brandLogo} src={logo} alt="The Last Centre" />
-        <Typography className={classes.brandCopy}>
-          One place for workshops, meetings, volunteers and enrollments.
+      <Box className={classes.panel}>
+        <Typography className={`${classes.eyebrow} loginEyebrow`}>
+          Our philosophy
         </Typography>
-        <Box className={classes.featureList}>
-          {FEATURES.map((item, i) => (
-            <Typography
-              key={item}
-              className={classes.feature}
-              style={{ animationDelay: `${60 + i * 70}ms` }}
-            >
-              <CheckCircleOutlineIcon />
-              {item}
-            </Typography>
-          ))}
+        <Typography className={`${classes.panelTitle} loginDisplay`}>
+          Not a solution, but a quest.
+        </Typography>
+        <Typography className={`${classes.panelCopy} loginCopy`}>
+          An exploration of life’s fundamental questions, in pursuit of joy,
+          creativity, and fulfillment.
+        </Typography>
+        <Box className={classes.panelList}>
+          {['Who am I?', 'What am I doing?', 'What do I truly want?'].map(
+            (item) => (
+              <Typography key={item} className={`${classes.panelItem} loginCopy`}>
+                {item}
+              </Typography>
+            )
+          )}
         </Box>
       </Box>
       <Box className={classes.formColumn}>
@@ -120,21 +114,25 @@ function Login() {
           <Box className={classes.formWrapper}>
             <form className={classes.form} onSubmit={handleSignInSubmit}>
               <FormControl required className={classes.formControl}>
-                <FormLabel htmlFor="emailField">Email Address</FormLabel>
+                <FormLabel htmlFor="emailField">Phone number</FormLabel>
                 <TextField
-                  type="email"
+                  type="text"
                   id="emailField"
-                  placeholder="you@thelastcentre.com"
+                  placeholder="10-digit mobile number"
                   name="email"
                   required
+                  inputProps={{ inputMode: 'tel', autoComplete: 'username' }}
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
-                        <MailOutlineIcon className={classes.fieldIcon} />
+                        <PhoneOutlinedIcon className={classes.fieldIcon} />
                       </InputAdornment>
                     ),
                   }}
                 />
+                <Typography className={classes.fieldHint}>
+                  Email also works when the account has one.
+                </Typography>
               </FormControl>
               <Box className={classes.FormElementInBox}>
                 <FormControl required className={classes.formControl}>

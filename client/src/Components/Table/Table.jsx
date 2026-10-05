@@ -2,7 +2,7 @@ import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-quartz.css';
 import { useStyles } from './Table.styles';
-import { Box, Button, Typography } from '@mui/material';
+import { Box, Button, Typography, useMediaQuery } from '@mui/material';
 import { memo, useCallback, useContext, useMemo, useRef } from 'react';
 import UserContext from '../../store/userContext';
 
@@ -26,6 +26,9 @@ const Table = ({
 }) => {
   const rowData = data || [];
   const classes = useStyles();
+  const isNarrow = useMediaQuery((theme) => theme.breakpoints.down('sm'), {
+    noSsr: true,
+  });
   const { user } = useContext(UserContext);
   const gridApi = useRef(null);
 
@@ -36,7 +39,7 @@ const Table = ({
   }, [updateSelectedRows]);
 
   const handleClickInColumn = function (params) {
-    showVerifyStatus(params.data.email);
+    showVerifyStatus(params.data.id);
   };
 
   const IsAdminVerifiedComp = (params) => {
@@ -124,13 +127,13 @@ const Table = ({
 
   const isRowSelectable = useMemo(() => {
     return (params) => {
-      return !!params.data && params.data.email !== user?.email;
+      return !(params.data?.phoneNumber && params.data.id === user?.id);
     };
   }, [user]);
 
   const getRowStyle = (params) => {
-    if (params.data?.email && params.data.email === user?.email) {
-      return { background: '#F3F6F1', fontWeight: 600 };
+    if (params.data?.phoneNumber && params.data.id === user?.id) {
+      return { background: '#faf6ef', fontWeight: 600 };
     }
     return null;
   };
@@ -185,6 +188,7 @@ const Table = ({
           )}
           <AgGridReact
             className={classes.AgGridMain}
+            domLayout={isNarrow ? 'autoHeight' : 'normal'}
             rowData={rowData}
             defaultColDef={defaultColDef}
             columnDefs={modifiedColumnDefs}

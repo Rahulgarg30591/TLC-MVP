@@ -32,7 +32,7 @@ export const useStyles = makeStyles((theme) => ({
   },
   DialogActions: {
     height: '56px',
-    borderTop: '1px solid #D5E6CE',
+    borderTop: '1px solid #e6dcc8',
     padding: '0 20px !important',
     gap: '12px',
     '& button': {
@@ -62,7 +62,7 @@ export const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'column',
     gap: '20px',
-    background: '#F2F3F4',
+    background: '#faf6ef',
   },
   //elemnts
 
@@ -120,7 +120,7 @@ export const useStyles = makeStyles((theme) => ({
         padding: '5px 10px',
         fontSize: '14px',
         '&.Mui-selected': {
-          background: '#F2F3F4 !important',
+          background: '#faf6ef !important',
         },
         '& span': {
           display: 'none',

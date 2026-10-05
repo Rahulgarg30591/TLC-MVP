@@ -66,7 +66,10 @@ const colDefs = [
     filter: false,
     editable: false,
     minWidth: 230,
-    valueGetter: (params) => params.data.enrollment_volunteer?.email || '-',
+    valueGetter: (params) =>
+      params.data.enrollment_volunteer?.phoneNumber ||
+      params.data.enrollment_volunteer?.name ||
+      '-',
     cellStyle: { textTransform: 'lowercase' },
     headerName: 'Enrolled By',
   },

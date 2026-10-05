@@ -11,7 +11,7 @@ const auth = (req: Request, res: Response, next: NextFunction) => {
       authToken = authToken[1];
       try{
         const token: any = jwt.verify(authToken, process.env.JWT_SECRET_KEY || '')
-        if(token?.email)
+        if(token?.id || token?.email)
         {
           return next()
         }

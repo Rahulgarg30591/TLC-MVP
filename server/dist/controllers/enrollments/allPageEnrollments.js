@@ -95,14 +95,18 @@ const allPageEnrollments = (req, res) => __awaiter(void 0, void 0, void 0, funct
                     }
                 },
                 {
-                    enrolled_by: {
-                        _like: `${email}%`
+                    enrollment_done_by: {
+                        _or: [
+                            { email: { _like: `${email}%` } },
+                            { name: { _like: `${name}%` } },
+                            { phoneNumber: { _like: `${digits || phone}%` } },
+                        ]
                     }
                 }
             ] });
     }
     if (enrolled_is_null) {
-        filters = Object.assign(Object.assign({}, filters), { enrolled_by: {
+        filters = Object.assign(Object.assign({}, filters), { enrolled_by_id: {
                 _is_null: enrolled_is_null === 'true' ? true : false
             } });
     }

@@ -19,11 +19,18 @@ import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
 import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import ExpandMoreOutlinedIcon from '@mui/icons-material/ExpandMoreOutlined';
 import { useStyles } from './VolunteerForm.styles';
 import { getLocationData } from '../../apis/global';
 
-function VolunteerForm({ submit, isRole = false, isPending, isEmail }) {
+function VolunteerForm({
+  submit,
+  isRole = false,
+  isPending,
+  isEmail,
+  defaultPhone = '',
+}) {
   const currentYear = new Date().getFullYear();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -77,7 +84,6 @@ function VolunteerForm({ submit, isRole = false, isPending, isEmail }) {
           <PersonOutlineOutlinedIcon />
           <Typography>Personal Information</Typography>
         </Box>
-        {/* name and email address */}
         <Box className={classes.formElementBox}>
           <FormControl className={classes.formControl} required>
             <FormLabel htmlFor="fullNameField">Name</FormLabel>
@@ -89,21 +95,15 @@ function VolunteerForm({ submit, isRole = false, isPending, isEmail }) {
             />
           </FormControl>
           <FormControl className={classes.formControl} required>
-            <FormLabel htmlFor="emailField">Email Address</FormLabel>
-            {isEmail && (
-              <Typography variant={'body2'} className={classes.borderClass}>
-                {isEmail}
-              </Typography>
-            )}
-            {!isEmail && (
-              <TextField
-                type="email"
-                id="emailField"
-                placeholder="Enter Your Email Address"
-                required
-                name="email"
-              />
-            )}
+            <FormLabel htmlFor="phoneNumberField">Phone Number</FormLabel>
+            <TextField
+              id="phoneNumberField"
+              placeholder="10-digit mobile number"
+              required
+              name="phone"
+              defaultValue={defaultPhone}
+              inputProps={{ inputMode: 'tel', readOnly: Boolean(defaultPhone) }}
+            />
           </FormControl>
         </Box>
 
@@ -168,17 +168,7 @@ function VolunteerForm({ submit, isRole = false, isPending, isEmail }) {
             />
           </FormControl>
         </Box>
-        {/* phone number and  date picker-DOB */}
         <Box className={classes.formElementBox}>
-          <FormControl className={classes.formControl} required>
-            <FormLabel htmlFor="phoneNumberField">Phone Number</FormLabel>
-            <TextField
-              id="phoneNumberField"
-              placeholder="Enter Your Phone Number"
-              required
-              name="phone"
-            />
-          </FormControl>
           <FormControl className={classes.formControl} required>
             <FormLabel>Date of Birth</FormLabel>
             <LocalizationProvider
@@ -260,6 +250,28 @@ function VolunteerForm({ submit, isRole = false, isPending, isEmail }) {
             </Select>
           </FormControl>
         </Box>
+      </Box>
+      <Box className={classes.formHeaderSection}>
+        <Box className="formIconAndHeader">
+          <InfoOutlinedIcon />
+          <Typography>Extra information</Typography>
+        </Box>
+        <FormControl className={classes.formControl}>
+          <FormLabel htmlFor="emailField">Email Address</FormLabel>
+          {isEmail && (
+            <Typography variant={'body2'} className={classes.borderClass}>
+              {isEmail}
+            </Typography>
+          )}
+          {!isEmail && (
+            <TextField
+              type="email"
+              id="emailField"
+              placeholder="Optional"
+              name="email"
+            />
+          )}
+        </FormControl>
       </Box>
       {/*------ address section------ */}
       <Box className={classes.formHeaderSection}>

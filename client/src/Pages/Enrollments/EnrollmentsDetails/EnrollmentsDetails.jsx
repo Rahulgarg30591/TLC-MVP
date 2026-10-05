@@ -238,7 +238,7 @@ function EnrollmentsDetails() {
     if (viewType === 'create') {
       body = {
         ...body,
-        enrolled_by: user?.email,
+        enrolled_by_id: user?.id,
       };
     }
     const isValid = validateEnrollment(body);

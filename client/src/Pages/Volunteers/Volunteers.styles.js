@@ -10,7 +10,7 @@ export const useStyles = makeStyles((theme) => ({
     gap: '16px',
     height: '100%',
     minHeight: 0,
-    background: '#F2F3F4',
+    background: '#faf6ef',
     [theme.breakpoints.down('sm')]: {
       padding: '13px 8px',
       height: 'auto',
@@ -41,7 +41,7 @@ export const useStyles = makeStyles((theme) => ({
     minHeight: 0,
     display: 'flex',
     flexDirection: 'column',
-    border: '1px solid #D5E6CE',
+    border: '1px solid #e6dcc8',
     background: '#FFFFFF',
   },
   tableContainer: {
@@ -49,10 +49,14 @@ export const useStyles = makeStyles((theme) => ({
     minHeight: 0,
     overflow: 'hidden',
     background: '#FFFFFF',
+    [theme.breakpoints.down('sm')]: {
+      minHeight: '320px',
+      overflow: 'auto',
+    },
   },
   tableHeader: {
-    borderBottom: '1px solid #D5E6CE',
-    background: '#F7FBF5',
+    borderBottom: '1px solid #e6dcc8',
+    background: '#faf6ef',
     padding: '10px 16px',
     height: '56px',
     flexShrink: 0,
@@ -70,7 +74,7 @@ export const useStyles = makeStyles((theme) => ({
     flex: 1,
     maxWidth: '380px',
     '& .MuiInputBase-formControl': {
-      border: '1px solid #D0DCCB',
+      border: '1px solid #e6dcc8',
       borderRadius: '24px',
       paddingRight: '10px',
       height: '36px',
@@ -129,7 +133,7 @@ export const useStyles = makeStyles((theme) => ({
         padding: '5px 10px',
         fontSize: '12px',
         '&.Mui-selected': {
-          background: '#F2F3F4 !important',
+          background: '#faf6ef !important',
         },
         '& span': {
           display: 'none',
@@ -165,7 +169,7 @@ export const useStyles = makeStyles((theme) => ({
       padding: '6px',
       height: '36px',
       width: '36px',
-      border: '1px solid #D0DCCB',
+      border: '1px solid #e6dcc8',
       background: '#FFFFFF',
     },
   },

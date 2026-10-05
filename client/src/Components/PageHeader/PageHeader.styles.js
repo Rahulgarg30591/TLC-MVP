@@ -6,7 +6,7 @@ export const useStyles = makeStyles((theme) => ({
       fontSize: '15px',
       fontWeight: '700',
       textTransform: 'capitalize',
-      color: '#3D5A36',
+      color: '#3d4f1e',
     },
   },
   breadCrumbs: {
@@ -24,7 +24,7 @@ export const useStyles = makeStyles((theme) => ({
       transition: 'color 160ms ease',
       '&:hover': {
         textDecoration: 'underline',
-        color: '#259311',
+        color: '#3d4f1e',
       },
     },
     '& svg': { fontSize: '20px', color: '#005C8E' },

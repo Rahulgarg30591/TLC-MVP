@@ -1,5 +1,5 @@
 export const InsertUserMutation = `
-  mutation InsertUser($name: String!, $email: String!, $password: String!, $isVerified: Boolean!, $token: String!, $dob: date!, $gender: String!,
+  mutation InsertUser($name: String!, $email: String, $password: String!, $isVerified: Boolean!, $token: String!, $dob: date!, $gender: String!,
     $phoneNumber: String!,  $yearOfJoining: Int!, 
     $location: String!, $city: String!, $state: String!, $pincode: Int!, 
     $isAdmin: Boolean) {
@@ -67,6 +67,38 @@ export const updateStatus = `
   }
 `;
 
+export const updateStatusById = `
+  mutation UpdateStatusById($isLoggedIn: String, $id: Int!) {
+    update_users(where: {id: {_eq: $id}}, _set: {isLoggedIn: $isLoggedIn}) {
+      affected_rows
+    }
+  }
+`;
+
+export const verifyAndUpdateKeyById = `
+  mutation VerifyAndUpdateKeyById($id: Int!, $key: String!, $isLoggedIn: String) {
+    update_users(where: {id: {_eq: $id}, isLoggedIn: {_eq: $key}}, _set: {isLoggedIn: $isLoggedIn}) {
+      affected_rows
+      returning {
+        id
+        name
+        isVerified
+        isAdminVerified
+        gender
+        phoneNumber
+        email
+        yearOfJoining
+        location
+        city
+        state
+        pincode
+        isAdmin
+        dob
+      }
+    }
+  }
+`;
+
 export const verifyAndUpdateKey = `
   mutation MyMutation($email: String!, $key: String!, $isLoggedIn: String) {
     update_users(where: {email: {_eq: $email}, isLoggedIn: {_eq: $key}}, _set: {isLoggedIn: $isLoggedIn}) {
@@ -92,9 +124,9 @@ export const verifyAndUpdateKey = `
   }
 `;
 
-export const updateUserByEmail = `
-  mutation MyMutation($email: String!, $city: String!, $dob: date!, $gender: String!, $location: String!, $name: String!, $phoneNumber: String!, $pincode: Int!, $yearOfJoining: Int!, $state: String!) {
-    update_users(where: {email: {_eq: $email}, isVerified: {_eq: true}, isAdminVerified: {_eq: true}}, _set: {city: $city, dob: $dob, gender: $gender, location: $location, name: $name, phoneNumber: $phoneNumber, pincode: $pincode, yearOfJoining: $yearOfJoining, state: $state}) {
+export const updateUserById = `
+  mutation UpdateUserById($id: Int!, $city: String!, $dob: date!, $gender: String!, $location: String!, $name: String!, $phoneNumber: String!, $pincode: Int!, $yearOfJoining: Int!, $state: String!) {
+    update_users(where: {id: {_eq: $id}, isVerified: {_eq: true}, isAdminVerified: {_eq: true}}, _set: {city: $city, dob: $dob, gender: $gender, location: $location, name: $name, phoneNumber: $phoneNumber, pincode: $pincode, yearOfJoining: $yearOfJoining, state: $state}) {
       affected_rows
     }
   }

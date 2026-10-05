@@ -2,9 +2,10 @@ import { makeStyles } from '@mui/styles';
 
 export const useStyles = makeStyles((theme) => ({
   accordion: {
-    backgroundColor: '#EFEFEF',
-    borderRadius: '5px !important',
-    boxShadow: '0px 1px 4px 0px rgba(0, 0, 0, .15) !important',
+    backgroundColor: '#faf6ef',
+    border: '1px solid #e6dcc8',
+    borderRadius: '12px !important',
+    boxShadow: 'none !important',
     '&::before': {
       background: 'transparent !important',
     },
@@ -24,10 +25,10 @@ export const useStyles = makeStyles((theme) => ({
       fontSize: '14px ',
       fontWeight: '500',
       textTransform: 'capitalize',
-      '&.Mui-expanded': { borderBottom: '1px solid #C6C6C6' },
+      '&.Mui-expanded': { borderBottom: '1px solid #e6dcc8' },
 
       '& svg': {
-        color: '#2F2F2F',
+        color: '#5a7030',
         fontSize: '20px',
       },
 
@@ -58,31 +59,32 @@ export const useStyles = makeStyles((theme) => ({
       border: '0px',
     },
     '& .ag-header': {
-      backgroundColor: '#FFFFFF',
-      borderColor: theme.palette.primaryGreen,
+      backgroundColor: '#fffdf8',
+      borderColor: '#e6dcc8',
       '& .ag-header-cell-text': {
-        fontSize: '12px',
-        color: '#2F2F2F',
-        fontFamily: '"Inter", sans-serif',
+        fontSize: '14px',
+        color: '#3d3525',
+        fontFamily: theme.typography.fontFamily,
+        fontWeight: '600',
       },
     },
     '& .ag-header-cell-resize': {
       right: '10px',
       '&::after': {
-        background: '#C6C6C6',
+        background: '#e6dcc8',
         width: '1.5px',
       },
     },
     '& .ag-row': {
-      borderColor: '#C6C6C6',
+      borderColor: '#e6dcc8',
     },
 
     '& .ag-cell': {
-      fontSize: '12px',
-      color: '#6C6C6C',
+      fontSize: '14px',
+      color: '#3d3525',
       fontWeight: '500',
-      textTransform: 'capitalize',
-      fontFamily: '"Inter", sans-serif',
+      textTransform: 'none',
+      fontFamily: theme.typography.fontFamily,
     },
     '& .ag-cell-focus': {
       borderColor: 'transparent',
@@ -90,7 +92,8 @@ export const useStyles = makeStyles((theme) => ({
 
     '& .ag-overlay-wrapper': {
       paddingTop: '30px !important',
-      fontSize: '12px',
+      fontSize: '14px',
+      fontFamily: theme.typography.fontFamily,
       color: '#6C6C6C',
       fontWeight: '500',
     },

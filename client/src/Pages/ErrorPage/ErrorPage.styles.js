@@ -33,7 +33,7 @@ export const useStyles = makeStyles((theme) => ({
       height: '40px',
       fontSize: '13px',
       textTransform: 'none',
-      background: '#259311 !important',
+      background: '#5a7030 !important',
       color: '#FFFFFF',
       fontWeight: '700',
       borderRadius: '10px',

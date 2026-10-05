@@ -31,7 +31,7 @@ export const useStyles = makeStyles((theme) => ({
   },
   DialogActions: {
     height: '56px',
-    borderTop: '1px solid #D5E6CE',
+    borderTop: '1px solid #e6dcc8',
     padding: '0px 20px !important',
     gap: '12px',
     '& button': {
@@ -61,7 +61,7 @@ export const useStyles = makeStyles((theme) => ({
     justifyContent: 'center',
     alignItems: 'center',
     gap: '10px',
-    background: '#F2F3F4',
+    background: '#faf6ef',
     '& p': {
       textAlign: 'center',
       fontSize: '14px',

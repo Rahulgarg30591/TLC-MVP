@@ -9,6 +9,7 @@ import Wrapper from '../Wrapper/Wrapper';
 import UserContext from '../../store/userContext';
 import { logStatus } from '../../apis/user';
 import Loader from '../Loader/Loader';
+import { PrefetchLists } from '../../hooks/prefetchLists';
 
 const Dashboard = lazy(() => import('../../Pages/Dashboard/Dashboard'));
 const Volunteers = lazy(() => import('../../Pages/Volunteers/Volunteers'));
@@ -89,6 +90,7 @@ function Main() {
 
   return (
     <UserContext.Provider value={value}>
+      <PrefetchLists user={user} />
       <BrowserRouter>
         <Wrapper>
           <Suspense fallback={<Loader />}>
@@ -133,7 +135,7 @@ function Main() {
             {user && !loader && (
               <Route
                 exact
-                path="/volunteers/detail/:email/:type"
+                path="/volunteers/detail/:id/:type"
                 element={<VolunteerDetails />}
               />
             )}

@@ -55,9 +55,9 @@ export const inviteVolunteer = async function ({ data, key }) {
 };
 
 export const getVolunteer = async function ({ signal, queryKey, user }) {
-  const [email] = queryKey;
+  const [id] = queryKey;
 
-  const res = await fetch(`${BASEURL}/${email}/details`, {
+  const res = await fetch(`${BASEURL}/${id}/details`, {
     method: 'GET',
     headers: {
       Authorization: `Bearer ${user.key}`,
@@ -76,10 +76,10 @@ export const getVolunteer = async function ({ signal, queryKey, user }) {
   return resData;
 };
 
-export const updateVolunteerRole = async function ({ email, isAdmin, key }) {
+export const updateVolunteerRole = async function ({ id, isAdmin, key }) {
   const res = await fetch(`${BASEURL}/updateRole`, {
     method: 'PUT',
-    body: JSON.stringify({ email: email, isAdmin: isAdmin }),
+    body: JSON.stringify({ id, isAdmin }),
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${key}`,
@@ -100,7 +100,7 @@ export const updateVolunteerRole = async function ({ email, isAdmin, key }) {
 export const deleteVolunteers = async function ({ key, data }) {
   const res = await fetch(`${BASEURL}/`, {
     method: 'DELETE',
-    body: JSON.stringify({ emails: data }),
+    body: JSON.stringify({ ids: data }),
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${key}`,
@@ -118,10 +118,10 @@ export const deleteVolunteers = async function ({ key, data }) {
   return resData;
 };
 
-export const verifyVolunteer = async function ({ isAdmin, email, key }) {
+export const verifyVolunteer = async function ({ isAdmin, id, key }) {
   const res = await fetch(`${BASEURL}/adminVerified`, {
     method: 'PUT',
-    body: JSON.stringify({ isAdmin, email }),
+    body: JSON.stringify({ isAdmin, id }),
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${key}`,

@@ -34,7 +34,7 @@ export const useStyles = makeStyles((theme) => ({
   },
   DialogActions: {
     height: '56px',
-    borderTop: '1px solid #D5E6CE',
+    borderTop: '1px solid #e6dcc8',
     padding: '0 20px !important',
     gap: '12px',
     '& button': {
@@ -42,7 +42,7 @@ export const useStyles = makeStyles((theme) => ({
       padding: '0 16px',
       borderRadius: '10px',
       textTransform: 'none',
-      fontSize: '13px',
+      fontSize: '14px',
       fontWeight: 700,
       minWidth: '92px',
       marginLeft: '0px',
@@ -73,9 +73,10 @@ export const useStyles = makeStyles((theme) => ({
       backgroundColor: '#FFFFFF',
       borderColor: theme.palette.primaryGreen,
       '& .ag-header-cell-text': {
-        fontSize: '12px',
-        color: '#2F2F2F',
-        fontFamily: '"Inter", sans-serif',
+        fontSize: '14px',
+        color: '#3d3525',
+        fontFamily: theme.typography.fontFamily,
+        fontWeight: '600',
       },
     },
     '& .ag-header-cell-resize': {
@@ -90,10 +91,10 @@ export const useStyles = makeStyles((theme) => ({
     },
 
     '& .ag-cell': {
-      fontSize: '12px',
-      color: '#6C6C6C',
+      fontSize: '14px',
+      color: '#3d3525',
       fontWeight: '500',
-      fontFamily: '"Inter", sans-serif',
+      fontFamily: theme.typography.fontFamily,
     },
     '& .ag-cell-focus': {
       borderColor: 'transparent',
@@ -101,7 +102,8 @@ export const useStyles = makeStyles((theme) => ({
 
     '& .ag-overlay-wrapper': {
       paddingTop: '30px !important',
-      fontSize: '12px',
+      fontSize: '14px',
+      fontFamily: theme.typography.fontFamily,
       color: '#6C6C6C',
       fontWeight: '500',
     },

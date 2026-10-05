@@ -16,7 +16,7 @@ const router = express.Router();
 
 // router.get('/', getAllVolunteers)
 // router.get('/filters', getFilteredVolunteers)
-router.get('/:email/details', auth, getSingleVolunteer)
+router.get('/:id/details', auth, getSingleVolunteer)
 router.get('/searchAndFilter', auth, searchAndFilterVolunteer)
 router.put('/updateRole', adminAuth, updateRole)
 router.delete('/', adminAuth, deleteVolunteer)

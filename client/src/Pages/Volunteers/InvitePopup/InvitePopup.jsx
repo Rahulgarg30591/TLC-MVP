@@ -29,7 +29,9 @@ function InvitePopup({ hideInviteModal, hideInviteModalAndShowSuccess }) {
 
   const [roleDropdown, setRoleDropdown] = useState('volunteer');
   const [fullName, setFullName] = useState('');
+  const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
+  const [signupPath, setSignupPath] = useState('');
   const [alertType, setAlertType] = useState();
 
   const removeAlertType = function () {
@@ -46,7 +48,11 @@ function InvitePopup({ hideInviteModal, hideInviteModalAndShowSuccess }) {
           message: data.message,
         });
       } else {
-        hideInviteModalAndShowSuccess();
+        setSignupPath(data.signupPath || '');
+        setAlertType({
+          type: 'success',
+          message: data.message,
+        });
       }
     },
     onError: (error) => {
@@ -62,6 +68,7 @@ function InvitePopup({ hideInviteModal, hideInviteModalAndShowSuccess }) {
     const body = {
       isAdmin: roleDropdown === 'admin' ? 'true' : 'false',
       name: fullName.trim(),
+      phoneNumber: phone,
       email,
     };
 
@@ -74,7 +81,7 @@ function InvitePopup({ hideInviteModal, hideInviteModalAndShowSuccess }) {
     <>
       <Dialog open={open} className={classes.Dialog}>
         <DialogTitle className={classes.TitleAndClose}>
-          <Typography>Invite Volunteer</Typography>
+          <Typography>Invite by phone</Typography>
           <IconButton
             className={classes.CloseIcon}
             disableRipple
@@ -112,13 +119,23 @@ function InvitePopup({ hideInviteModal, hideInviteModalAndShowSuccess }) {
             </FormControl>
           </Box>
           <Box className={classes.formElementBox}>
-            {/* email address */}
             <FormControl className={classes.formControl} required>
-              <FormLabel htmlFor="emailField">Email</FormLabel>
+              <FormLabel htmlFor="phoneField">Phone number</FormLabel>
+              <TextField
+                id="phoneField"
+                placeholder="10-digit mobile number"
+                name="phone"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                inputProps={{ inputMode: 'tel' }}
+              />
+            </FormControl>
+            <FormControl className={classes.formControl}>
+              <FormLabel htmlFor="emailField">Email address</FormLabel>
               <TextField
                 type="email"
                 id="emailField"
-                placeholder="Enter Email Address"
+                placeholder="Optional extra"
                 name="email"
                 value={email}
                 onChange={(e) => {
@@ -151,6 +168,18 @@ function InvitePopup({ hideInviteModal, hideInviteModalAndShowSuccess }) {
           </Box>
         </DialogContent>
         {/* action buttons */}
+        {signupPath && (
+          <Box sx={{ px: 3, pb: 1 }}>
+            <Typography sx={{ fontSize: 13, color: '#5a5040', mb: 1 }}>
+              Share this link. They register with the phone number above.
+            </Typography>
+            <TextField
+              fullWidth
+              value={`${window.location.origin}${signupPath}`}
+              InputProps={{ readOnly: true }}
+            />
+          </Box>
+        )}
         <DialogActions className={classes.DialogActions}>
           <Button
             className="cancelBtn"
@@ -162,8 +191,15 @@ function InvitePopup({ hideInviteModal, hideInviteModalAndShowSuccess }) {
           >
             Cancel
           </Button>
-          <Button className="inviteBtn" disableRipple onClick={sendInvite}>
-            {isPending ? 'Loading...' : 'Send Invitation'}
+          <Button
+            className="inviteBtn"
+            disableRipple
+            onClick={signupPath ? () => {
+              hideInviteModalAndShowSuccess();
+              SetOpen(false);
+            } : sendInvite}
+          >
+            {isPending ? 'Loading...' : signupPath ? 'Done' : 'Create invite'}
           </Button>
         </DialogActions>
       </Dialog>

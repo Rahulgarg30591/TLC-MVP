@@ -26,14 +26,14 @@ const updateWorkshop = (req, res) => __awaiter(void 0, void 0, void 0, function*
     const vols = req.body.vols.map((vol) => {
         var _a;
         return {
-            user_email: vol,
+            user_id: Number(vol),
             workshop_id: (_a = req === null || req === void 0 ? void 0 : req.params) === null || _a === void 0 ? void 0 : _a.id
         };
     });
     const leads = req.body.leads.map((lead) => {
         var _a;
         return {
-            user_email: lead,
+            user_id: Number(lead),
             workshop_id: (_a = req === null || req === void 0 ? void 0 : req.params) === null || _a === void 0 ? void 0 : _a.id
         };
     });

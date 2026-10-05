@@ -17,27 +17,27 @@ const queries_1 = require("../../gql/user/queries");
 const mutations_1 = require("../../gql/user/mutations");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const bcrypt_1 = require("bcrypt");
+const global_1 = require("../../utils/global");
 const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a, _b, _c, _d, _e;
-    const { email, password } = req.body;
-    // 1) Check if email and password exist
-    if (!email || !password) {
+    var _a, _b, _c, _d, _e, _f, _g;
+    const identifier = (((_a = req.body) === null || _a === void 0 ? void 0 : _a.email) || ((_b = req.body) === null || _b === void 0 ? void 0 : _b.phoneNumber) || '').trim();
+    const { password } = req.body;
+    if (!identifier || !password) {
         return res
             .status(400)
-            .json({ message: 'Please provide email and password!', status: 'error' });
+            .json({ message: 'Please provide your phone number and password!', status: 'error' });
     }
-    const query = queries_1.getUserByEmail;
-    const variables = {
-        email,
-    };
-    const data = yield (0, getData_1.default)(query, variables);
-    if ((_a = data === null || data === void 0 ? void 0 : data.errors) === null || _a === void 0 ? void 0 : _a.length) {
+    const phone = (0, global_1.normalizeMobile)(identifier);
+    const data = phone
+        ? yield (0, getData_1.default)(queries_1.getUserByPhone, { phoneNumber: phone })
+        : yield (0, getData_1.default)(queries_1.getUserByEmail, { email: identifier.toLowerCase() });
+    if ((_c = data === null || data === void 0 ? void 0 : data.errors) === null || _c === void 0 ? void 0 : _c.length) {
         return res.status(500).json({
             status: 'error',
             message: 'Database is unavailable. Please try again later.',
         });
     }
-    if (!((_c = (_b = data === null || data === void 0 ? void 0 : data.data) === null || _b === void 0 ? void 0 : _b.users) === null || _c === void 0 ? void 0 : _c.length)) {
+    if (!((_e = (_d = data === null || data === void 0 ? void 0 : data.data) === null || _d === void 0 ? void 0 : _d.users) === null || _e === void 0 ? void 0 : _e.length)) {
         return res
             .status(400)
             .json({ status: 'error', message: 'User does not exists!' });
@@ -65,17 +65,19 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     let userToSend = JSON.parse(JSON.stringify(user));
     userToSend === null || userToSend === void 0 ? true : delete userToSend.password;
     const tokenObj = {
-        email,
+        id: user === null || user === void 0 ? void 0 : user.id,
+        email: user === null || user === void 0 ? void 0 : user.email,
+        phoneNumber: user === null || user === void 0 ? void 0 : user.phoneNumber,
         isAdmin: user === null || user === void 0 ? void 0 : user.isAdmin
     };
     const token = jsonwebtoken_1.default.sign(tokenObj, process.env.JWT_SECRET_KEY || '', {
         expiresIn: '24h'
     });
-    const updateUserStatus = yield (0, getData_1.default)(mutations_1.updateStatus, {
-        email, isLoggedIn: token
-    });
+    const updateUserStatus = (user === null || user === void 0 ? void 0 : user.email)
+        ? yield (0, getData_1.default)(mutations_1.updateStatus, { email: user.email, isLoggedIn: token })
+        : yield (0, getData_1.default)(mutations_1.updateStatusById, { id: user.id, isLoggedIn: token });
     userToSend = Object.assign(Object.assign({}, userToSend), { key: token });
-    if ((_e = (_d = updateUserStatus === null || updateUserStatus === void 0 ? void 0 : updateUserStatus.data) === null || _d === void 0 ? void 0 : _d.update_users) === null || _e === void 0 ? void 0 : _e.affected_rows) {
+    if ((_g = (_f = updateUserStatus === null || updateUserStatus === void 0 ? void 0 : updateUserStatus.data) === null || _f === void 0 ? void 0 : _f.update_users) === null || _g === void 0 ? void 0 : _g.affected_rows) {
         return res.status(200).json({ status: 'success', user: userToSend });
     }
     return res.status(400).json({ status: 'error', message: 'Something went wrong. Please try again later!' });

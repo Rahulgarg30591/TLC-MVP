@@ -16,7 +16,7 @@ const getData_1 = __importDefault(require("../../utils/getData"));
 const mutations_1 = require("../../gql/user/mutations");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const updateLogStatus = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r;
+    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q;
     const { authorization } = req === null || req === void 0 ? void 0 : req.headers;
     let token;
     if (!authorization) {
@@ -48,7 +48,9 @@ const updateLogStatus = (req, res) => __awaiter(void 0, void 0, void 0, function
     }
     else {
         const tokenObj = {
+            id: token === null || token === void 0 ? void 0 : token.id,
             email: token === null || token === void 0 ? void 0 : token.email,
+            phoneNumber: token === null || token === void 0 ? void 0 : token.phoneNumber,
             isAdmin: token === null || token === void 0 ? void 0 : token.isAdmin
         };
         updatedToken = jsonwebtoken_1.default.sign(tokenObj, process.env.JWT_SECRET_KEY || '', {
@@ -60,9 +62,13 @@ const updateLogStatus = (req, res) => __awaiter(void 0, void 0, void 0, function
     if (isLoggingOut) {
         isLoggedIn = null;
     }
-    const data = yield (0, getData_1.default)(mutations_1.verifyAndUpdateKey, {
-        email: token === null || token === void 0 ? void 0 : token.email, key: authToken, isLoggedIn
-    });
+    const data = (token === null || token === void 0 ? void 0 : token.id)
+        ? yield (0, getData_1.default)(mutations_1.verifyAndUpdateKeyById, {
+            id: token.id, key: authToken, isLoggedIn
+        })
+        : yield (0, getData_1.default)(mutations_1.verifyAndUpdateKey, {
+            email: token === null || token === void 0 ? void 0 : token.email, key: authToken, isLoggedIn
+        });
     if (data === null || data === void 0 ? void 0 : data.errors) {
         return res.status(400).json({
             status: 'error',
@@ -99,29 +105,36 @@ const updateLogStatus = (req, res) => __awaiter(void 0, void 0, void 0, function
             user: userToSend
         });
     }
+    const freshUser = (_k = (_j = data === null || data === void 0 ? void 0 : data.data) === null || _j === void 0 ? void 0 : _j.update_users) === null || _k === void 0 ? void 0 : _k.returning[0];
     const tokenObj = {
-        email: updateTokenObj === null || updateTokenObj === void 0 ? void 0 : updateTokenObj.email,
-        isAdmin: (_l = (_k = (_j = data === null || data === void 0 ? void 0 : data.data) === null || _j === void 0 ? void 0 : _j.update_users) === null || _k === void 0 ? void 0 : _k.returning[0]) === null || _l === void 0 ? void 0 : _l.isAdmin
+        id: (freshUser === null || freshUser === void 0 ? void 0 : freshUser.id) || (updateTokenObj === null || updateTokenObj === void 0 ? void 0 : updateTokenObj.id),
+        email: (freshUser === null || freshUser === void 0 ? void 0 : freshUser.email) || (updateTokenObj === null || updateTokenObj === void 0 ? void 0 : updateTokenObj.email),
+        phoneNumber: (freshUser === null || freshUser === void 0 ? void 0 : freshUser.phoneNumber) || (updateTokenObj === null || updateTokenObj === void 0 ? void 0 : updateTokenObj.phoneNumber),
+        isAdmin: freshUser === null || freshUser === void 0 ? void 0 : freshUser.isAdmin
     };
     const updatedRoleToken = jsonwebtoken_1.default.sign(tokenObj, process.env.JWT_SECRET_KEY || '', {
         expiresIn: '24h'
     });
-    const roleData = yield (0, getData_1.default)(mutations_1.verifyAndUpdateKey, {
-        email: updateTokenObj === null || updateTokenObj === void 0 ? void 0 : updateTokenObj.email, key: updatedToken, isLoggedIn: updatedRoleToken
-    });
+    const roleData = tokenObj.id
+        ? yield (0, getData_1.default)(mutations_1.verifyAndUpdateKeyById, {
+            id: tokenObj.id, key: updatedToken, isLoggedIn: updatedRoleToken
+        })
+        : yield (0, getData_1.default)(mutations_1.verifyAndUpdateKey, {
+            email: updateTokenObj === null || updateTokenObj === void 0 ? void 0 : updateTokenObj.email, key: updatedToken, isLoggedIn: updatedRoleToken
+        });
     if (roleData === null || roleData === void 0 ? void 0 : roleData.errors) {
         return res.status(400).json({
             status: 'error',
-            message: (_m = roleData === null || roleData === void 0 ? void 0 : roleData.errors[0]) === null || _m === void 0 ? void 0 : _m.message
+            message: (_l = roleData === null || roleData === void 0 ? void 0 : roleData.errors[0]) === null || _l === void 0 ? void 0 : _l.message
         });
     }
-    if (!((_p = (_o = roleData === null || roleData === void 0 ? void 0 : roleData.data) === null || _o === void 0 ? void 0 : _o.update_users) === null || _p === void 0 ? void 0 : _p.affected_rows)) {
+    if (!((_o = (_m = roleData === null || roleData === void 0 ? void 0 : roleData.data) === null || _m === void 0 ? void 0 : _m.update_users) === null || _o === void 0 ? void 0 : _o.affected_rows)) {
         return res.status(404).json({
             status: 'error',
             message: 'User not found at this moment. Please try logging in again!'
         });
     }
-    let userToSend = Object.assign(Object.assign({}, (_r = (_q = roleData === null || roleData === void 0 ? void 0 : roleData.data) === null || _q === void 0 ? void 0 : _q.update_users) === null || _r === void 0 ? void 0 : _r.returning[0]), { key: updatedRoleToken });
+    let userToSend = Object.assign(Object.assign({}, (_q = (_p = roleData === null || roleData === void 0 ? void 0 : roleData.data) === null || _p === void 0 ? void 0 : _p.update_users) === null || _q === void 0 ? void 0 : _q.returning[0]), { key: updatedRoleToken });
     return res.status(200).json({
         status: 'success',
         message: 'User still logged in!',

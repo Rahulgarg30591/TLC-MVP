@@ -41,7 +41,7 @@ function VolunteerDetails() {
   const { user } = useContext(UserContext);
   const nav = useNavigate();
 
-  const { email, type } = useParams();
+  const { id, type } = useParams();
 
   useEffect(() => {
     if (type === 'edit') {
@@ -52,7 +52,7 @@ function VolunteerDetails() {
     }
   }, [type]);
 
-  const { data, isPending, isError } = useReactQuery([email], getVolunteer);
+  const { data, isPending, isError } = useReactQuery([id], getVolunteer);
 
   const [role, setRole] = useState(
     data?.user?.isAdmin === true ? 'admin' : 'volunteer'
@@ -89,7 +89,7 @@ function VolunteerDetails() {
 
   const saveVolunteer = function () {
     mutate({
-      email,
+      id,
       isAdmin: role === 'admin' ? 'true' : 'false',
       key: user?.key,
     });
@@ -188,8 +188,8 @@ function VolunteerDetails() {
               </Typography>
               <Typography className="introSub">
                 {type === 'view'
-                  ? 'Review this volunteer. Use Edit if you need to change it.'
-                  : 'Update role or profile fields, then save.'}
+                  ? 'Phone identifies this volunteer or admin. Email is extra information.'
+                  : 'Phone identifies this volunteer or admin. Email is extra information.'}
               </Typography>
             </Box>
             <Box className={classes.mainContent}>
@@ -199,7 +199,6 @@ function VolunteerDetails() {
                   Personal Information
                 </Typography>
 
-                {/* name and email address */}
                 <Box className={classes.formElementBox}>
                   <FormControl className={classes.formControl}>
                     <FormLabel htmlFor="fullNameField">Name</FormLabel>
@@ -209,17 +208,6 @@ function VolunteerDetails() {
                       name="name"
                       disabled={true}
                       value={data.user.name}
-                    />
-                  </FormControl>
-                  <FormControl className={classes.formControl}>
-                    <FormLabel htmlFor="emailField">Email Address</FormLabel>
-                    <TextField
-                      type="email"
-                      id="emailField"
-                      placeholder="Enter Your Email Address"
-                      name="email"
-                      disabled={true}
-                      value={data.user.email}
                     />
                   </FormControl>
                 </Box>
@@ -312,6 +300,20 @@ function VolunteerDetails() {
                     />
                   </FormControl>
                 </Box>
+              </Box>
+              <Box className={classes.HeadingAndElementBox}>
+                <Typography className="heading">Extra information</Typography>
+                <FormControl className={classes.formControl}>
+                  <FormLabel htmlFor="emailField">Email Address</FormLabel>
+                  <TextField
+                    type="email"
+                    id="emailField"
+                    placeholder="Not added"
+                    name="email"
+                    disabled={true}
+                    value={data.user.email || ''}
+                  />
+                </FormControl>
               </Box>
               {/* ADDRESS INFORMATION */}
               <Box className={classes.HeadingAndElementBox}>

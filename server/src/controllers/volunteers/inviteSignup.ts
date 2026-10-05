@@ -1,5 +1,5 @@
 import { Request, Response } from "express"
-import { capitaliseStr, formatDate } from "../../utils/global";
+import { capitaliseStr, formatDate, normalizeMobile } from "../../utils/global";
 import getData from "../../utils/getData";
 import { verifyVolunteerInvite } from "../../gql/volunteers/queries";
 import { signupInvitation } from "../../gql/volunteers/mutations";
@@ -9,26 +9,43 @@ const inviteSignup = async (req: Request, res: Response) => {
   
   if(req.body.token && req.body.token !== 'null' && req.body.token !== 'NULL')
   {
-    const verifyEmail = await getData(verifyVolunteerInvite, {token: req.body.token})
-    if(verifyEmail?.errors)
+    const inviteResult = await getData(verifyVolunteerInvite, {token: req.body.token})
+    if(inviteResult?.errors)
     {
       return res.status(400).json({
         status: 'error',
-        message: verifyEmail?.errors[0]?.message
+        message: inviteResult?.errors[0]?.message
       })
     }
-    if(!verifyEmail?.data?.Invitations?.length)
+    const invite = inviteResult?.data?.Invitations?.[0]
+    if(!invite)
     {
       return res.status(404).json({
         status: 'error',
         message: "Invitation doesn't exist."
       })
     }
-    if(verifyEmail?.data?.Invitations[0]?.email !== (req.body.email.replace('%40', '@')).toLowerCase())
+    const phone = normalizeMobile(req.body.phoneNumber)
+    const emailRaw = (req.body.email || '').replace('%40', '@').trim()
+    const email = emailRaw ? emailRaw.toLowerCase() : null
+    if(invite.phone_number && invite.phone_number !== phone)
+    {
+      return res.status(404).json({
+        status: 'error',
+        message: "This invitation is for a different phone number."
+      })
+    }
+    if(!invite.phone_number && invite.email && invite.email !== email)
     {
       return res.status(404).json({
         status: 'error',
         message: "Invitation doesn't exist for the given email."
+      })
+    }
+    if (!phone) {
+      return res.status(400).json({
+        status: 'error',
+        message: 'Please provide a valid 10-digit mobile number',
       })
     }
   
@@ -36,12 +53,14 @@ const inviteSignup = async (req: Request, res: Response) => {
     
     const variables = {
       ...req.body,
-      isAdmin: verifyEmail?.data?.Invitations[0]?.isAdmin,
+      inviteToken: req.body.token,
+      isAdmin: invite.isAdmin,
       name: capitaliseStr(req.body.name),
       state: capitaliseStr(req.body.state),
       location: capitaliseStr(req.body.location),
       city: capitaliseStr(req.body.city),
-      email: (req.body.email.replace('%40', '@')).toLowerCase(),
+      email,
+      phoneNumber: phone,
       dob: formatDate(req.body.dob),
       password: encryptPass,
       isAdminVerified: true,

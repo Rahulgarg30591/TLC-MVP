@@ -13,10 +13,11 @@ Mutate Hasura with admin secret from `server/.env`. Never echo the secret.
 
 Join shapes (from the Express controllers):
 
-- `workshop_volunteers` / `workshop_lead_volunteers`: `{ user_email }`
+- `workshop_volunteers` / `workshop_lead_volunteers`: `{ user_id }` (`users.id`)
 - `workshop_participants`: `{ enrollment_id, workshop_id }`
 - `meetings_enrollments`: `{ enrollment_id }` (or `{ meeting_id, enrollment_id }` on the join table)
-- `meetings_volunteers`: `{ volunteer_email }`
+- `meetings_volunteers`: `{ user_id }` (`users.id`)
+- `enrollments.enrolled_by_id`: `users.id` of the volunteer who enrolled the participant
 - `children`: `{ name, dob, gender }` nested under enrollment
 
 ## Matching rule

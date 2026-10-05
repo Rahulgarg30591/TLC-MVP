@@ -64,7 +64,7 @@ export const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'column',
     gap: '20px',
-    background: '#F2F3F4',
+    background: '#faf6ef',
   },
 
   //   autocomplete
@@ -144,7 +144,7 @@ export const useStyles = makeStyles((theme) => ({
       padding: '5px 10px',
       fontSize: '14px',
       '&.MuiAutocomplete-option[aria-selected="true"]': {
-        background: '#F2F3F4 !important',
+        background: '#faf6ef !important',
       },
     },
   },

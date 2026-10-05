@@ -12,7 +12,7 @@ const auth = (req, res, next) => {
             authToken = authToken[1];
             try {
                 const token = jsonwebtoken_1.default.verify(authToken, process.env.JWT_SECRET_KEY || '');
-                if (token === null || token === void 0 ? void 0 : token.email) {
+                if ((token === null || token === void 0 ? void 0 : token.id) || (token === null || token === void 0 ? void 0 : token.email)) {
                     return next();
                 }
             }

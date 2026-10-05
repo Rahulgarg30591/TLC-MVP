@@ -42,13 +42,13 @@ export const useStyles = makeStyles((theme) => ({
     height: '100%',
     width: '40%',
     borderRadius: '999px',
-    background: 'linear-gradient(90deg, #1F7A12, #259311)',
+    background: '#5a7030',
     animation: 'tlcBar 1.1s ease-in-out infinite',
   },
   label: {
     fontSize: '13px !important',
     fontWeight: '600 !important',
-    color: '#3D5A36',
+    color: '#3d4f1e',
     letterSpacing: '0.01em !important',
   },
   loaderRoot: {

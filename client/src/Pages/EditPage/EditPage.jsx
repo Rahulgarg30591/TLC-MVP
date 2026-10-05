@@ -86,7 +86,7 @@ function EditPage() {
   }
 
   const handleSubmit = () => {
-    const mail = user?.email;
+    const id = user?.id;
     const body = {
       name: data?.name.trim(),
       dob: moment(data?.dob).format('MM/DD/YYYY'),
@@ -106,7 +106,7 @@ function EditPage() {
         message: check?.message,
       });
     }
-    mutate({ mail, body, user });
+    mutate({ id, body, user });
   };
 
   return (
@@ -142,15 +142,7 @@ function EditPage() {
               </FormControl>
             </Box>
 
-            {/*email and phone number*/}
-
             <Box className={classes.formElementBox}>
-              <FormControl className={classes.formControl}>
-                <FormLabel htmlFor="emailField">Email Address</FormLabel>
-                <Typography className={classes.preFilled} variant="body2">
-                  {data.email}
-                </Typography>
-              </FormControl>
               <FormControl className={classes.formControl} required>
                 <FormLabel htmlFor="phoneNumberField">Phone Number</FormLabel>
                 <TextField
@@ -252,6 +244,15 @@ function EditPage() {
                 </Select>
               </FormControl>
             </Box>
+          </Box>
+          <Box className={classes.HeadingAndElementBox}>
+            <Typography className="heading">Extra information</Typography>
+            <FormControl className={classes.formControl}>
+              <FormLabel htmlFor="emailField">Email Address</FormLabel>
+              <Typography className={classes.preFilled} variant="body2">
+                {data.email || 'Not added'}
+              </Typography>
+            </FormControl>
           </Box>
           {/* ADDRESS INFORMATION */}
           <Box className={classes.HeadingAndElementBox}>

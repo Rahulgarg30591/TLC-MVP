@@ -24,6 +24,7 @@ function Signup() {
   const nav = useNavigate();
   const queryParams = new URLSearchParams(location.search);
   const email = queryParams.get('for');
+  const invitePhone = queryParams.get('phone');
   const classes = useStyles();
   const [alertType, setAlertType] = useState();
   const [signupType, setSignupType] = useState('normal');
@@ -72,24 +73,17 @@ function Signup() {
     const isValid = validateSignup(e.target.elements);
     if (isValid.type) return setAlertType(isValid);
 
-    if (email) {
-      if (!validator.isEmail(email)) {
-        return setAlertType({
-          type: 'error',
-          message: 'please provide valid email',
-        });
-      }
-    } else {
-      if (!validator.isEmail(e.target.elements.email.value)) {
-        return setAlertType({
-          type: 'error',
-          message: 'please provide valid email',
-        });
-      }
+    const typedEmail = (e.target.elements.email?.value || '').trim();
+    const accountEmail = (email || typedEmail).trim();
+    if (email && !validator.isEmail(email)) {
+      return setAlertType({
+        type: 'error',
+        message: 'please provide valid email',
+      });
     }
 
     const body = {
-      email: email || e.target.elements.email.value,
+      email: accountEmail,
       password: e.target.elements.password.value,
       name: e.target.elements.name.value,
       dob: moment(e.target.elements.dob.value).format('MM/DD/YYYY'),
@@ -147,7 +141,7 @@ function Signup() {
           <Box className={classes.headingBlock}>
             <Typography className={classes.welcome}>Join TLC</Typography>
             <Typography className={classes.header}>
-              Create an account to continue
+              Phone is required. Email is optional extra information.
             </Typography>
           </Box>
           <Box className={classes.signupWrapper}>
@@ -155,6 +149,7 @@ function Signup() {
               submit={handleSubmit}
               isPending={isPending}
               isEmail={email}
+              defaultPhone={invitePhone || ''}
             />
             <Box className={classes.signUpBtn_loginLink}>
               <Typography className={classes.loginLink}>

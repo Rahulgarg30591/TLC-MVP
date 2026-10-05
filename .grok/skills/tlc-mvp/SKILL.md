@@ -30,11 +30,21 @@ Architecture, routes, and tables live in the repo `README.md` — do not copy th
 
 ## Local login
 
-Known local admin (created for this machine):
+Known local admin (created for this machine). Browser sign-in uses the phone number. Email still signs in when the account has one. The first `Phone` and `Password` lines below are what `e2e/tests/admin.js` reads — keep those two labels on the admin account.
 
+- Phone: `9000000037`
 - Email: `dev.admin@thelastcentre.com`
 - Password: `TlcLocal@123`
 - Role: admin (`isVerified` + `isAdminVerified` + `isAdmin`)
+- Name: Local Admin
+
+Known local volunteer on the same database (`users.id` 38). Same sign-in screen, volunteer role:
+
+- Volunteer phone: `9000000038`
+- Volunteer email: `dev.volunteer@thelastcentre.com`
+- Volunteer password: `TlcVolunteer@123`
+- Role: volunteer (`isVerified` + `isAdminVerified`, `isAdmin` false)
+- Name: Local Volunteer
 
 Existing real users (passwords unknown): `rgarg@celestialsys.com`, `shreya.celestialsys@gmail.com`, `gauravyadav.mern@gmail.com`, `anishchaurasia2002@gmail.com`, `shivani.pruthi13@gmail.com`.
 

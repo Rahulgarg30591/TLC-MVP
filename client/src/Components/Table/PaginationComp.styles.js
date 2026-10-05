@@ -8,21 +8,22 @@ export const useStyles = makeStyles((theme) => ({
     justifyContent: 'flex-end',
     height: '52px',
     flexShrink: 0,
-    background: '#F7FBF5',
+    background: '#faf6ef',
     padding: '0 16px',
-    borderTop: '1px solid #D5E6CE',
+    borderTop: '1px solid #e6dcc8',
     '& .pageInfo': {
       minWidth: '92px',
       textAlign: 'center',
-      fontSize: '12px',
-      fontWeight: '700',
-      color: '#1B3B14',
+      fontSize: '14px',
+      fontWeight: '600',
+      fontFamily: theme.typography.fontFamily,
+      color: '#2a3814',
       background: '#FFFFFF',
-      border: '1px solid #D5E6CE',
+      border: '1px solid #e6dcc8',
       borderRadius: '999px',
       padding: '4px 12px',
       [theme.breakpoints.down('sm')]: {
-        fontSize: '12px',
+        fontSize: '14px',
         minWidth: 'auto',
       },
     },
@@ -30,9 +31,9 @@ export const useStyles = makeStyles((theme) => ({
   pageBtn: {
     '&.MuiIconButton-root': {
       padding: '6px',
-      color: '#1B3B14',
+      color: '#2a3814',
       '&:hover': {
-        backgroundColor: '#E5F3E0',
+        backgroundColor: '#f2e8d8',
       },
       '&.Mui-disabled': {
         color: '#B7C4B3',

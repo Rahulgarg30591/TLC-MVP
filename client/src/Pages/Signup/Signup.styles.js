@@ -2,10 +2,10 @@ import { makeStyles } from '@mui/styles';
 
 export const useStyles = makeStyles((theme) => ({
   root: {
-    minHeight: '100%',
+    minHeight: '100dvh',
     display: 'flex',
     width: '100%',
-    background: '#F3F6F1',
+    background: '#faf6ef',
     alignItems: 'stretch',
   },
   brandPanel: {
@@ -14,11 +14,12 @@ export const useStyles = makeStyles((theme) => ({
       display: 'flex',
       flexDirection: 'column',
       justifyContent: 'center',
-      width: '40%',
+      width: '42%',
+      minHeight: '100dvh',
       padding: '56px',
-      background:
-        'linear-gradient(165deg, #0F3F0A 0%, #1F7A12 48%, #259311 78%, #3D7AB8 130%)',
-      color: '#FFFFFF',
+      background: 'linear-gradient(180deg, #faf6ef 0%, #f2e8d8 100%)',
+      color: '#3d3525',
+      borderRight: '1px solid #e6dcc8',
       gap: '18px',
       position: 'relative',
       height: '100%',
@@ -106,7 +107,7 @@ export const useStyles = makeStyles((theme) => ({
     backgroundColor: '#FFFFFF',
     borderRadius: '18px',
     boxShadow: '0 18px 50px rgba(27, 59, 20, 0.12)',
-    border: '1px solid #E4EDE0',
+    border: '1px solid #e6dcc8',
     animation: 'tlcSlideUp 480ms ease both',
     [theme.breakpoints.down('sm')]: {
       padding: '28px 12px',
@@ -126,13 +127,13 @@ export const useStyles = makeStyles((theme) => ({
   welcome: {
     fontSize: '22px !important',
     fontWeight: '800 !important',
-    color: '#163812',
+    color: '#2a3814',
     letterSpacing: '-0.03em !important',
   },
   header: {
     fontSize: '14px !important',
     fontWeight: '500 !important',
-    color: '#5B6F56',
+    color: '#5a5040',
     marginTop: '4px !important',
     textAlign: 'center',
   },
@@ -153,7 +154,7 @@ export const useStyles = makeStyles((theme) => ({
     textAlign: 'center',
     '& .login': {
       textDecoration: 'none',
-      color: '#259311',
+      color: '#3d4f1e',
       fontWeight: 700,
       '&:hover': {
         textDecoration: 'underline',

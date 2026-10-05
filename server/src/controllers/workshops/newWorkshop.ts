@@ -6,12 +6,12 @@ import { addMeetingsToWorkshop, insertNewWorkshop } from "../../gql/workshops/mu
 const newWorkshop = async (req: Request, res: Response) => {
   const vols = req.body.vols.map((vol: string)=>{
     return {
-      user_email: vol
+      user_id: Number(vol)
     }
   })
   const leads = req.body.leads.map((lead: string)=>{
     return {
-      user_email: lead
+      user_id: Number(lead)
     }
   })
   const variables = {

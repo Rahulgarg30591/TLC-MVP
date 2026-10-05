@@ -160,7 +160,7 @@ function MeetingsDetails() {
     }
 
     if (mode === 'Volunteers' && data) {
-      const isEvery = compareTwoArrays(volunteersRowData, data, 'email');
+      const isEvery = compareTwoArrays(volunteersRowData, data, 'id');
 
       if (!isEvery) {
         setAlertType({
@@ -216,7 +216,7 @@ function MeetingsDetails() {
       venue_city: venueCity.trim(),
       workshop_id: selectedWorkshop?.id,
       enrollments: enrollmentsRowData.map((enrollment) => enrollment.id),
-      volunteers: volunteersRowData.map((volunteer) => volunteer.email),
+      volunteers: volunteersRowData.map((volunteer) => volunteer.id),
     };
 
     let isValid;
@@ -245,9 +245,9 @@ function MeetingsDetails() {
     return;
   }
 
-  const handleDeleteRow = function ({ email, row, id }) {
+  const handleDeleteRow = function ({ row, id }) {
     if (row === 'Volunteers') {
-      const updatedRow = volunteersRowData.filter((v) => v.email !== email);
+      const updatedRow = volunteersRowData.filter((v) => v.id !== id);
       setVolunteersRowData(updatedRow);
     }
 

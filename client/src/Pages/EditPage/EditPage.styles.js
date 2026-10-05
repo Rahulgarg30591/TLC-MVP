@@ -5,7 +5,7 @@ export const useStyles = makeStyles((theme) => ({
     height: '100%',
     minHeight: 0,
     position: 'relative',
-    background: '#F2F3F4',
+    background: '#faf6ef',
     display: 'flex',
     flexDirection: 'column',
   },
@@ -177,7 +177,7 @@ export const useStyles = makeStyles((theme) => ({
         padding: '5px 10px',
         fontSize: '14px',
         '&.Mui-selected': {
-          background: '#F2F3F4 !important',
+          background: '#faf6ef !important',
         },
         '& span': {
           display: 'none',

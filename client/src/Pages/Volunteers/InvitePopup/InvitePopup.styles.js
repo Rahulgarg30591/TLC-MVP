@@ -20,7 +20,7 @@ export const useStyles = makeStyles((theme) => ({
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: '0 20px !important',
-    background: 'linear-gradient(90deg, #1F7A12 0%, #259311 100%)',
+    background: '#5a7030',
     '& p': {
       fontSize: '16px',
       fontWeight: '800',
@@ -35,10 +35,10 @@ export const useStyles = makeStyles((theme) => ({
   },
   DialogActions: {
     height: '56px',
-    borderTop: '1px solid #D5E6CE',
+    borderTop: '1px solid #e6dcc8',
     padding: '0 20px !important',
     gap: '12px',
-    background: '#F7FBF5',
+    background: '#faf6ef',
     '& button': {
       height: '40px',
       padding: '0 16px',
@@ -89,12 +89,12 @@ export const useStyles = makeStyles((theme) => ({
       borderRadius: '12px',
       paddingRight: '10px',
       height: '44px',
-      backgroundColor: '#FBFDF9',
+      backgroundColor: '#fffdf8',
       '& input': {
         fontSize: '14px',
         padding: '8px 12px',
         '&:-webkit-autofill': {
-          '-webkit-box-shadow': '0 0 0 100px #FBFDF9 inset',
+          '-webkit-box-shadow': '0 0 0 100px #fffdf8 inset',
         },
       },
       '& fieldset': {
@@ -123,7 +123,7 @@ export const useStyles = makeStyles((theme) => ({
         padding: '8px 12px',
         fontSize: '14px',
         '&.Mui-selected': {
-          background: '#EAF6E6 !important',
+          background: '#f2e8d8 !important',
         },
         '& span': {
           display: 'none',
